@@ -57,6 +57,11 @@ export default function ContainerPage() {
           throw new Error(`Container with ID ${params.id} not found`);
         }
         
+        // Default the zone name to "Empty" if it doesn't exist
+        if (!containerData.zoneId) {
+          containerData.zoneId = "Empty";
+        }
+        
         // Find all items in this container
         const containerItems = data.items
           .filter((item: any) => item.containerId === params.id)
@@ -120,7 +125,7 @@ export default function ContainerPage() {
                 <h1 className="text-3xl font-bold text-white">
                   {container.name}
                 </h1>
-                <p className="text-blue-400">Zone: {container.zoneId}</p>
+                <p className="text-blue-400">Zone: {container.zoneId || 'Empty'}</p>
               </div>
               <div className="space-x-4">
                 <Link 

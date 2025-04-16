@@ -11,6 +11,7 @@ const Page: React.FC = () => {
   const [scale, setScale] = useState<number>(0.7);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [apiData, setApiData] = useState<any>(null);
 
   interface TooltipProps {
     visible: boolean;
@@ -51,11 +52,12 @@ const Page: React.FC = () => {
         }
         
         const data = await response.json();
+        setApiData(data);
         
         // Transform the container data to the format needed by the ISS component
         const transformedContainers = data.containers.map((container: any) => ({
           id: container.id,
-          zoneId: container.zoneId
+          zoneId: container.zoneId || "Empty" // Ensure we have a zoneId, default to "Empty" if missing
         }));
         
         // Transform the item data to the format needed by the ISS component

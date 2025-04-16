@@ -47,7 +47,7 @@ const ISS = ({
   const svgWidth = 1830;
   const svgHeight = 850;
   
-  // Map SVG IDs to API zone IDs
+  // Map SVG IDs to API zone IDs - this will be used as a fallback
   const zoneMapping: Record<string, string> = {
     "fgb": "Zarya",
     "service-module": "Zvezda",
@@ -71,14 +71,22 @@ const ISS = ({
   };
 
   React.useEffect(() => {
+    // Get all unique zone IDs from the API response
+    const uniqueZoneIds = new Set(containers.map(container => container.zoneId));
+    
     // Process data to count containers and items per zone
     const zoneStats: Record<string, {id: string, displayName: string, totalContainers: number, totalItems: number}> = {};
     
-    // Initialize zones
-    Object.entries(zoneMapping).forEach(([svgId, apiZoneId]) => {
+    // First, initialize all SVG zones with default values
+    Object.entries(zoneMapping).forEach(([svgId, defaultZoneName]) => {
+      // Try to find a matching zone ID in the API data
+      const matchedZoneId = Array.from(uniqueZoneIds).find(zoneId => 
+        zoneId.toLowerCase() === defaultZoneName.toLowerCase()
+      );
+      
       zoneStats[svgId] = {
-        id: apiZoneId,
-        displayName: apiZoneId.replace(/-/g, ' '),
+        id: matchedZoneId || defaultZoneName,
+        displayName: matchedZoneId || defaultZoneName || "Empty",
         totalContainers: 0,
         totalItems: 0
       };
@@ -86,19 +94,25 @@ const ISS = ({
     
     // Count containers per zone
     containers.forEach(container => {
-      const svgId = Object.entries(zoneMapping).find(([_, apiZoneId]) => apiZoneId === container.zoneId)?.[0];
-      if (svgId && zoneStats[svgId]) {
-        zoneStats[svgId].totalContainers += 1;
+      const matchingSvgId = Object.entries(zoneMapping).find(([_, apiZoneId]) => 
+        apiZoneId.toLowerCase() === container.zoneId.toLowerCase()
+      )?.[0];
+      
+      if (matchingSvgId && zoneStats[matchingSvgId]) {
+        zoneStats[matchingSvgId].totalContainers += 1;
       }
     });
     
-    // Count items per zone
+    // Count items per zone by first checking which container they belong to
     items.forEach(item => {
       const containerFound = containers.find(c => c.id === item.containerId);
       if (containerFound) {
-        const svgId = Object.entries(zoneMapping).find(([_, apiZoneId]) => apiZoneId === containerFound.zoneId)?.[0];
-        if (svgId && zoneStats[svgId]) {
-          zoneStats[svgId].totalItems += 1;
+        const matchingSvgId = Object.entries(zoneMapping).find(([_, apiZoneId]) => 
+          apiZoneId.toLowerCase() === containerFound.zoneId.toLowerCase()
+        )?.[0];
+        
+        if (matchingSvgId && zoneStats[matchingSvgId]) {
+          zoneStats[matchingSvgId].totalItems += 1;
         }
       }
     });
@@ -130,12 +144,12 @@ const ISS = ({
     }
   };
 
-  const handleMouseEnter = (e: React.MouseEvent, zoneId: string, defaultName: string) => {
+  const handleMouseEnter = (e: React.MouseEvent, zoneId: string) => {
     if (!containerRef.current) return;
     
     const rect = containerRef.current.getBoundingClientRect();
     const zoneInfo = zoneData[zoneId] || { 
-      displayName: defaultName,
+      displayName: zoneMapping[zoneId] || "Empty",
       totalContainers: 0,
       totalItems: 0
     };
@@ -212,7 +226,7 @@ const ISS = ({
             id="Progress 1"
             className="hover-group"
             onClick={() => handleZoneClick("storage-1")}
-            onMouseEnter={(e) => handleMouseEnter(e, "storage-1", "Storage 1")}
+            onMouseEnter={(e) => handleMouseEnter(e, "storage-1")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -234,7 +248,7 @@ const ISS = ({
             id="Progress 2"
             className="hover-group"
             onClick={() => handleZoneClick("storage-2")}
-            onMouseEnter={(e) => handleMouseEnter(e, "storage-2", "Storage- 2")}
+            onMouseEnter={(e) => handleMouseEnter(e, "storage-2")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -254,7 +268,7 @@ const ISS = ({
             id="Soyuz 1"
             className="hover-group"
             onClick={() => handleZoneClick("soyuz-1")}
-            onMouseEnter={(e) => handleMouseEnter(e, "soyuz-1", "Soyuz 1")}
+            onMouseEnter={(e) => handleMouseEnter(e, "soyuz-1")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -274,7 +288,7 @@ const ISS = ({
             id="Soyuz 2"
             className="hover-group"
             onClick={() => handleZoneClick("soyuz-2")}
-            onMouseEnter={(e) => handleMouseEnter(e, "soyuz-2", "Soyuz 2")}
+            onMouseEnter={(e) => handleMouseEnter(e, "soyuz-2")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -294,7 +308,7 @@ const ISS = ({
             id="Zvezda"
             className="hover-group"
             onClick={() => handleZoneClick("service-module")}
-            onMouseEnter={(e) => handleMouseEnter(e, "service-module", "Service Module")}
+            onMouseEnter={(e) => handleMouseEnter(e, "service-module")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -331,7 +345,7 @@ const ISS = ({
             id="Poisk"
             className="hover-group"
             onClick={() => handleZoneClick("poisk")}
-            onMouseEnter={(e) => handleMouseEnter(e, "poisk", "Poisk")}
+            onMouseEnter={(e) => handleMouseEnter(e, "poisk")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -366,7 +380,7 @@ const ISS = ({
             id="Nauka"
             className="hover-group"
             onClick={() => handleZoneClick("nauka")}
-            onMouseEnter={(e) => handleMouseEnter(e, "nauka", "Nauka")}
+            onMouseEnter={(e) => handleMouseEnter(e, "nauka")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -404,7 +418,7 @@ const ISS = ({
             id="Zarya"
             className="hover-group"
             onClick={() => handleZoneClick("fgb")}
-            onMouseEnter={(e) => handleMouseEnter(e, "fgb", "Zarya")}
+            onMouseEnter={(e) => handleMouseEnter(e, "fgb")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -436,7 +450,7 @@ const ISS = ({
             id="Rassvet"
             className="hover-group"
             onClick={() => handleZoneClick("rassvet")}
-            onMouseEnter={(e) => handleMouseEnter(e, "rassvet", "Rassvet")}
+            onMouseEnter={(e) => handleMouseEnter(e, "rassvet")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -520,7 +534,7 @@ const ISS = ({
             id="Harmony"
             className="hover-group"
             onClick={() => handleZoneClick("node-2")}
-            onMouseEnter={(e) => handleMouseEnter(e, "node-2", "Harmony")}
+            onMouseEnter={(e) => handleMouseEnter(e, "node-2")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -552,7 +566,7 @@ const ISS = ({
             id="Destiny"
             className="hover-group"
             onClick={() => handleZoneClick("us-lab")}
-            onMouseEnter={(e) => handleMouseEnter(e, "us-lab", "Destiny")}
+            onMouseEnter={(e) => handleMouseEnter(e, "us-lab")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -578,7 +592,7 @@ const ISS = ({
             className="hover-group"
             onClick={() => handleZoneClick("boeing-cst-100-starliner")}
             onMouseEnter={(e) =>
-              handleMouseEnter(e, "boeing-cst-100-starliner", "Boeing CST-100 Starliner")
+              handleMouseEnter(e, "boeing-cst-100-starliner")
             }
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -614,7 +628,7 @@ const ISS = ({
             id="Kibo"
             className="hover-group"
             onClick={() => handleZoneClick("jap-lab")}
-            onMouseEnter={(e) => handleMouseEnter(e, "jap-lab", "Kibo")}
+            onMouseEnter={(e) => handleMouseEnter(e, "jap-lab")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -638,7 +652,7 @@ const ISS = ({
             id="SpaceX Dragon"
             className="hover-group"
             onClick={() => handleZoneClick("spacex-dragon")}
-            onMouseEnter={(e) => handleMouseEnter(e, "spacex-dragon", "SpaceX Dragon")}
+            onMouseEnter={(e) => handleMouseEnter(e, "spacex-dragon")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -667,7 +681,7 @@ const ISS = ({
             id="Unity"
             className="hover-group"
             onClick={() => handleZoneClick("node-1")}
-            onMouseEnter={(e) => handleMouseEnter(e, "node-1", "Unity")}
+            onMouseEnter={(e) => handleMouseEnter(e, "node-1")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -694,7 +708,7 @@ const ISS = ({
             id="Quest Airlock"
             className="hover-group"
             onClick={() => handleZoneClick("airlock")}
-            onMouseEnter={(e) => handleMouseEnter(e, "airlock", "Quest Airlock")}
+            onMouseEnter={(e) => handleMouseEnter(e, "airlock")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -713,7 +727,7 @@ const ISS = ({
             id="Truss Structure"
             className="hover-group"
             onClick={() => handleZoneClick("truss-structure")}
-            onMouseEnter={(e) => handleMouseEnter(e, "truss-structure", "Truss Structure")}
+            onMouseEnter={(e) => handleMouseEnter(e, "truss-structure")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -740,7 +754,7 @@ const ISS = ({
             id="Radiators"
             className="hover-group"
             onClick={() => handleZoneClick("radiators")}
-            onMouseEnter={(e) => handleMouseEnter(e, "radiators", "Radiators")}
+            onMouseEnter={(e) => handleMouseEnter(e, "radiators")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -784,7 +798,7 @@ const ISS = ({
             id="Solar Panels"
             className="hover-group"
             onClick={() => handleZoneClick("solar-panels")}
-            onMouseEnter={(e) => handleMouseEnter(e, "solar-panels", "Solar Panels")}
+            onMouseEnter={(e) => handleMouseEnter(e, "solar-panels")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
