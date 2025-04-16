@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, SVGProps } from "react";
 import "@/app/globals.css";
 import { useRouter } from "next/navigation";
 
@@ -42,115 +42,130 @@ const ISS = ({
   containers: Array<{ id: string; zoneId: string }>;
   items: Array<{ id: string; containerId: string }>;
 }) => {
-  const router = useRouter();
+  const [zoneData, setZoneData] = React.useState<Record<string, {id: string, displayName: string, totalContainers: number, totalItems: number}>>({});
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const svgWidth = 1830;
+  const svgHeight = 850;
+  
+  // Map SVG IDs to API zone IDs
+  const zoneMapping: Record<string, string> = {
+    "fgb": "Zarya",
+    "service-module": "Zvezda",
+    "node-1": "Unity",
+    "us-lab": "Destiny",
+    "node-2": "Harmony", 
+    "jap-lab": "Kibo",
+    "airlock": "Quest Airlock",
+    "soyuz-1": "Soyuz",
+    "soyuz-2": "Soyuz",
+    "poisk": "Poisk",
+    "rassvet": "Rassvet",
+    "nauka": "Nauka",
+    "boeing-cst-100-starliner": "Boeing CST-100 Starliner",
+    "spacex-dragon": "SpaceX Dragon",
+    "storage-1": "Progress",
+    "storage-2": "Progress",
+    "radiators": "Radiators",
+    "solar-panels": "Solar Panels",
+    "truss-structure": "Auxiliary Storage"
+  };
+
+  React.useEffect(() => {
+    // Process data to count containers and items per zone
+    const zoneStats: Record<string, {id: string, displayName: string, totalContainers: number, totalItems: number}> = {};
+    
+    // Initialize zones
+    Object.entries(zoneMapping).forEach(([svgId, apiZoneId]) => {
+      zoneStats[svgId] = {
+        id: apiZoneId,
+        displayName: apiZoneId.replace(/-/g, ' '),
+        totalContainers: 0,
+        totalItems: 0
+      };
+    });
+    
+    // Count containers per zone
+    containers.forEach(container => {
+      const svgId = Object.entries(zoneMapping).find(([_, apiZoneId]) => apiZoneId === container.zoneId)?.[0];
+      if (svgId && zoneStats[svgId]) {
+        zoneStats[svgId].totalContainers += 1;
+      }
+    });
+    
+    // Count items per zone
+    items.forEach(item => {
+      const containerFound = containers.find(c => c.id === item.containerId);
+      if (containerFound) {
+        const svgId = Object.entries(zoneMapping).find(([_, apiZoneId]) => apiZoneId === containerFound.zoneId)?.[0];
+        if (svgId && zoneStats[svgId]) {
+          zoneStats[svgId].totalItems += 1;
+        }
+      }
+    });
+    
+    setZoneData(zoneStats);
+  }, [containers, items]);
+
+  const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Mouse down handler implementation
+  };
+
+  const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Mouse move handler implementation
+  };
+
+  const onMouseUp = () => {
+    // Mouse up handler implementation
+  };
+
+  const onWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    // Wheel handler implementation
+  };
 
   const handleZoneClick = (zoneId: string) => {
-    router.push(`/zone/${zoneId}`);
+    if (zoneData[zoneId]) {
+      console.log(`Clicked on zone: ${zoneData[zoneId].displayName}`);
+      // Navigate or perform action for the selected zone
+      // e.g., window.location.href = `/zone/${zoneData[zoneId].id}`;
+    }
   };
 
-  const getZoneStats = (zoneId: string) => {
-    const zoneContainers = containers.filter((c) => c.zoneId === zoneId);
-    const zoneItems = items.filter((i) =>
-      zoneContainers.some((c) => c.id === i.containerId)
-    );
-    return {
-      totalContainers: zoneContainers.length,
-      totalItems: zoneItems.length,
+  const handleMouseEnter = (e: React.MouseEvent, zoneId: string, defaultName: string) => {
+    if (!containerRef.current) return;
+    
+    const rect = containerRef.current.getBoundingClientRect();
+    const zoneInfo = zoneData[zoneId] || { 
+      displayName: defaultName,
+      totalContainers: 0,
+      totalItems: 0
     };
-  };
-
-  const handleMouseEnter = (
-    e: React.MouseEvent,
-    zoneId: string,
-    title: string
-  ) => {
-    const stats = getZoneStats(zoneId);
-    const rect = (e.target as SVGElement).getBoundingClientRect();
+    
     setTooltip({
       visible: true,
-      x: e.clientX,
-      y: e.clientY,
-      title,
-      totalContainers : stats.totalContainers,
-      totalItems : stats.totalItems,
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+      title: zoneInfo.displayName,
+      totalContainers: zoneInfo.totalContainers,
+      totalItems: zoneInfo.totalItems
     });
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    setTooltip((prev) => ({
-      ...prev,
-      x: e.clientX,
-      y: e.clientY,
-    }));
+    if (!containerRef.current || !tooltip.visible) return;
+    
+    const rect = containerRef.current.getBoundingClientRect();
+    setTooltip({
+      ...tooltip,
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
   };
 
   const handleMouseLeave = () => {
     setTooltip({
-      visible: false,
-      x: 0,
-      y: 0,
-      title: "",
-      totalContainers: 0,
-      totalItems: 0,
+      ...tooltip,
+      visible: false
     });
-  };
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const isDragging = useRef(false);
-  const startX = useRef(0);
-  const startY = useRef(0);
-
-  const scaleMin = 0.7;
-  const scaleMax = 10;
-  const translateMax = 100;
-
-  const svgWidth = 1804;
-  const svgHeight = 811;
-
-  const onMouseDown = (event: React.MouseEvent) => {
-    isDragging.current = true;
-    startX.current = event.clientX;
-    startY.current = event.clientY;
-  };
-
-  const onMouseMove = (event: React.MouseEvent) => {
-    if (isDragging.current) {
-      const dx = (event.clientX - startX.current) / scale;
-      const dy = (event.clientY - startY.current) / scale;
-
-      setTranslateX((prev) => prev + dx);
-      setTranslateY((prev) => prev + dy);
-
-      startX.current = event.clientX;
-      startY.current = event.clientY;
-    }
-  };
-
-  const onMouseUp = () => {
-    isDragging.current = false;
-  };
-
-  const onWheel = (event: React.WheelEvent) => {
-    event.preventDefault();
-
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      const mouseX = event.clientX - rect.left;
-      const mouseY = event.clientY - rect.top;
-
-      const zoomFactor = Math.exp(-event.deltaY * 0.001);
-      const newScale = Math.min(
-        Math.max(scale * zoomFactor, scaleMin),
-        scaleMax
-      );
-
-      const s = scale;
-      const s_new = newScale;
-
-      setTranslateX((prev) => prev + (mouseX / s_new - mouseX / s));
-      setTranslateY((prev) => prev + (mouseY / s_new - mouseY / s));
-      setScale(newScale);
-    }
   };
 
   return (
@@ -169,16 +184,18 @@ const ISS = ({
     >
       {tooltip.visible && (
         <div
-          className="tooltip"
+          className="absolute bg-black/80 text-white p-2 rounded z-50 pointer-events-none shadow-xl border border-white/20"
           style={{
-            position: "fixed",
             left: tooltip.x + 10,
             top: tooltip.y + 10,
+            maxWidth: "200px"
           }}
         >
-          <h3 className="font-bold">{tooltip.title}</h3>
-          <p>Containers: {tooltip.totalContainers}</p>
-          <p>Items: {tooltip.totalItems}</p>
+          <h3 className="font-bold text-sm">{tooltip.title}</h3>
+          <div className="text-xs mt-1 text-gray-300">
+            <div>Containers: {tooltip.totalContainers}</div>
+            <div>Items: {tooltip.totalItems}</div>
+          </div>
         </div>
       )}
       <svg
@@ -236,6 +253,7 @@ const ISS = ({
           <g
             id="Soyuz 1"
             className="hover-group"
+            onClick={() => handleZoneClick("soyuz-1")}
             onMouseEnter={(e) => handleMouseEnter(e, "soyuz-1", "Soyuz 1")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -255,6 +273,7 @@ const ISS = ({
           <g
             id="Soyuz 2"
             className="hover-group"
+            onClick={() => handleZoneClick("soyuz-2")}
             onMouseEnter={(e) => handleMouseEnter(e, "soyuz-2", "Soyuz 2")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -311,6 +330,7 @@ const ISS = ({
           <g
             id="Poisk"
             className="hover-group"
+            onClick={() => handleZoneClick("poisk")}
             onMouseEnter={(e) => handleMouseEnter(e, "poisk", "Poisk")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -345,6 +365,7 @@ const ISS = ({
           <g
             id="Nauka"
             className="hover-group"
+            onClick={() => handleZoneClick("nauka")}
             onMouseEnter={(e) => handleMouseEnter(e, "nauka", "Nauka")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -383,7 +404,7 @@ const ISS = ({
             id="Zarya"
             className="hover-group"
             onClick={() => handleZoneClick("fgb")}
-            onMouseEnter={(e) => handleMouseEnter(e, "fgb", "FGB")}
+            onMouseEnter={(e) => handleMouseEnter(e, "fgb", "Zarya")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -414,6 +435,7 @@ const ISS = ({
           <g
             id="Rassvet"
             className="hover-group"
+            onClick={() => handleZoneClick("rassvet")}
             onMouseEnter={(e) => handleMouseEnter(e, "rassvet", "Rassvet")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -498,7 +520,7 @@ const ISS = ({
             id="Harmony"
             className="hover-group"
             onClick={() => handleZoneClick("node-2")}
-            onMouseEnter={(e) => handleMouseEnter(e, "node-2", "Node-2")}
+            onMouseEnter={(e) => handleMouseEnter(e, "node-2", "Harmony")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -530,7 +552,7 @@ const ISS = ({
             id="Destiny"
             className="hover-group"
             onClick={() => handleZoneClick("us-lab")}
-            onMouseEnter={(e) => handleMouseEnter(e, "us-lab", "US Lab")}
+            onMouseEnter={(e) => handleMouseEnter(e, "us-lab", "Destiny")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -554,6 +576,7 @@ const ISS = ({
           <g
             id="Boeing CST-100 Starliner"
             className="hover-group"
+            onClick={() => handleZoneClick("boeing-cst-100-starliner")}
             onMouseEnter={(e) =>
               handleMouseEnter(e, "boeing-cst-100-starliner", "Boeing CST-100 Starliner")
             }
@@ -591,7 +614,7 @@ const ISS = ({
             id="Kibo"
             className="hover-group"
             onClick={() => handleZoneClick("jap-lab")}
-            onMouseEnter={(e) => handleMouseEnter(e, "jap-lab", "Jap Lab")}
+            onMouseEnter={(e) => handleMouseEnter(e, "jap-lab", "Kibo")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -614,6 +637,7 @@ const ISS = ({
           <g
             id="SpaceX Dragon"
             className="hover-group"
+            onClick={() => handleZoneClick("spacex-dragon")}
             onMouseEnter={(e) => handleMouseEnter(e, "spacex-dragon", "SpaceX Dragon")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -643,7 +667,7 @@ const ISS = ({
             id="Unity"
             className="hover-group"
             onClick={() => handleZoneClick("node-1")}
-            onMouseEnter={(e) => handleMouseEnter(e, "node-1", "Node 1")}
+            onMouseEnter={(e) => handleMouseEnter(e, "node-1", "Unity")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
@@ -688,6 +712,7 @@ const ISS = ({
           <g
             id="Truss Structure"
             className="hover-group"
+            onClick={() => handleZoneClick("truss-structure")}
             onMouseEnter={(e) => handleMouseEnter(e, "truss-structure", "Truss Structure")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -714,14 +739,16 @@ const ISS = ({
           <g
             id="Radiators"
             className="hover-group"
+            onClick={() => handleZoneClick("radiators")}
             onMouseEnter={(e) => handleMouseEnter(e, "radiators", "Radiators")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
-            <g id="dark_17">
+            <g id="dark_17" role="presentation">
               <path
                 d="M1014 252H1005.5L994 303L996.5 348L986.5 390L988.5 434.5L977 476.5L978 522.5L968 565H976.5L986.5 522.5L983.5 477.5L995 434.5L993 390L1003.5 348L999.5 302.5L1014 252Z"
                 fill="black"
+                role="presentation"
               />
               <path
                 d="M979.5 365.5H988L979.5 387L981.5 433L966.5 474L968 520L950 562H941.5L959 520L957.5 474L972.5 433V387L979.5 365.5Z"
@@ -756,6 +783,7 @@ const ISS = ({
           <g
             id="Solar Panels"
             className="hover-group"
+            onClick={() => handleZoneClick("solar-panels")}
             onMouseEnter={(e) => handleMouseEnter(e, "solar-panels", "Solar Panels")}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
