@@ -23,8 +23,8 @@ def get_blocking_items(
     other_placements = db.query(DBPlacement).\
         options(joinedload(DBPlacement.item)).\
         filter(
-            DBPlacement.containerId_fk == container_id,
-            DBPlacement.itemId_fk != target_item_id,
+            DBPlacement.container_id_fk == container_id,
+            DBPlacement.item_id_fk != target_item_id,
             DBPlacement.item.has(DBItem.status == ItemStatus.ACTIVE) # Only consider active items as blockers
         ).all()
 
@@ -42,7 +42,7 @@ def get_blocking_items(
         if geometry.does_block(blocker_pos=blocker_pos, target_pos=target_pos):
             item_info = placed_other.item # Already loaded via joinedload
             if item_info: # Should always be true due to join
-                 blockers.append((item_info.itemId, item_info.name, blocker_pos))
+                 blockers.append((item_info.item_id, item_info.name, blocker_pos))
             else:
                  # Should not happen with joinedload unless data inconsistency
                  print(f"Warning: Item info not found for placement ID {placed_other.id}")
@@ -64,10 +64,10 @@ def search_for_item(db: Session, item_id: Optional[str], item_name: Optional[str
         options(joinedload(DBPlacement.item), joinedload(DBPlacement.container))
 
     if item_id:
-        query = query.filter(DBPlacement.itemId_fk == item_id)
+        query = query.filter(DBPlacement.item_id_fk == item_id)
     elif item_name:
          # Join with Item table to filter by name
-         query = query.join(DBItem, DBPlacement.itemId_fk == DBItem.itemId).\
+         query = query.join(DBItem, DBPlacement.item_id_fk == DBItem.item_id).\
              filter(DBItem.name == item_name)
     else:
         # Should be caught by route validation, but double-check
@@ -101,7 +101,7 @@ def search_for_item(db: Session, item_id: Optional[str], item_name: Optional[str
         )
 
         # Find direct blockers for this specific placement
-        blockers = get_blocking_items(item_info.itemId, target_pos, container_info.containerId, db)
+        blockers = get_blocking_items(item_info.item_id, target_pos, container_info.container_id, db)
         num_blockers = len(blockers)
 
         # Compare with the current best option found so far
@@ -117,7 +117,7 @@ def search_for_item(db: Session, item_id: Optional[str], item_name: Optional[str
                 current_steps_list.append(RetrievalStep(
                     step=step_count,
                     action="setAside", # Or "remove", based on operational preference
-                    itemId=blocker_id,
+                    item_id=blocker_id,
                     itemName=blocker_name
                 ))
                 step_count += 1
@@ -126,7 +126,7 @@ def search_for_item(db: Session, item_id: Optional[str], item_name: Optional[str
             current_steps_list.append(RetrievalStep(
                 step=step_count,
                 action="retrieve",
-                itemId=item_info.itemId,
+                item_id=item_info.item_id,
                 itemName=item_info.name
             ))
             step_count += 1
@@ -136,7 +136,7 @@ def search_for_item(db: Session, item_id: Optional[str], item_name: Optional[str
             #     current_steps_list.append(RetrievalStep(
             #         step=step_count,
             #         action="placeBack",
-            #         itemId=blocker_id,
+            #         item_id=blocker_id,
             #         itemName=blocker_name
             #     ))
             #     step_count += 1
@@ -145,9 +145,9 @@ def search_for_item(db: Session, item_id: Optional[str], item_name: Optional[str
 
             # Store details of the best one found so far
             found_item_details = SearchResponseItem(
-                itemId=item_info.itemId,
+                item_id=item_info.item_id,
                 name=item_info.name,
-                containerId=container_info.containerId,
+                container_id=container_info.container_id,
                 zone=container_info.zone,
                 position=target_pos
             )
@@ -170,11 +170,11 @@ def log_item_retrieval(db: Session, request_data: RetrieveRequest) -> SuccessRes
     """
     Logs the retrieval of an item and decrements its usage count.
     """
-    item_id = request_data.itemId
+    item_id = request_data.item_id
     user_id = request_data.userId
     timestamp = request_data.timestamp or datetime.utcnow() # Use provided or now
 
-    item = db.query(DBItem).filter(DBItem.itemId == item_id).first()
+    item = db.query(DBItem).filter(DBItem.item_id == item_id).first()
 
     if not item:
         raise ValueError(f"Item {item_id} not found.") # Or return SuccessResponse(success=False)?
@@ -187,43 +187,51 @@ def log_item_retrieval(db: Session, request_data: RetrieveRequest) -> SuccessRes
 
     # --- Decrement Usage Count ---
     remaining_uses = None
-    if item.usageLimit is not None:
-        item.currentUses += 1
-        remaining_uses = item.usageLimit - item.currentUses
-        if remaining_uses < 0:
-             # This shouldn't ideally happen if checks are done, but handle defensively
-             print(f"Warning: Item {item_id} used more times ({item.currentUses}) than limit ({item.usageLimit}).")
-             remaining_uses = 0 # Cap at 0
-             return SuccessResponse(success=False, error="Usage limit exceeded.")
+    if item.usage_limit is not None and item.usage_limit != "N/A":
+        try:
+            usage_limit_int = int(item.usage_limit)
+            current_uses = getattr(item, 'current_uses', 0)
+            current_uses += 1
+            item.current_uses = current_uses
+            remaining_uses = usage_limit_int - current_uses
+            if remaining_uses < 0:
+                 # This shouldn't ideally happen if checks are done, but handle defensively
+                 print(f"Warning: Item {item_id} used more times ({current_uses}) than limit ({usage_limit_int}).")
+                 remaining_uses = 0 # Cap at 0
+                 return SuccessResponse(success=False, error="Usage limit exceeded.")
 
-        # --- Update Status if Depleted ---
-        if remaining_uses == 0:
-            item.status = ItemStatus.WASTE_DEPLETED
-            action_type = LogActionType.SIMULATION_DEPLETED # Or a specific RETRIEVAL_DEPLETED? Use generic for now.
-            log_details = {
-                "reason": "Usage limit reached upon retrieval",
-                "remainingUses": remaining_uses
-            }
-             # Log the depletion event separately? Or combine with retrieval log? Combine for now.
-            create_log_entry(
-                 db=db,
-                 actionType=LogActionType.SIMULATION_DEPLETED, # Specific log for status change
-                 itemId=item.itemId,
-                 userId=user_id, # User action caused depletion
-                 timestamp=timestamp,
-                 details=log_details
-            )
+            # --- Update Status if Depleted ---
+            if remaining_uses == 0:
+                item.status = ItemStatus.WASTE_DEPLETED
+                action_type = LogActionType.SIMULATION_DEPLETED # Or a specific RETRIEVAL_DEPLETED? Use generic for now.
+                log_details = {
+                    "reason": "Usage limit reached upon retrieval",
+                    "remainingUses": remaining_uses
+                }
+                 # Log the depletion event separately? Or combine with retrieval log? Combine for now.
+                create_log_entry(
+                     db=db,
+                     actionType=LogActionType.SIMULATION_DEPLETED, # Specific log for status change
+                     itemId=item.item_id,
+                     userId=user_id, # User action caused depletion
+                     timestamp=timestamp,
+                     details=log_details
+                )
+        except (ValueError, TypeError):
+            # Handle invalid usage_limit format
+            print(f"Warning: Invalid usage_limit format for item {item_id}: {item.usage_limit}")
+            remaining_uses = None
 
 
     # --- Log the Retrieval Action ---
     # Find current placement for logging details
-    placement = db.query(DBPlacement).filter(DBPlacement.itemId_fk == item_id).first()
+    placement = db.query(DBPlacement).filter(DBPlacement.item_id_fk == item_id).first()
     log_details_retrieval = {
         "remainingUses": remaining_uses,
         "status_after": item.status.value # Log status after potential update
     }
     if placement:
-        log_details_retrieval["containerId"] = placement.containerId_fk
+        log_details_retrieval["containerId"] = placement.container_id_fk
         log_details_retrieval["position"] = Position(
              startCoordinates=Coordinates(width=placement.start_w, depth=placement.start_d, height=placement.start_h),
              endCoordinates=Coordinates(width=placement.end_w, depth=placement.end_d, height=placement.end_h)
@@ -255,34 +263,33 @@ def update_item_placement(db: Session, request_data: PlaceUpdateRequest) -> Succ
     Updates the location of a single, known item after retrieval/use.
     Assumes the item exists and was previously retrieved (or is being placed initially this way).
     """
-    item_id = request_data.itemId
+    item_id = request_data.item_id
     user_id = request_data.userId
     timestamp = request_data.timestamp or datetime.utcnow()
-    new_container_id = request_data.containerId
+    new_container_id = request_data.container_id
     new_pos = request_data.position
 
     # --- Validate Item and Container ---
-    item = db.query(DBItem).filter(DBItem.itemId == item_id).first()
+    item = db.query(DBItem).filter(DBItem.item_id == item_id).first()
     if not item:
         raise ValueError(f"Item {item_id} not found. Cannot update placement.")
 
-    container = db.query(DBContainer).filter(DBContainer.containerId == new_container_id).first()
+    container = db.query(DBContainer).filter(DBContainer.container_id == new_container_id).first()
     if not container:
         raise ValueError(f"Target container {new_container_id} not found.")
 
     # --- Collision Check (Placeholder - needs proper implementation) ---
     # Fetch other items in the *target* container
     existing_placements_in_target = db.query(DBPlacement).filter(
-        DBPlacement.containerId_fk == new_container_id,
-        DBPlacement.itemId_fk != item_id # Exclude the item itself
+        DBPlacement.container_id_fk == new_container_id,
+        DBPlacement.item_id_fk != item_id # Exclude the item itself
     ).all()
 
-    target_container_dims = Coordinates(width=container.width, depth=container.depth, height=container.height)
+    target_container_dims = Coordinates(width=container.width_cm, depth=container.depth_cm, height=container.height_cm)
 
     # Check bounds first
     if not geometry.check_bounds(new_pos, target_container_dims):
          raise ValueError(f"Proposed position for {item_id} is outside the bounds of container {new_container_id}.")
-
 
     for existing in existing_placements_in_target:
          existing_pos = Position(
@@ -290,25 +297,25 @@ def update_item_placement(db: Session, request_data: PlaceUpdateRequest) -> Succ
              endCoordinates=Coordinates(width=existing.end_w, depth=existing.end_d, height=existing.end_h)
          )
          if geometry.check_overlap(new_pos, existing_pos):
-             raise ValueError(f"Proposed position for {item_id} in {new_container_id} overlaps with item {existing.itemId_fk}.") # Use 409 Conflict in route?
+             raise ValueError(f"Proposed position for {item_id} in {new_container_id} overlaps with item {existing.item_id_fk}.") # Use 409 Conflict in route?
 
     print("Placement Update Collision Check Passed (basic).")
 
     # --- Find or Create Placement Record ---
-    placement = db.query(DBPlacement).filter(DBPlacement.itemId_fk == item_id).first()
+    placement = db.query(DBPlacement).filter(DBPlacement.item_id_fk == item_id).first()
     original_container_id = None
     original_position_dict = None
 
     if placement:
         # Record original location for logging
-        original_container_id = placement.containerId_fk
+        original_container_id = placement.container_id_fk
         original_position_dict = Position(
              startCoordinates=Coordinates(width=placement.start_w, depth=placement.start_d, height=placement.start_h),
              endCoordinates=Coordinates(width=placement.end_w, depth=placement.end_d, height=placement.end_h)
         ).dict()
 
         # Update existing placement
-        placement.containerId_fk = new_container_id
+        placement.container_id_fk = new_container_id
         placement.start_w = new_pos.startCoordinates.width
         placement.start_d = new_pos.startCoordinates.depth
         placement.start_h = new_pos.startCoordinates.height
@@ -318,8 +325,8 @@ def update_item_placement(db: Session, request_data: PlaceUpdateRequest) -> Succ
     else:
         # Create new placement if none exists (e.g., first time placing via this API)
         placement = DBPlacement(
-            itemId_fk=item_id,
-            containerId_fk=new_container_id,
+            item_id_fk=item_id,
+            container_id_fk=new_container_id,
             start_w=new_pos.startCoordinates.width,
             start_d=new_pos.startCoordinates.depth,
             start_h=new_pos.startCoordinates.height,
@@ -339,7 +346,6 @@ def update_item_placement(db: Session, request_data: PlaceUpdateRequest) -> Succ
          log_details["fromPosition"] = original_position_dict # Already a dict
     else:
          log_details["status"] = "New placement created via /api/place"
-
 
     create_log_entry(
         db=db,

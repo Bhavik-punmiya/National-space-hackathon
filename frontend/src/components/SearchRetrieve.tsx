@@ -13,9 +13,9 @@ import {
 import toast from "react-hot-toast";
 
 interface Item {
-  itemId: string;
+  item_id: string;
   name: string;
-  containerId?: string;
+  container_id?: string;
   zone?: string;
   position?: {
     startCoordinates: {
@@ -34,7 +34,7 @@ interface Item {
 interface RetrievalStep {
   step: number;
   action: "remove" | "setAside" | "retrieve" | "placeBack";
-  itemId: string;
+  item_id: string;
   itemName: string;
 }
 
@@ -74,9 +74,9 @@ export default function SearchRetrieve() {
         const data = await response.json();
         setAllItems(
           data.items.map((item: any) => ({
-            itemId: item.id,
+            item_id: item.id,
             name: item.name,
-            containerId: item.containerId,
+            container_id: item.containerId,
             zone: item.preferredZone,
             position: item.position,
           })) || []
@@ -102,7 +102,7 @@ export default function SearchRetrieve() {
         setSearchHistory((prev) => [searchTerm, ...prev].slice(0, 5));
       }
 
-      const isItemId = allItems.some((item) => item.itemId === searchValue);
+      const isItemId = allItems.some((item) => item.item_id === searchValue);
       const endpoint = isItemId
         ? `/api/search?itemId=${encodeURIComponent(searchValue)}`
         : `/api/search?itemName=${encodeURIComponent(searchValue)}`;
@@ -144,7 +144,7 @@ export default function SearchRetrieve() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            itemId: itemId,
+            item_id: itemId,
             userId: "user123",
             timestamp: new Date().toISOString(),
           }),
@@ -165,7 +165,7 @@ export default function SearchRetrieve() {
 
         // Remove the retrieved item from search results
         setSearchResults((prev) =>
-          prev.filter((result) => result.item?.itemId !== itemId)
+          prev.filter((result) => result.item?.item_id !== itemId)
         );
 
         // Clear search if no results remain
@@ -311,13 +311,13 @@ export default function SearchRetrieve() {
                           onClick={() => {
                             setSearchTerm(item.name);
                             setShowSuggestions(false);
-                            handleSearch(item.itemId);
+                            handleSearch(item.item_id);
                           }}
                         >
                           <Search size={14} className="mr-2 text-gray-400" />
                           {item.name}{" "}
                           <span className="ml-2 text-xs text-gray-500">
-                            ({item.itemId})
+                            ({item.item_id})
                           </span>
                         </div>
                       ))
@@ -362,13 +362,13 @@ export default function SearchRetrieve() {
                             onClick={() => {
                               setSearchTerm(item.name);
                               setShowSuggestions(false);
-                              handleSearch(item.itemId);
+                              handleSearch(item.item_id);
                             }}
                           >
                             <Search size={14} className="mr-2 text-gray-400" />
                             {item.name}{" "}
                             <span className="ml-2 text-xs text-gray-500">
-                              ({item.itemId})
+                              ({item.item_id})
                             </span>
                           </div>
                         ))}
@@ -395,11 +395,11 @@ export default function SearchRetrieve() {
                           </h3>
                           <div className="flex items-center space-x-2 mb-2">
                             <span className="font-mono text-xs px-2 py-0.5 rounded-md bg-indigo-900/50 text-indigo-300 border border-indigo-700/50">
-                              {result.item.itemId}
+                              {result.item.item_id}
                             </span>
-                            {result.item.containerId && (
+                            {result.item.container_id && (
                               <span className="font-mono text-xs px-2 py-0.5 rounded-md bg-gray-700 text-gray-300 border border-gray-600">
-                                {result.item.containerId}
+                                {result.item.container_id}
                               </span>
                             )}
                           </div>
@@ -437,16 +437,16 @@ export default function SearchRetrieve() {
                         </div>
                         <button
                           onClick={() =>
-                            result.item && handleRetrieve(result.item.itemId)
+                            result.item && handleRetrieve(result.item.item_id)
                           }
-                          disabled={isRetrieving === result.item.itemId}
+                          disabled={isRetrieving === result.item.item_id}
                           className={`px-4 py-2 rounded-md flex items-center space-x-2 transition-all ${
-                            isRetrieving === result.item.itemId
+                            isRetrieving === result.item.item_id
                               ? "bg-gray-700 text-gray-300"
                               : "bg-indigo-600 hover:bg-indigo-500 text-white"
                           } shadow-md border border-indigo-700 ml-3 min-w-24`}
                         >
-                          {isRetrieving === result.item.itemId ? (
+                          {isRetrieving === result.item.item_id ? (
                             <>
                               <Loader2 size={16} className="animate-spin" />
                               <span>Wait...</span>
@@ -502,7 +502,7 @@ export default function SearchRetrieve() {
                                   {step.itemName}
                                 </span>
                                 <span className="ml-1 text-xs text-gray-500">
-                                  ({step.itemId})
+                                  ({step.item_id})
                                 </span>
                               </div>
                             </div>

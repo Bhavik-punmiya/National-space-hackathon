@@ -18,50 +18,37 @@ class Position(BaseModel):
 # --- Item Models ---
 
 class ItemBase(BaseModel):
-    itemId: str
+    item_id: str
     name: str
-    width: float = Field(..., gt=0)
-    depth: float = Field(..., gt=0)
-    height: float = Field(..., gt=0)
-    mass: float = Field(..., gt=0)
+    category: str
+    subcategory: str
+    width_cm: float = Field(..., gt=0)
+    depth_cm: float = Field(..., gt=0)
+    height_cm: float = Field(..., gt=0)
+    mass_kg: float = Field(..., gt=0)
     priority: int = Field(..., ge=0, le=100)
-    expiryDate: Optional[datetime] = None # Accept ISO string, convert to datetime
-    usageLimit: Optional[int] = Field(None, ge=0)
-    preferredZone: Optional[str] = None
-
-    @validator('expiryDate', pre=True, always=True)
-    def parse_expiry_date(cls, value):
-        if value is None:
-            return None
-        if isinstance(value, datetime):
-            return value
-        try:
-            # Use iso8601 library for robust parsing
-            return iso8601.parse_date(value)
-        except iso8601.ParseError as e:
-            raise ValueError(f"Invalid ISO 8601 date format: {value}. Error: {e}")
-        except Exception as e:
-             raise ValueError(f"Error parsing date '{value}': {e}")
-
+    expiry_date: Optional[str] = None # Accept string format (e.g., "2026-06-12" or "N/A")
+    usage_limit: Optional[str] = None # Accept string format (e.g., "314" or "N/A")
+    preferred_zone: Optional[str] = None
 
 class ItemCreate(ItemBase):
     pass # Inherits all fields
 
 class ItemResponse(ItemBase):
-    currentUses: int
     status: str # Use the string representation of the enum
 
     class Config:
-        orm_mode = True # To allow creating from ORM objects
+        from_attributes = True # To allow creating from ORM objects
 
 # --- Container Models ---
 
 class ContainerBase(BaseModel):
-    containerId: str
     zone: str
-    width: float = Field(..., gt=0)
-    depth: float = Field(..., gt=0)
-    height: float = Field(..., gt=0)
+    module_id: str
+    container_id: str
+    width_cm: float = Field(..., gt=0)
+    depth_cm: float = Field(..., gt=0)
+    height_cm: float = Field(..., gt=0)
 
 class ContainerCreate(ContainerBase):
     pass
@@ -70,19 +57,19 @@ class ContainerResponse(ContainerBase):
     id: Optional[int] # Maybe not needed for API response?
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # --- Placement Models ---
 
 class PlacementResponseItem(BaseModel):
-    itemId: str
-    containerId: str
+    item_id: str
+    container_id: str
     position: Position
 
 class RearrangementStep(BaseModel):
     step: int
     action: str # "move", "remove", "place"
-    itemId: str
+    item_id: str
     fromContainer: Optional[str] = None # Null if placing a new item initially in rearrangement
     fromPosition: Optional[Position] = None
     toContainer: str
@@ -104,13 +91,13 @@ class PlacementResponse(BaseModel):
 class RetrievalStep(BaseModel):
     step: int
     action: str # "remove", "setAside", "retrieve", "placeBack"
-    itemId: str
+    item_id: str
     itemName: str
 
 class SearchResponseItem(BaseModel):
-    itemId: str
+    item_id: str
     name: str
-    containerId: str
+    container_id: str
     zone: str
     position: Position
 
@@ -121,7 +108,7 @@ class SearchResponse(BaseModel):
     retrievalSteps: List[RetrievalStep] = []
 
 class RetrieveRequest(BaseModel):
-    itemId: str
+    item_id: str
     userId: Optional[str] = None
     timestamp: Optional[datetime] = None # Accept ISO string, convert to datetime
 
@@ -140,10 +127,10 @@ class RetrieveRequest(BaseModel):
 
 
 class PlaceUpdateRequest(BaseModel):
-    itemId: str
+    item_id: str
     userId: Optional[str] = None
     timestamp: Optional[datetime] = None # Accept ISO string, convert to datetime
-    containerId: str
+    container_id: str
     position: Position
 
     @validator('timestamp', pre=True, always=True)
@@ -166,10 +153,10 @@ class SuccessResponse(BaseModel):
 # --- Waste Models ---
 
 class WasteItemResponse(BaseModel):
-    itemId: str
+    item_id: str
     name: str
     reason: str # "Expired", "Out of Uses"
-    containerId: str
+    container_id: str
     position: Position
 
 class WasteIdentifyResponse(BaseModel):
@@ -195,13 +182,13 @@ class WasteReturnPlanRequest(BaseModel):
 
 class WasteReturnPlanStep(BaseModel):
     step: int
-    itemId: str
+    item_id: str
     itemName: str
     fromContainer: str
     toContainer: str # Should always be the undockingContainerId
 
 class WasteReturnManifestItem(BaseModel):
-    itemId: str
+    item_id: str
     name: str
     reason: str
 
@@ -242,13 +229,13 @@ class WasteCompleteUndockingResponse(BaseModel):
 # --- Simulation Models ---
 
 class SimulationItemUsage(BaseModel):
-    itemId: Optional[str] = None
+    item_id: Optional[str] = None
     name: Optional[str] = None
 
     @validator('name')
     def check_id_or_name(cls, name, values):
-        if not values.get('itemId') and not name:
-            raise ValueError('Either itemId or name must be provided for itemsToBeUsedPerDay')
+        if not values.get('item_id') and not name:
+            raise ValueError('Either item_id or name must be provided for itemsToBeUsedPerDay')
         return name
 
 class SimulationRequest(BaseModel):
@@ -279,16 +266,17 @@ class SimulationRequest(BaseModel):
 
     @validator('itemsToBeUsedPerDay', each_item=True)
     def validate_items_to_be_used(cls, item):
-        if not item.itemId and not item.name:
-            raise ValueError('Each item in itemsToBeUsedPerDay must have either itemId or name')
+        if not item.item_id and not item.name:
+            raise ValueError('Each item in itemsToBeUsedPerDay must have either item_id or name')
         return item
 
 class SimulationItemChange(BaseModel):
-    itemId: str
+    item_id: str
     name: str
+    timestamp: datetime  # Add timestamp for when the change occurred
 
 class SimulationItemUsedChange(SimulationItemChange):
-     remainingUses: Optional[int] # None if usageLimit was null
+     remainingUses: Optional[int] # None if usage_limit was null
 
 class SimulationChanges(BaseModel):
     itemsUsed: List[SimulationItemUsedChange]
@@ -332,11 +320,11 @@ class LogResponseItem(BaseModel):
     timestamp: datetime
     userId: Optional[str] = None
     actionType: str # Enum value as string
-    itemId: Optional[str] = None # Changed from itemId_fk
+    item_id: Optional[str] = None # Changed from item_id_fk
     details: Optional[Dict[str, Any]] = None # Keep as dict for flexibility, validate on creation
 
     class Config:
-        orm_mode = True
+        from_attributes = True
         # Handle potential JSON string in details_json
         # json_encoders = {
         #     dict: lambda v: json.dumps(v) if isinstance(v, dict) else v,

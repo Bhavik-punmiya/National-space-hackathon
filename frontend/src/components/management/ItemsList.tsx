@@ -3,25 +3,28 @@
 // Updated ItemsList component to match our new implementation
 
 interface Item {
-    itemId: string;
+    item_id: string;
     name: string;
-    width: number | null;
-    depth: number | null;
-    height: number | null;
-    mass: number | null;
+    category: string;
+    subcategory: string;
+    width_cm: number | null;
+    depth_cm: number | null;
+    height_cm: number | null;
+    mass_kg: number | null;
     priority: number | null;
-    expiryDate: string | null;
-    usageLimit: string | number | null;
-    preferredZone: string | null;
+    expiry_date: string | null;
+    usage_limit: string | number | null;
+    preferred_zone: string | null;
     _key?: string;
 }
 
 interface Container {
-    containerId: string;
+    container_id: string;
     zone: string | null;
-    width: number | null;
-    depth: number | null;
-    height: number | null;
+    module_id: string;
+    width_cm: number | null;
+    depth_cm: number | null;
+    height_cm: number | null;
     _key?: string;
 }
 
@@ -54,6 +57,8 @@ export default function ItemsList({ items, type, onDelete, onSelect }: ItemsList
                     <tr>
                         <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">ID</th>
                         <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Name</th>
+                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Category</th>
+                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Subcategory</th>
                         <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Dimensions (H×W×D cm)</th>
                         <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Mass (kg)</th>
                         <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Priority</th>
@@ -67,6 +72,7 @@ export default function ItemsList({ items, type, onDelete, onSelect }: ItemsList
                 ) : (
                     <tr>
                         <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Container ID</th>
+                        <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Module</th>
                         <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Zone</th>
                         <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Dimensions (H×W×D cm)</th>
                         {onDelete && (
@@ -80,21 +86,23 @@ export default function ItemsList({ items, type, onDelete, onSelect }: ItemsList
                   ? items.map((item) => {
                       const typedItem = item as Item;
                       return (
-                        <tr key={typedItem._key || typedItem.itemId} className={`hover:bg-gray-550 ${onSelect ? 'cursor-pointer' : ''}`} onClick={() => onSelect?.(item)}>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-200">{typedItem.itemId}</td>
+                        <tr key={typedItem._key || typedItem.item_id} className={`hover:bg-gray-550 ${onSelect ? 'cursor-pointer' : ''}`} onClick={() => onSelect?.(item)}>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-200">{typedItem.item_id}</td>
                           <td className="px-4 py-3 whitespace-nowrap text-sm text-white font-medium">{typedItem.name}</td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-200">{typedItem.category}</td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-200">{typedItem.subcategory}</td>
                           <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-200">
-                              {typedItem.height ?? '?' }×{typedItem.width ?? '?' }×{typedItem.depth ?? '?'}
+                              {typedItem.height_cm ?? '?' }×{typedItem.width_cm ?? '?' }×{typedItem.depth_cm ?? '?'}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-200">{typedItem.mass ?? 'N/A'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-200">{typedItem.mass_kg ?? 'N/A'}</td>
                           <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-200">{typedItem.priority ?? 'N/A'}</td>
                           <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-200">
-                               {typedItem.expiryDate ? new Date(typedItem.expiryDate).toLocaleDateString() : 'N/A'}
+                               {typedItem.expiry_date ? new Date(typedItem.expiry_date).toLocaleDateString() : 'N/A'}
                           </td>
                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-200">
-                              {typedItem.usageLimit ? `${typedItem.usageLimit}${typeof typedItem.usageLimit === 'number' ? ' uses' : ''}` : 'N/A'}
+                              {typedItem.usage_limit ? `${typedItem.usage_limit}${typeof typedItem.usage_limit === 'number' ? ' uses' : ''}` : 'N/A'}
                           </td>
-                           <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-200">{typedItem.preferredZone ?? 'Any'}</td>
+                           <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-200">{typedItem.preferred_zone ?? 'Any'}</td>
                            {onDelete && (
                              <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
                                <button 
@@ -114,11 +122,12 @@ export default function ItemsList({ items, type, onDelete, onSelect }: ItemsList
                   : items.map((container) => {
                       const typedContainer = container as Container;
                       return (
-                        <tr key={typedContainer._key || typedContainer.containerId} className={`hover:bg-gray-550 ${onSelect ? 'cursor-pointer' : ''}`} onClick={() => onSelect?.(container)}>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-200">{typedContainer.containerId}</td>
+                        <tr key={typedContainer._key || typedContainer.container_id} className={`hover:bg-gray-550 ${onSelect ? 'cursor-pointer' : ''}`} onClick={() => onSelect?.(container)}>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-200">{typedContainer.container_id}</td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-200">{typedContainer.module_id}</td>
                           <td className="px-4 py-3 whitespace-nowrap text-sm text-white font-medium">{typedContainer.zone ?? 'N/A'}</td>
                           <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-200">
-                              {typedContainer.height ?? '?' }×{typedContainer.width ?? '?' }×{typedContainer.depth ?? '?'}
+                              {typedContainer.height_cm ?? '?' }×{typedContainer.width_cm ?? '?' }×{typedContainer.depth_cm ?? '?'}
                           </td>
                           {onDelete && (
                             <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">

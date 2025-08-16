@@ -3,11 +3,12 @@
 import { useState } from 'react';
 
 interface Container {
-  containerId: string;
+  container_id: string;
   zone: string | null;
-  width: number | null;
-  depth: number | null;
-  height: number | null;
+  module_id: string;
+  width_cm: number | null;
+  depth_cm: number | null;
+  height_cm: number | null;
 }
 
 interface AddContainerModalProps {
@@ -26,13 +27,16 @@ const ZONES = [
   'Cargo Hold'
 ];
 
+const MODULES = ['M1', 'M2', 'M3'];
+
 export default function AddContainerModal({ onClose, onSubmit }: AddContainerModalProps) {
   const [formData, setFormData] = useState<Omit<Container, '_key'>>({
-    containerId: `cont${Date.now().toString(36)}`,
+    container_id: `cont${Date.now().toString(36)}`,
     zone: 'Crew Quarters',
-    width: 400,
-    depth: 400,
-    height: 400
+    module_id: 'M1',
+    width_cm: 400,
+    depth_cm: 400,
+    height_cm: 400
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -42,9 +46,9 @@ export default function AddContainerModal({ onClose, onSubmit }: AddContainerMod
     const formattedData = {
       ...formData,
       // Ensure numerical values are numbers
-      width: typeof formData.width === 'string' ? parseFloat(formData.width) : formData.width,
-      depth: typeof formData.depth === 'string' ? parseFloat(formData.depth) : formData.depth,
-      height: typeof formData.height === 'string' ? parseFloat(formData.height) : formData.height,
+      width_cm: typeof formData.width_cm === 'string' ? parseFloat(formData.width_cm) : formData.width_cm,
+      depth_cm: typeof formData.depth_cm === 'string' ? parseFloat(formData.depth_cm) : formData.depth_cm,
+      height_cm: typeof formData.height_cm === 'string' ? parseFloat(formData.height_cm) : formData.height_cm,
     };
     
     onSubmit(formattedData);
@@ -57,15 +61,30 @@ export default function AddContainerModal({ onClose, onSubmit }: AddContainerMod
         <h2 className="text-xl font-bold text-white mb-6">Add New Container</h2>
         
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="text-gray-300 text-sm block mb-1">Container ID</label>
-            <input
-              type="text"
-              value={formData.containerId}
-              onChange={(e) => setFormData(prev => ({ ...prev, containerId: e.target.value }))}
-              className="w-full bg-gray-700 rounded-md px-3 py-2 text-white border border-gray-600"
-              required
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-gray-300 text-sm block mb-1">Container ID</label>
+              <input
+                type="text"
+                value={formData.container_id}
+                onChange={(e) => setFormData(prev => ({ ...prev, container_id: e.target.value }))}
+                className="w-full bg-gray-700 rounded-md px-3 py-2 text-white border border-gray-600"
+                required
+              />
+            </div>
+            <div>
+              <label className="text-gray-300 text-sm block mb-1">Module</label>
+              <select
+                value={formData.module_id}
+                onChange={(e) => setFormData(prev => ({ ...prev, module_id: e.target.value }))}
+                className="w-full bg-gray-700 rounded-md px-3 py-2 text-white border border-gray-600"
+                required
+              >
+                {MODULES.map(module => (
+                  <option key={module} value={module}>{module}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div>
@@ -88,8 +107,8 @@ export default function AddContainerModal({ onClose, onSubmit }: AddContainerMod
               <label className="text-gray-300 text-sm block mb-1">Width (cm)</label>
               <input
                 type="number"
-                value={formData.width || ''}
-                onChange={(e) => setFormData(prev => ({ ...prev, width: e.target.value ? Number(e.target.value) : null }))}
+                value={formData.width_cm || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, width_cm: e.target.value ? Number(e.target.value) : null }))}
                 className="w-full bg-gray-700 rounded-md px-3 py-2 text-white border border-gray-600"
                 required
               />
@@ -98,8 +117,8 @@ export default function AddContainerModal({ onClose, onSubmit }: AddContainerMod
               <label className="text-gray-300 text-sm block mb-1">Depth (cm)</label>
               <input
                 type="number"
-                value={formData.depth || ''}
-                onChange={(e) => setFormData(prev => ({ ...prev, depth: e.target.value ? Number(e.target.value) : null }))}
+                value={formData.depth_cm || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, depth_cm: e.target.value ? Number(e.target.value) : null }))}
                 className="w-full bg-gray-700 rounded-md px-3 py-2 text-white border border-gray-600"
                 required
               />
@@ -108,8 +127,8 @@ export default function AddContainerModal({ onClose, onSubmit }: AddContainerMod
               <label className="text-gray-300 text-sm block mb-1">Height (cm)</label>
               <input
                 type="number"
-                value={formData.height || ''}
-                onChange={(e) => setFormData(prev => ({ ...prev, height: e.target.value ? Number(e.target.value) : null }))}
+                value={formData.height_cm || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, height_cm: e.target.value ? Number(e.target.value) : null }))}
                 className="w-full bg-gray-700 rounded-md px-3 py-2 text-white border border-gray-600"
                 required
               />

@@ -16,7 +16,7 @@ interface Item {
   position_end_depth: number
   position_end_height: number
   category: string
-  mass: number
+  mass_kg: number
   quantity: number
   priority: number
 }
@@ -24,9 +24,9 @@ interface Item {
 interface Container {
   id: string
   name: string
-  width: number
-  depth: number
-  height: number
+  width_cm: number
+  depth_cm: number
+  height_cm: number
 }
 
 interface ItemMeshProps {
@@ -169,9 +169,9 @@ const ContainerMesh: React.FC<{ container: Container, maxDimension: number }> = 
   const containerRef = useRef<THREE.LineSegments>(null)
   
   // Normalize dimensions to fit in scene
-  const width = container.width / maxDimension
-  const height = container.height / maxDimension
-  const depth = container.depth / maxDimension
+  const width = container.width_cm / maxDimension
+  const height = container.height_cm / maxDimension
+  const depth = container.depth_cm / maxDimension
   
   return (
     <lineSegments ref={containerRef}>
@@ -189,15 +189,15 @@ const ContainerDimensions: React.FC<{ container: Container }> = ({ container }) 
       <div className="grid grid-cols-3 gap-2 text-sm">
         <div className="text-center">
           <p className="text-gray-300">Width</p>
-          <p className="font-medium">{container.width.toFixed(1)}</p>
+          <p className="font-medium">{container.width_cm.toFixed(1)}</p>
         </div>
         <div className="text-center">
           <p className="text-gray-300">Depth</p>
-          <p className="font-medium">{container.depth.toFixed(1)}</p>
+          <p className="font-medium">{container.depth_cm.toFixed(1)}</p>
         </div>
         <div className="text-center">
           <p className="text-gray-300">Height</p>
-          <p className="font-medium">{container.height.toFixed(1)}</p>
+          <p className="font-medium">{container.height_cm.toFixed(1)}</p>
         </div>
       </div>
     </div>
@@ -239,7 +239,7 @@ const ItemInfoPanel: React.FC<{ item: Item | null }> = ({ item }) => {
       <h3 className="text-lg font-bold mb-2">{item.name}</h3>
       <p className="text-sm mb-1">Category: {item.category}</p>
       <p className="text-sm mb-1">Quantity: {item.quantity}</p>
-      <p className="text-sm mb-1">Mass: {item.mass} kg</p>
+      <p className="text-sm mb-1">Mass: {item.mass_kg} kg</p>
       <p className="text-sm mb-1">Priority: {item.priority}</p>
       <div className="text-xs mt-2 text-gray-300">
         <p>Dimensions: {(item.position_end_width - item.position_start_width).toFixed(1)} × 
@@ -262,7 +262,7 @@ const Scene: React.FC<{
   const { camera } = useThree()
   
   // Find maximum dimension to normalize
-  const maxDimension = Math.max(container.width, container.depth, container.height)
+  const maxDimension = Math.max(container.width_cm, container.depth_cm, container.height_cm)
   
   // Set initial camera position
   useEffect(() => {

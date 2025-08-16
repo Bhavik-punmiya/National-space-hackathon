@@ -1,3 +1,4 @@
+
 # /app/routes/simulation.py
 import logging
 from flask import Blueprint, request, jsonify
@@ -27,6 +28,15 @@ def handle_simulate_day():
             # Convert datetime in response back to ISO string for JSON
             response_dict = response_data.dict()
             response_dict['newDate'] = response_data.newDate.isoformat()
+            
+            # Convert timestamps in changes to ISO strings
+            for change in response_dict['changes']['itemsUsed']:
+                change['timestamp'] = change['timestamp'].isoformat()
+            for change in response_dict['changes']['itemsExpired']:
+                change['timestamp'] = change['timestamp'].isoformat()
+            for change in response_dict['changes']['itemsDepletedToday']:
+                change['timestamp'] = change['timestamp'].isoformat()
+            
             return jsonify(response_dict)
         except Exception as e:
             db.rollback()

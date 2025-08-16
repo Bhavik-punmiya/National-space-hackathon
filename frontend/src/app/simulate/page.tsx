@@ -17,9 +17,9 @@ interface SimulationResponse {
   success: boolean;
   newDate: string;
   changes: {
-    itemsUsed: { itemId: string; name: string; remainingUses: number }[];
-    itemsExpired: { itemId: string; name: string }[];
-    itemsDepletedToday: { itemId: string; name: string }[];
+    itemsUsed: { item_id: string; name: string; remainingUses: number; timestamp: string }[];
+    itemsExpired: { item_id: string; name: string; timestamp: string }[];
+    itemsDepletedToday: { item_id: string; name: string; timestamp: string }[];
   };
 }
 
@@ -29,7 +29,7 @@ export default function SimulatePage() {
   const [simulationResult, setSimulationResult] =
     useState<SimulationResponse | null>(null);
   const [filter, setFilter] = useState<
-    "itemsUsed" | "itemsExpired" | "itemsDepletedToday"
+    "itemsUsed" | "itemsExpired" | "itemsDepletedToday" | "allEvents"
   >("itemsUsed");
   const [isOpen, setOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -84,7 +84,7 @@ export default function SimulatePage() {
       const requestBody = {
         numOfDays, // Send numOfDays instead of toTimestamp
         itemsToBeUsedPerDay: selectedItems.map((item) => ({
-          itemId: item.itemId,
+          item_id: item.itemId,
           name: item.name,
         })),
       };

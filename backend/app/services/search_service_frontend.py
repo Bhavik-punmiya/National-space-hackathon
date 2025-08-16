@@ -1,149 +1,148 @@
-from typing import List, Dict, Any, Set
+from sqlalchemy.orm import Session
+from sqlalchemy import or_, and_
+from typing import List, Optional
 from app.models_db import Item, Container, Placement
-from app.api.models_api_search import SearchResult, SearchGroupedResults, SearchResponse
+from app.api.models_api_frontend import ItemFrontendResponse, ContainerFrontendResponse
 
-class SearchService:
-    """Service for searching items, containers and zones."""
+def search_items_frontend(db_session: Session, search_term: str) -> List[ItemFrontendResponse]:
+    """
+    Search for items by name, ID, or preferred zone.
+    Returns items with their placement information if available.
+    """
+    if not search_term:
+        return []
+
+    # Build the query with joins to get placement and container info
+    query = (db_session.query(Item, Placement, Container)
+             .outerjoin(Placement, Item.item_id == Placement.item_id_fk)  # outer join to include items without placement
+             .outerjoin(Container, Placement.container_id_fk == Container.container_id))  # outer join to include items without container
+
+    # Apply search filters
+    query = query.filter(
+        or_(
+            (Item.name.ilike(f"%{search_term}%")) |
+            (Item.item_id.ilike(f"%{search_term}%")) |
+            (Item.preferred_zone.ilike(f"%{search_term}%"))
+        )
+    )
+
+    results = query.all()
     
-    @staticmethod
-    def search_items(db_session, query: str, limit: int = 20) -> SearchResponse:
-        """
-        Dynamically search for items, containers, and zones based on a partial query string.
-        This supports incremental character-by-character searching for autocomplete functionality.
+    # Also search by container ID if the search term looks like a container ID
+    if search_term.upper().startswith(('M1-', 'M2-', 'M3-')):
+        container_query = (db_session.query(Item, Placement, Container)
+                          .join(Placement, Item.item_id == Placement.item_id_fk)
+                          .join(Container, Placement.container_id_fk == Container.container_id)
+                          .filter(Container.container_id.ilike(f"%{search_term}%")))
         
-        Args:
-            db_session: Database session
-            query: Search query string (even partial characters)
-            limit: Maximum number of results per category (default: 20)
-            
-        Returns:
-            SearchResponse object with grouped results
-        """
-        if not query or len(query.strip()) == 0:
-            # Return empty results for empty queries
-            return SearchResponse(
-                query=query,
-                results=SearchGroupedResults(),
-                total_count=0
-            )
-            
-        # Normalize query for case-insensitive search
-        search_term = f"%{query.lower()}%"
+        container_results = container_query.all()
+        results.extend(container_results)
+
+    # Also search by zone name
+    zone_query = (db_session.query(Item, Placement, Container)
+                  .outerjoin(Placement, Item.item_id == Placement.item_id_fk)
+                  .outerjoin(Container, Placement.container_id_fk == Container.container_id)
+                  .filter(
+                      and_(
+                          (Item.preferred_zone.ilike(f"%{search_term}%")) &
+                          (Item.preferred_zone.isnot(None))
+                      )
+                  ))
+    
+    zone_results = zone_query.all()
+    results.extend(zone_results)
+
+    # Convert to response format
+    items_response = []
+    seen_item_ids = set()
+
+    for item, placement, container in results:
+        if item.item_id in seen_item_ids:
+            continue
         
-        # Search for items by id, name, category
-        matching_items = (
-            db_session.query(Item, Placement, Container)
-            .outerjoin(Placement, Item.itemId == Placement.itemId_fk)  # outer join to include items without placement
-            .outerjoin(Container, Placement.containerId_fk == Container.containerId)  # outer join to include items without container
-            .filter(
-                # Match any of these fields
-                (Item.itemId.ilike(search_term)) |
-                (Item.name.ilike(search_term)) |
-                (Item.preferredZone.ilike(search_term))
-            )
-            .limit(limit)
-            .all()
-        )
+        seen_item_ids.add(item.item_id)
+        container_id = placement.container_id_fk if placement else None
         
-        # Search for containers by id
-        matching_containers = (
-            db_session.query(Container)
-            .filter(Container.containerId.ilike(search_term))
-            .limit(limit)
-            .all()
-        )
+        # Get position coordinates if placement exists
+        position_start_width = placement.start_w if placement else 0.0
+        position_start_depth = placement.start_d if placement else 0.0
+        position_start_height = placement.start_h if placement else 0.0
+        position_end_width = placement.end_w if placement else 0.0
+        position_end_depth = placement.end_d if placement else 0.0
+        position_end_height = placement.end_h if placement else 0.0
         
-        # Search for zones (distinct zones from both Items and Containers)
-        zones_from_items = (
-            db_session.query(Item.preferredZone)
-            .filter(
-                (Item.preferredZone.ilike(search_term)) &
-                (Item.preferredZone.isnot(None))
-            )
-            .distinct()
-            .limit(limit)
-            .all()
-        )
+        items_response.append(ItemFrontendResponse(
+            id=item.item_id,
+            name=item.name,
+            category=item.category,
+            subcategory=item.subcategory,
+            containerId=container_id or "",
+            quantity=1,
+            mass_kg=item.mass_kg,
+            expirationDate=item.expiry_date,
+            width_cm=item.width_cm,
+            depth_cm=item.depth_cm,
+            height_cm=item.height_cm,
+            priority=item.priority,
+            usageLimit=item.usage_limit,
+            usageCount=getattr(item, 'current_uses', 0),
+            preferredZone=item.preferred_zone,
+            position_start_width=position_start_width,
+            position_start_depth=position_start_depth,
+            position_start_height=position_start_height,
+            position_end_width=position_end_width,
+            position_end_depth=position_end_depth,
+            position_end_height=position_end_height
+        ))
+
+    return items_response
+
+def search_containers_frontend(db_session: Session, search_term: str) -> List[ContainerFrontendResponse]:
+    """
+    Search for containers by ID or zone.
+    """
+    if not search_term:
+        return []
+
+    # Search by container ID or zone
+    query = (db_session.query(Container)
+             .filter(
+                 or_(
+                     Container.container_id.ilike(f"%{search_term}%"),
+                     Container.zone.ilike(f"%{search_term}%")
+                 )
+             ))
+
+    results = query.all()
+    
+    # Convert to response format
+    containers_response = []
+    seen_container_ids = set()
+
+    for container in results:
+        if container.container_id in seen_container_ids:
+            continue
         
-        zones_from_containers = (
-            db_session.query(Container.zone)
-            .filter(Container.zone.ilike(search_term))
-            .distinct()
-            .limit(limit)
-            .all()
-        )
+        seen_container_ids.add(container.container_id)
         
-        # Process item results
-        item_results = []
-        seen_item_ids = set()
-        
-        for item, placement, container in matching_items:
-            if item.itemId in seen_item_ids:
-                continue
-                
-            seen_item_ids.add(item.itemId)
-            container_id = placement.containerId_fk if placement else None
-            
-            item_results.append(
-                SearchResult(
-                    id=item.itemId,
-                    name=item.name,
-                    category="Maintenance Tools",  # Default as specified in requirements
-                    containerId=container_id,
-                    preferredZone=item.preferredZone,
-                    type="item"
-                )
-            )
-        
-        # Process container results
-        container_results = []
-        seen_container_ids = set()
-        
-        for container in matching_containers:
-            if container.containerId in seen_container_ids:
-                continue
-                
-            seen_container_ids.add(container.containerId)
-            
-            container_results.append(
-                SearchResult(
-                    id=container.containerId,
-                    name=container.containerId,  # Using ID as name
-                    preferredZone=container.zone,
-                    type="container"
-                )
-            )
-        
-        # Process zone results (merge from both sources)
-        all_zones = set()
-        for zone_tuple in zones_from_items:
-            all_zones.add(zone_tuple[0])
-        
-        for zone_tuple in zones_from_containers:
-            all_zones.add(zone_tuple[0])
-        
-        zone_results = [
-            SearchResult(
-                id=zone,
-                name=zone,
-                type="zone"
-            )
-            for zone in all_zones
-        ]
-        
-        # Create grouped results
-        grouped_results = SearchGroupedResults(
-            items=item_results,
-            containers=container_results,
-            zones=zone_results
-        )
-        
-        # Calculate total count
-        total_count = len(item_results) + len(container_results) + len(zone_results)
-        
-        # Return formatted response
-        return SearchResponse(
-            query=query,
-            results=grouped_results,
-            total_count=total_count
-        )
+        containers_response.append(ContainerFrontendResponse(
+            id=container.container_id,
+            name=container.container_id,  # Using ID as name
+            type="Supply Container",
+            zoneId=container.zone,
+            module_id=container.module_id,
+            capacity=0,
+            width_cm=container.width_cm,
+            depth_cm=container.depth_cm,
+            height_cm=container.height_cm,
+            maxWeight=0.0,
+            currentWeight=0.0,
+            start_width=None,
+            start_depth=None,
+            start_height=None,
+            end_width=None,
+            end_depth=None,
+            end_height=None
+        ))
+
+    return containers_response

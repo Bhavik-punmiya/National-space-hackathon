@@ -6,13 +6,14 @@ from datetime import datetime
 class ContainerFrontendResponse(BaseModel):
     """Container model matching the CSV format expected by the frontend."""
     id: str
-    name: str  # Using containerId as name since original model doesn't have a name field
+    name: str  # Using container_id as name since original model doesn't have a name field
     type: str = "Supply Container"  # Default value, adjust as needed
     zoneId: str
+    module_id: str  # Added module_id field
     capacity: int = 0  # Default value, not in original model
-    width: float
-    depth: float
-    height: float
+    width_cm: float
+    depth_cm: float
+    height_cm: float
     maxWeight: float = 0.0  # Default value, not in original model
     currentWeight: float = 0.0  # Default value, not in original model
     start_width: Optional[float] = None
@@ -26,16 +27,17 @@ class ItemFrontendResponse(BaseModel):
     """Item model matching the CSV format expected by the frontend."""
     id: str
     name: str
-    category: str = "Maintenance Tools"  # Default value, not in original model
+    category: str  # Item category (e.g., Medical, Food, Equipment)
+    subcategory: str  # Item subcategory (e.g., Antibiotic_Supply, Food_Packet)
     containerId: str
     quantity: int = 1  # Default value, not in original model
-    mass: float
-    expirationDate: Optional[datetime] = None
-    width: float
-    depth: float
-    height: float
+    mass_kg: float
+    expirationDate: Optional[str] = None  # Changed to string to handle "N/A" values
+    width_cm: float
+    depth_cm: float
+    height_cm: float
     priority: int
-    usageLimit: Optional[int] = None
+    usageLimit: Optional[str] = None  # Changed to string to handle "N/A" values
     usageCount: int = 0
     preferredZone: Optional[str] = None
     position_start_width: float

@@ -43,14 +43,13 @@ def simulate_time_passage(db: Session, request_data: SimulationRequest, user_id:
 
     item_filters = []
     for usage_request in request_data.itemsToBeUsedPerDay:
-        if usage_request.itemId:
-            item_filters.append(DBItem.itemId == usage_request.itemId)
+        if usage_request.item_id:
+            item_filters.append(DBItem.item_id == usage_request.item_id)
         elif usage_request.name:
             item_filters.append(DBItem.name == usage_request.name)
 
     # Ensure all filters are valid before applying
     item_filters = [f for f in item_filters if f is not None]
-
 
     # Build the query
     query = db.query(DBItem).filter(DBItem.status == ItemStatus.ACTIVE) # Default filter
@@ -58,7 +57,6 @@ def simulate_time_passage(db: Session, request_data: SimulationRequest, user_id:
         query = query.filter(item_filters[0])
     elif len(item_filters) > 1:
         query = query.filter(or_(*item_filters))
-
 
     try:
         items_to_process = query.all()
@@ -72,23 +70,62 @@ def simulate_time_passage(db: Session, request_data: SimulationRequest, user_id:
 
         # Process item usage
         for item in items_to_process:
-            if item.usageLimit is not None and item.currentUses < item.usageLimit:
-                item.currentUses += 1
-                remaining_uses = max(0, item.usageLimit - item.currentUses)
-                if remaining_uses == 0:
-                    item.status = ItemStatus.WASTE_DEPLETED
-                    if not any(c.itemId == item.itemId for c in items_depleted_changes):
-                        items_depleted_changes.append(SimulationItemChange(itemId=item.itemId, name=item.name))
-                items_used_changes.append(SimulationItemUsedChange(itemId=item.itemId, name=item.name, remainingUses=remaining_uses))
-                create_log_entry(db, LogActionType.SIMULATION_USE, item.itemId, current_time, {"remainingUses": remaining_uses})
+            if item.usage_limit is not None and item.usage_limit != "N/A":
+                try:
+                    usage_limit_int = int(item.usage_limit)
+                    current_uses = getattr(item, 'current_uses', 0)
+                    if current_uses < usage_limit_int:
+                        item.current_uses = current_uses + 1
+                        remaining_uses = max(0, usage_limit_int - item.current_uses)
+                        if remaining_uses == 0:
+                            item.status = ItemStatus.WASTE_DEPLETED
+                            if not any(c.item_id == item.item_id for c in items_depleted_changes):
+                                items_depleted_changes.append(SimulationItemChange(
+                                    item_id=item.item_id, 
+                                    name=item.name,
+                                    timestamp=current_time
+                                ))
+                        items_used_changes.append(SimulationItemUsedChange(
+                            item_id=item.item_id, 
+                            name=item.name, 
+                            remainingUses=remaining_uses,
+                            timestamp=current_time
+                        ))
+                        create_log_entry(db, LogActionType.SIMULATION_USE, item.item_id, current_time, {"remainingUses": remaining_uses})
+                except (ValueError, TypeError):
+                    # Skip items with invalid usage_limit format
+                    continue
 
         # Check for expired items
-        expired_items = db.query(DBItem).filter(DBItem.status == ItemStatus.ACTIVE, DBItem.expiryDate <= day_end).all()
+        expired_items = db.query(DBItem).filter(
+            DBItem.status == ItemStatus.ACTIVE,
+            DBItem.expiry_date != None,
+            DBItem.expiry_date != "N/A"
+        ).all()
+        
         for item in expired_items:
-            item.status = ItemStatus.WASTE_EXPIRED
-            if not any(c.itemId == item.itemId for c in items_expired_changes):
-                items_expired_changes.append(SimulationItemChange(itemId=item.itemId, name=item.name))
-            create_log_entry(db, LogActionType.SIMULATION_EXPIRED, item.itemId, day_end, {"reason": "Item expired"})
+            try:
+                # Handle different date formats
+                expiry_date_str = item.expiry_date
+                if 'T' in expiry_date_str:
+                    # ISO format: "2021-03-29T00:00:00.000Z"
+                    expiry_date = datetime.fromisoformat(expiry_date_str.replace('Z', '+00:00'))
+                else:
+                    # Simple date format: "2021-03-29"
+                    expiry_date = datetime.strptime(expiry_date_str, "%Y-%m-%d")
+                
+                if expiry_date <= day_end:
+                    item.status = ItemStatus.WASTE_EXPIRED
+                    if not any(c.item_id == item.item_id for c in items_expired_changes):
+                        items_expired_changes.append(SimulationItemChange(
+                            item_id=item.item_id, 
+                            name=item.name,
+                            timestamp=day_end
+                        ))
+                    create_log_entry(db, LogActionType.SIMULATION_EXPIRED, item.item_id, day_end, {"reason": "Item expired"})
+            except (ValueError, TypeError) as e:
+                logging.warning(f"Invalid date format for item {item.item_id}: {item.expiry_date} - Error: {e}")
+                continue
 
         # Commit daily changes
         # try:

@@ -10,25 +10,28 @@ import AddItemModal from '@/components/management/AddItemModal';
 import AddContainerModal from '@/components/management/AddContainerModal';
 
 interface Item {
-  itemId: string;
+  item_id: string;
   name: string;
-  width: number | null;
-  depth: number | null;
-  height: number | null;
-  mass: number | null;
+  category: string;
+  subcategory: string;
+  width_cm: number | null;
+  depth_cm: number | null;
+  height_cm: number | null;
+  mass_kg: number | null;
   priority: number | null;
-  expiryDate: string | null;
-  usageLimit: string | number | null;
-  preferredZone: string | null;
+  expiry_date: string | null;
+  usage_limit: string | null;
+  preferred_zone: string | null;
   _key?: string;
 }
 
 interface Container {
-  containerId: string;
+  container_id: string;
   zone: string | null;
-  width: number | null;
-  depth: number | null;
-  height: number | null;
+  module_id: string;
+  width_cm: number | null;
+  depth_cm: number | null;
+  height_cm: number | null;
   _key?: string;
 }
 
@@ -47,13 +50,13 @@ interface PlacementPosition {
 }
 
 interface PlacementItem {
-  itemId: string;
-  containerId: string;
+  item_id: string;
+  container_id: string;
   position: PlacementPosition;
 }
 
 interface RearrangementItem {
-  itemId: string;
+  item_id: string;
   fromContainerId: string;
   toContainerId: string;
   position: PlacementPosition;
@@ -174,30 +177,38 @@ export default function ManagementPage() {
   const processItemCsvData = (data: Record<string, string>[]) => {
     const newItems: Item[] = data.map((row, index) => ({
       _key: `csv-${Date.now()}-${index}`,
-      itemId: row['item_id'] || `generated-${Date.now()}-${index}`,
+      item_id: row['item_id'] || `generated-${Date.now()}-${index}`,
       name: row['name'] || 'Unnamed Item',
-      width: parseFloat(row['width_cm']) || null,
-      depth: parseFloat(row['depth_cm']) || null,
-      height: parseFloat(row['height_cm']) || null,
-      mass: parseFloat(row['mass_kg']) || null,
+      category: row['category'] || 'Unknown',
+      subcategory: row['subcategory'] || 'Unknown',
+      width_cm: parseFloat(row['width_cm']) || null,
+      depth_cm: parseFloat(row['depth_cm']) || null,
+      height_cm: parseFloat(row['height_cm']) || null,
+      mass_kg: parseFloat(row['mass_kg']) || null,
       priority: parseInt(row['priority'], 10) || null,
-      expiryDate: row['expiry_date'] && row['expiry_date'].toUpperCase() !== 'N/A' ? new Date(row['expiry_date']).toISOString() : null,
-      usageLimit: row['usage_limit'] && row['usage_limit'].toUpperCase() !== 'N/A' ? parseInt(row['usage_limit'].replace(/\D/g, ''), 10) || null : null,
-      preferredZone: row['preferred_zone'] || null,
+      expiry_date: row['expiry_date'] && row['expiry_date'].toUpperCase() !== 'N/A' ? new Date(row['expiry_date']).toISOString() : null,
+      usage_limit: row['usage_limit'] ? String(row['usage_limit']) : null,
+      preferred_zone: row['preferred_zone'] || null,
     })).filter(item => item.name !== 'Unnamed Item');
 
-    setItems(prevItems => [...prevItems, ...newItems]);
+    // Ensure usage_limit is always a string in the state
+    const processedItems = newItems.map(item => ({
+      ...item,
+      usage_limit: item.usage_limit ? String(item.usage_limit) : null
+    }));
+    setItems(prevItems => [...prevItems, ...processedItems]);
     toast.success(`Added ${newItems.length} items`);
   };
 
   const processContainerCsvData = (data: Record<string, string>[]) => {
     const newContainers: Container[] = data.map((row, index) => ({
       _key: `csv-cont-${Date.now()}-${index}`,
-      containerId: row['container_id'] || `generated-cont-${Date.now()}-${index}`,
+      container_id: row['container_id'] || `generated-cont-${Date.now()}-${index}`,
       zone: row['zone'] || 'Default Zone',
-      width: parseFloat(row['width_cm']) || null,
-      depth: parseFloat(row['depth_cm']) || null,
-      height: parseFloat(row['height_cm']) || null,
+      module_id: row['module_id'] || 'M1',
+      width_cm: parseFloat(row['width_cm']) || null,
+      depth_cm: parseFloat(row['depth_cm']) || null,
+      height_cm: parseFloat(row['height_cm']) || null,
     })).filter(cont => cont.zone !== 'Default Zone');
 
     setContainers(prevContainers => [...prevContainers, ...newContainers]);
@@ -208,8 +219,8 @@ export default function ManagementPage() {
     // Format the date as ISO string if it exists
     const formattedItem = {
       ...newItem,
-      expiryDate: newItem.expiryDate ? new Date(newItem.expiryDate).toISOString() : null,
-      usageLimit: typeof newItem.usageLimit === 'string' ? parseInt(newItem.usageLimit.replace(/\D/g, ''), 10) || null : newItem.usageLimit,
+      expiry_date: newItem.expiry_date ? new Date(newItem.expiry_date).toISOString() : null,
+      usage_limit: newItem.usage_limit ? String(newItem.usage_limit) : null,
     };
     
     setItems(prevItems => [...prevItems, { ...formattedItem, _key: `manual-${Date.now()}` }]);
@@ -220,13 +231,13 @@ export default function ManagementPage() {
     // Ensure all numerical values are proper numbers, not strings
     const formattedContainer = {
       ...newContainer,
-      width: typeof newContainer.width === 'string' ? parseFloat(newContainer.width) : newContainer.width,
-      depth: typeof newContainer.depth === 'string' ? parseFloat(newContainer.depth) : newContainer.depth,
-      height: typeof newContainer.height === 'string' ? parseFloat(newContainer.height) : newContainer.height,
+      width_cm: typeof newContainer.width_cm === 'string' ? parseFloat(newContainer.width_cm) : newContainer.width_cm,
+      depth_cm: typeof newContainer.depth_cm === 'string' ? parseFloat(newContainer.depth_cm) : newContainer.depth_cm,
+      height_cm: typeof newContainer.height_cm === 'string' ? parseFloat(newContainer.height_cm) : newContainer.height_cm,
     };
     
     setContainers(prevContainers => [...prevContainers, { ...formattedContainer, _key: `manual-cont-${Date.now()}` }]);
-    toast.success(`Added container: ${newContainer.containerId}`);
+    toast.success(`Added container: ${newContainer.container_id}`);
   };
 
   const handlePlacement = async () => {
@@ -248,42 +259,43 @@ export default function ManagementPage() {
 
         // Ensure all items have properly formatted data
         const formattedItems = batch.map(item => ({
-          itemId: item.itemId,
+          item_id: item.item_id,
           name: item.name,
-          width: Number(item.width),
-          depth: Number(item.depth),
-          height: Number(item.height),
-          mass: Number(item.mass),
+          category: item.category,
+          subcategory: item.subcategory,
+          width_cm: Number(item.width_cm),
+          depth_cm: Number(item.depth_cm),
+          height_cm: Number(item.height_cm),
+          mass_kg: Number(item.mass_kg),
           priority: Number(item.priority),
           // Format date with Z timezone indicator
-          expiryDate: item.expiryDate ? item.expiryDate.endsWith('Z') ? item.expiryDate : `${new Date(item.expiryDate).toISOString().split('.')[0]}Z` : null,
-          usageLimit: typeof item.usageLimit === 'string' 
-            ? parseInt(item.usageLimit.replace(/\D/g, ''), 10) || null 
-            : typeof item.usageLimit === 'number' ? item.usageLimit : null,
-          preferredZone: item.preferredZone,
+          expiry_date: item.expiry_date ? item.expiry_date.endsWith('Z') ? item.expiry_date : `${new Date(item.expiry_date).toISOString().split('.')[0]}Z` : null,
+          usage_limit: item.usage_limit ? String(item.usage_limit) : null,
+          preferred_zone: item.preferred_zone,
         })).filter(item => 
-          item.itemId && 
+          item.item_id && 
           item.name && 
-          !isNaN(item.width) && 
-          !isNaN(item.depth) && 
-          !isNaN(item.height) && 
-          !isNaN(item.mass) && 
+          !isNaN(item.width_cm) && 
+          !isNaN(item.depth_cm) && 
+          !isNaN(item.height_cm) && 
+          !isNaN(item.mass_kg) && 
           !isNaN(item.priority)
         );
 
         // Ensure all containers have properly formatted data
         const formattedContainers = containers.map(cont => ({
-          containerId: cont.containerId,
+          container_id: cont.container_id,
           zone: cont.zone,
-          width: Number(cont.width),
-          depth: Number(cont.depth),
-          height: Number(cont.height),
+          module_id: cont.module_id,
+          width_cm: Number(cont.width_cm),
+          depth_cm: Number(cont.depth_cm),
+          height_cm: Number(cont.height_cm),
         })).filter(cont => 
-          cont.containerId && 
+          cont.container_id && 
           cont.zone && 
-          !isNaN(cont.width) && 
-          !isNaN(cont.depth) && 
-          !isNaN(cont.height)
+          !isNaN(cont.width_cm) && 
+          !isNaN(cont.depth_cm) && 
+          !isNaN(cont.height_cm)
         );
 
         const apiPayload = {
@@ -292,8 +304,9 @@ export default function ManagementPage() {
         };
 
         console.log("Sending to Placement API (Batch):", JSON.stringify(apiPayload, null, 2));
+        console.log("Sample usage_limit values:", formattedItems.slice(0, 3).map(item => ({ item_id: item.item_id, usage_limit: item.usage_limit, type: typeof item.usage_limit })));
 
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+        const apiUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:8000';
         const response = await fetch(`${apiUrl}/api/placement`, {
           method: 'POST',
           headers: {
@@ -558,21 +571,21 @@ export default function ManagementPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-gray-700 divide-y divide-gray-600">
-                  {(getPaginatedData() as PlacementItem[]).map((placement, index) => (
-                    <tr key={`${placement.itemId}-${index}`} className="hover:bg-gray-650">
-                      <td className="px-4 py-3 text-sm font-medium text-white">
-                        {(currentPage - 1) * itemsPerPage + index + 1}
-                      </td>
-                      <td className="px-4 py-3 text-sm font-medium">
-                        <span className="px-2 py-1 bg-gray-600 text-gray-200 text-xs font-mono rounded">
-                          {placement.itemId}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-sm">
-                        <span className="px-2 py-1 bg-blue-600 text-gray-200 text-xs font-mono rounded">
-                          {placement.containerId}
-                        </span>
-                      </td>
+                                     {(getPaginatedData() as PlacementItem[]).map((placement, index) => (
+                     <tr key={`${placement.item_id}-${index}`} className="hover:bg-gray-650">
+                       <td className="px-4 py-3 text-sm font-medium text-white">
+                         {(currentPage - 1) * itemsPerPage + index + 1}
+                       </td>
+                       <td className="px-4 py-3 text-sm font-medium">
+                         <span className="px-2 py-1 bg-gray-600 text-gray-200 text-xs font-mono rounded">
+                           {placement.item_id}
+                         </span>
+                       </td>
+                       <td className="px-4 py-3 text-sm">
+                         <span className="px-2 py-1 bg-blue-600 text-gray-200 text-xs font-mono rounded">
+                           {placement.container_id}
+                         </span>
+                       </td>
                       <td className="px-4 py-3 text-sm text-gray-300 font-mono">
                         {formatPosition(placement.position)}
                       </td>
@@ -630,16 +643,16 @@ export default function ManagementPage() {
                       </tr>
                     </thead>
                     <tbody className="bg-gray-700 divide-y divide-gray-600">
-                      {(getPaginatedData() as RearrangementItem[]).map((rearrangement, index) => (
-                        <tr key={`${rearrangement.itemId}-${index}`} className="hover:bg-gray-650">
-                          <td className="px-4 py-3 text-sm font-medium text-white">
-                            {(currentPage - 1) * itemsPerPage + index + 1}
-                          </td>
-                          <td className="px-4 py-3 text-sm font-medium">
-                            <span className="px-2 py-1 bg-gray-600 text-gray-200 text-xs font-mono rounded">
-                              {rearrangement.itemId}
-                            </span>
-                          </td>
+                                             {(getPaginatedData() as RearrangementItem[]).map((rearrangement, index) => (
+                         <tr key={`${rearrangement.item_id}-${index}`} className="hover:bg-gray-650">
+                           <td className="px-4 py-3 text-sm font-medium text-white">
+                             {(currentPage - 1) * itemsPerPage + index + 1}
+                           </td>
+                           <td className="px-4 py-3 text-sm font-medium">
+                             <span className="px-2 py-1 bg-gray-600 text-gray-200 text-xs font-mono rounded">
+                               {rearrangement.item_id}
+                             </span>
+                           </td>
                           <td className="px-4 py-3 text-sm">
                             <span className="px-2 py-1 bg-purple-600 text-gray-200 text-xs font-mono rounded">
                               {rearrangement.fromContainerId}

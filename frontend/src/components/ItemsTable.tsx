@@ -45,6 +45,7 @@ export function ItemsTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<ItemStatus | "">("");
   const [preferredZoneFilter, setPreferredZoneFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
   const [isPlaceModalOpen, setIsPlaceModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
@@ -74,6 +75,7 @@ export function ItemsTable() {
     if (statusFilter) params.append("status", statusFilter);
     if (preferredZoneFilter)
       params.append("preferred_zone", preferredZoneFilter);
+    if (categoryFilter) params.append("category", categoryFilter);
 
     try {
       const response = await fetch(
@@ -97,7 +99,7 @@ export function ItemsTable() {
     } finally {
       setIsLoading(false);
     }
-  }, [currentPage, debouncedSearchTerm, statusFilter, preferredZoneFilter]);
+  }, [currentPage, debouncedSearchTerm, statusFilter, preferredZoneFilter, categoryFilter]);
 
   useEffect(() => {
     fetchData();
@@ -120,7 +122,7 @@ export function ItemsTable() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          itemId: selectedItem.itemId,
+          itemId: selectedItem.item_id, // Updated field name
           userId: "current-user-id", // Replace with actual user ID
           timestamp: new Date().toISOString(),
           containerId: containerId,
@@ -244,15 +246,10 @@ export function ItemsTable() {
             </SelectTrigger>
             <SelectContent className="bg-gray-800 border-2 border-gray-700 text-white">
               <SelectItem value="all">All Statuses</SelectItem>
-              {Object.values(ItemStatus).map((status) => (
-                <SelectItem key={status} value={status}>
-                  {status === 'active' ? 'Active' : 
-                   status === 'expired' ? 'Waste Expired' :
-                   status === 'depleted' ? 'Waste Depleted' :
-                   status === 'disposed' ? 'Disposed' : 
-                   String(status).charAt(0).toUpperCase() + String(status).slice(1)}
-                </SelectItem>
-              ))}
+              <SelectItem value="active">Active</SelectItem>
+              <SelectItem value="expired">Waste Expired</SelectItem>
+              <SelectItem value="depleted">Waste Depleted</SelectItem>
+              <SelectItem value="disposed">Disposed</SelectItem>
             </SelectContent>
           </Select>
           <div className="relative">
@@ -263,6 +260,17 @@ export function ItemsTable() {
               placeholder="Filter Preferred Zone"
               value={preferredZoneFilter}
               onChange={(e) => setPreferredZoneFilter(e.target.value)}
+              className="w-[180px] bg-gray-700 text-white border-2 border-gray-600 pl-10 py-6 focus:ring-indigo-500 focus:border-indigo-500 shadow-lg shadow-black/10"
+            />
+          </div>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Filter size={16} className="text-gray-400" />
+            </div>
+            <Input
+              placeholder="Filter Category"
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
               className="w-[180px] bg-gray-700 text-white border-2 border-gray-600 pl-10 py-6 focus:ring-indigo-500 focus:border-indigo-500 shadow-lg shadow-black/10"
             />
           </div>
@@ -289,6 +297,12 @@ export function ItemsTable() {
                 Item ID
               </TableHead>
               <TableHead className="text-gray-300 font-semibold">
+                Category
+              </TableHead>
+              <TableHead className="text-gray-300 font-semibold">
+                Subcategory
+              </TableHead>
+              <TableHead className="text-gray-300 font-semibold">
                 Status
               </TableHead>
               <TableHead className="text-gray-300 font-semibold">
@@ -304,7 +318,7 @@ export function ItemsTable() {
                 Expiry
               </TableHead>
               <TableHead className="text-gray-300 font-semibold">
-                Uses
+                Usage
               </TableHead>
               <TableHead className="text-gray-300 font-semibold">
                 Priority
@@ -323,7 +337,7 @@ export function ItemsTable() {
           <TableBody>
             {isLoading ? (
               <TableRow key="loading">
-                <TableCell colSpan={11} className="text-center py-8">
+                <TableCell colSpan={14} className="text-center py-8">
                   <div className="flex items-center justify-center">
                     <svg
                       className="animate-spin h-6 w-6 text-indigo-400"
@@ -352,7 +366,7 @@ export function ItemsTable() {
             ) : error ? (
               <TableRow key="error">
                 <TableCell
-                  colSpan={11}
+                  colSpan={14}
                   className="text-center text-red-500 py-6"
                 >
                   <div className="flex flex-col items-center justify-center">
@@ -376,7 +390,7 @@ export function ItemsTable() {
               </TableRow>
             ) : items.length === 0 ? (
               <TableRow key="no-items">
-                <TableCell colSpan={11} className="text-center py-12">
+                <TableCell colSpan={14} className="text-center py-12">
                   <div className="flex flex-col items-center justify-center text-gray-400">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -402,47 +416,53 @@ export function ItemsTable() {
             ) : (
               items.map((item) => (
                 <TableRow
-                  key={item.itemId}
+                  key={item.item_id}
                   className="hover:bg-indigo-900/20 transition border-b border-gray-700"
                 >
                   <TableCell className="font-medium">{item.name}</TableCell>
                   <TableCell className="font-mono text-sm">
                     <span className="px-2 py-1 bg-gray-700 rounded-md text-gray-300 border border-gray-600">
-                      {item.itemId}
+                      {item.item_id}
                     </span>
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-blue-300">{item.category}</span>
+                  </TableCell>
+                  <TableCell>
+                    <span className="text-cyan-300">{item.subcategory}</span>
                   </TableCell>
                   <TableCell>{getStatusBadge(item.status)}</TableCell>
                   <TableCell>
-                    {item.containerId ? (
+                    {item.container_id ? (
                       <span className="px-2 py-1 bg-gray-700 rounded-md text-gray-300 text-xs border border-gray-600">
-                        {item.containerId}
+                        {item.container_id}
                       </span>
                     ) : (
                       <span className="text-gray-500">N/A</span>
                     )}
                   </TableCell>
                   <TableCell>
-                    {item.currentZone ? (
+                    {item.current_zone ? (
                       <span className="text-indigo-300">
-                        {item.currentZone}
+                        {item.current_zone}
                       </span>
                     ) : (
                       <span className="text-gray-500">N/A</span>
                     )}
                   </TableCell>
                   <TableCell>
-                    {item.preferredZone ? (
+                    {item.preferred_zone ? (
                       <span className="text-purple-300">
-                        {item.preferredZone}
+                        {item.preferred_zone}
                       </span>
                     ) : (
                       <span className="text-gray-500">N/A</span>
                     )}
                   </TableCell>
                   <TableCell>
-                    {item.expiryDate ? (
+                    {item.expiry_date ? (
                       <span className="text-amber-300">
-                        {format(new Date(item.expiryDate), "PP")}
+                        {format(new Date(item.expiry_date), "PP")}
                       </span>
                     ) : (
                       <span className="text-gray-500">N/A</span>
@@ -452,19 +472,17 @@ export function ItemsTable() {
                     <div className="flex items-center">
                       <span
                         className={`font-medium ${
-                          item.usageLimit &&
-                          item.currentUses / item.usageLimit > 0.8
+                          item.usage_limit && item.current_uses / parseInt(item.usage_limit) > 0.8
                             ? "text-red-400"
-                            : item.usageLimit &&
-                              item.currentUses / item.usageLimit > 0.5
+                            : item.usage_limit && item.current_uses / parseInt(item.usage_limit) > 0.5
                             ? "text-amber-400"
                             : "text-green-400"
                         }`}
                       >
-                        {item.currentUses}
+                        {item.current_uses}
                       </span>
                       <span className="text-gray-400 mx-1">/</span>
-                      <span>{item.usageLimit ?? "∞"}</span>
+                      <span>{item.usage_limit ?? "∞"}</span>
                     </div>
                   </TableCell>
                   <TableCell>
@@ -482,11 +500,11 @@ export function ItemsTable() {
                   </TableCell>
                   <TableCell className="text-xs font-mono">
                     <span className="px-2 py-1 bg-gray-700 rounded-md border border-gray-600">
-                      {`${item.width}×${item.depth}×${item.height}`}
+                      {`${item.width_cm}×${item.depth_cm}×${item.height_cm}`}
                     </span>
                   </TableCell>
                   <TableCell>
-                    <span className="font-medium">{item.mass}</span>
+                    <span className="font-medium">{item.mass_kg}</span>
                     <span className="text-gray-400 text-xs ml-1">kg</span>
                   </TableCell>
                 <TableCell>

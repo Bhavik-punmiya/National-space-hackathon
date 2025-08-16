@@ -53,7 +53,7 @@ def create_log_entry(
         timestamp=timestamp,
         userId=userId,
         actionType=actionType,
-        itemId_fk=itemId, # Use the foreign key field name
+        item_id_fk=itemId, # Use the foreign key field name
         details_json=details_json_str
     )
     db.add(log_entry)

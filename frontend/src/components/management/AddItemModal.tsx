@@ -3,16 +3,18 @@
 import { useState } from 'react';
 
 interface Item {
-  itemId: string;
+  item_id: string;
   name: string;
-  width: number | null;
-  depth: number | null;
-  height: number | null;
-  mass: number | null;
+  category: string;
+  subcategory: string;
+  width_cm: number | null;
+  depth_cm: number | null;
+  height_cm: number | null;
+  mass_kg: number | null;
   priority: number | null;
-  expiryDate: string | null;
-  usageLimit: string | number | null;
-  preferredZone: string | null;
+  expiry_date: string | null;
+  usage_limit: string | null;
+  preferred_zone: string | null;
 }
 
 interface AddItemModalProps {
@@ -31,18 +33,42 @@ const ZONES = [
   'Cargo Hold'
 ];
 
+const CATEGORIES = [
+  'Medical Supplies',
+  'Food & Water',
+  'Tools & Equipment',
+  'Electronics',
+  'Clothing & Personal',
+  'Scientific Instruments',
+  'Safety Equipment',
+  'Spare Parts'
+];
+
+const SUBCATEGORIES = {
+  'Medical Supplies': ['Medications', 'First Aid', 'Surgical Tools', 'Diagnostic Equipment'],
+  'Food & Water': ['Dehydrated Food', 'Fresh Food', 'Water Containers', 'Supplements'],
+  'Tools & Equipment': ['Hand Tools', 'Power Tools', 'Maintenance Equipment', 'Construction Tools'],
+  'Electronics': ['Computers', 'Communication Devices', 'Sensors', 'Batteries'],
+  'Clothing & Personal': ['Space Suits', 'Regular Clothing', 'Hygiene Products', 'Personal Items'],
+  'Scientific Instruments': ['Lab Equipment', 'Measurement Devices', 'Research Tools', 'Sample Containers'],
+  'Safety Equipment': ['Fire Extinguishers', 'Emergency Kits', 'Safety Harnesses', 'Alarm Systems'],
+  'Spare Parts': ['Mechanical Parts', 'Electrical Components', 'Structural Elements', 'Hydraulic Parts']
+};
+
 export default function AddItemModal({ onClose, onSubmit }: AddItemModalProps) {
   const [formData, setFormData] = useState<Omit<Item, '_key'>>({
-    itemId: `item_${Date.now()}`,
+    item_id: `item_${Date.now()}`,
     name: '',
-    width: 100,
-    depth: 100,
-    height: 100,
-    mass: 1,
+    category: 'Medical Supplies',
+    subcategory: 'Medications',
+    width_cm: 100,
+    depth_cm: 100,
+    height_cm: 100,
+    mass_kg: 1,
     priority: 50,
-    expiryDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    usageLimit: 100,
-    preferredZone: null
+    expiry_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    usage_limit: '100',
+    preferred_zone: null
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -52,17 +78,15 @@ export default function AddItemModal({ onClose, onSubmit }: AddItemModalProps) {
     const formattedData = {
       ...formData,
       // Ensure numerical values are numbers
-      width: typeof formData.width === 'string' ? parseFloat(formData.width) : formData.width,
-      depth: typeof formData.depth === 'string' ? parseFloat(formData.depth) : formData.depth,
-      height: typeof formData.height === 'string' ? parseFloat(formData.height) : formData.height,
-      mass: typeof formData.mass === 'string' ? parseFloat(formData.mass) : formData.mass,
+      width_cm: typeof formData.width_cm === 'string' ? parseFloat(formData.width_cm) : formData.width_cm,
+      depth_cm: typeof formData.depth_cm === 'string' ? parseFloat(formData.depth_cm) : formData.depth_cm,
+      height_cm: typeof formData.height_cm === 'string' ? parseFloat(formData.height_cm) : formData.height_cm,
+      mass_kg: typeof formData.mass_kg === 'string' ? parseFloat(formData.mass_kg) : formData.mass_kg,
       priority: typeof formData.priority === 'string' ? parseInt(formData.priority, 10) : formData.priority,
       // Ensure date is in ISO format with Z timezone
-      expiryDate: formData.expiryDate ? `${new Date(formData.expiryDate).toISOString().split('.')[0]}Z` : null,
-      // Ensure usageLimit is a number
-      usageLimit: typeof formData.usageLimit === 'string' 
-        ? parseInt(formData.usageLimit.replace(/\D/g, ''), 10) || null 
-        : formData.usageLimit,
+      expiry_date: formData.expiry_date ? `${new Date(formData.expiry_date).toISOString().split('.')[0]}Z` : null,
+      // Ensure usage_limit is a string
+      usage_limit: formData.usage_limit,
     };
     
     onSubmit(formattedData);
@@ -80,8 +104,8 @@ export default function AddItemModal({ onClose, onSubmit }: AddItemModalProps) {
               <label className="text-gray-300 text-sm block mb-1">Item ID</label>
               <input
                 type="text"
-                value={formData.itemId}
-                onChange={(e) => setFormData(prev => ({ ...prev, itemId: e.target.value }))}
+                value={formData.item_id}
+                onChange={(e) => setFormData(prev => ({ ...prev, item_id: e.target.value }))}
                 className="w-full bg-gray-700 rounded-md px-3 py-2 text-white border border-gray-600"
                 required
               />
@@ -98,13 +122,49 @@ export default function AddItemModal({ onClose, onSubmit }: AddItemModalProps) {
             </div>
           </div>
 
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-gray-300 text-sm block mb-1">Category</label>
+              <select
+                value={formData.category}
+                onChange={(e) => {
+                  const category = e.target.value;
+                  setFormData(prev => ({ 
+                    ...prev, 
+                    category,
+                    subcategory: SUBCATEGORIES[category as keyof typeof SUBCATEGORIES]?.[0] || 'Unknown'
+                  }));
+                }}
+                className="w-full bg-gray-700 rounded-md px-3 py-2 text-white border border-gray-600"
+                required
+              >
+                {CATEGORIES.map(category => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="text-gray-300 text-sm block mb-1">Subcategory</label>
+              <select
+                value={formData.subcategory}
+                onChange={(e) => setFormData(prev => ({ ...prev, subcategory: e.target.value }))}
+                className="w-full bg-gray-700 rounded-md px-3 py-2 text-white border border-gray-600"
+                required
+              >
+                {SUBCATEGORIES[formData.category as keyof typeof SUBCATEGORIES]?.map(subcategory => (
+                  <option key={subcategory} value={subcategory}>{subcategory}</option>
+                )) || []}
+              </select>
+            </div>
+          </div>
+
           <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="text-gray-300 text-sm block mb-1">Width (cm)</label>
               <input
                 type="number"
-                value={formData.width || ''}
-                onChange={(e) => setFormData(prev => ({ ...prev, width: e.target.value ? Number(e.target.value) : null }))}
+                value={formData.width_cm || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, width_cm: e.target.value ? Number(e.target.value) : null }))}
                 className="w-full bg-gray-700 rounded-md px-3 py-2 text-white border border-gray-600"
                 required
               />
@@ -113,8 +173,8 @@ export default function AddItemModal({ onClose, onSubmit }: AddItemModalProps) {
               <label className="text-gray-300 text-sm block mb-1">Depth (cm)</label>
               <input
                 type="number"
-                value={formData.depth || ''}
-                onChange={(e) => setFormData(prev => ({ ...prev, depth: e.target.value ? Number(e.target.value) : null }))}
+                value={formData.depth_cm || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, depth_cm: e.target.value ? Number(e.target.value) : null }))}
                 className="w-full bg-gray-700 rounded-md px-3 py-2 text-white border border-gray-600"
                 required
               />
@@ -123,8 +183,8 @@ export default function AddItemModal({ onClose, onSubmit }: AddItemModalProps) {
               <label className="text-gray-300 text-sm block mb-1">Height (cm)</label>
               <input
                 type="number"
-                value={formData.height || ''}
-                onChange={(e) => setFormData(prev => ({ ...prev, height: e.target.value ? Number(e.target.value) : null }))}
+                value={formData.height_cm || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, height_cm: e.target.value ? Number(e.target.value) : null }))}
                 className="w-full bg-gray-700 rounded-md px-3 py-2 text-white border border-gray-600"
                 required
               />
@@ -137,8 +197,8 @@ export default function AddItemModal({ onClose, onSubmit }: AddItemModalProps) {
               <input
                 type="number"
                 step="0.1"
-                value={formData.mass || ''}
-                onChange={(e) => setFormData(prev => ({ ...prev, mass: e.target.value ? Number(e.target.value) : null }))}
+                value={formData.mass_kg || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, mass_kg: e.target.value ? Number(e.target.value) : null }))}
                 className="w-full bg-gray-700 rounded-md px-3 py-2 text-white border border-gray-600"
                 required
               />
@@ -162,10 +222,10 @@ export default function AddItemModal({ onClose, onSubmit }: AddItemModalProps) {
               <label className="text-gray-300 text-sm block mb-1">Expiry Date</label>
               <input
                 type="date"
-                value={formData.expiryDate?.split('T')[0] || ''}
+                value={formData.expiry_date?.split('T')[0] || ''}
                 onChange={(e) => setFormData(prev => ({ 
                   ...prev, 
-                  expiryDate: e.target.value ? `${new Date(e.target.value).toISOString().split('.')[0]}Z` : null 
+                  expiry_date: e.target.value ? `${new Date(e.target.value).toISOString().split('.')[0]}Z` : null 
                 }))}
                 className="w-full bg-gray-700 rounded-md px-3 py-2 text-white border border-gray-600"
               />
@@ -173,11 +233,11 @@ export default function AddItemModal({ onClose, onSubmit }: AddItemModalProps) {
             <div>
               <label className="text-gray-300 text-sm block mb-1">Usage Limit</label>
               <input
-                type="number"
-                min="1"
-                value={formData.usageLimit || ''}
-                onChange={(e) => setFormData(prev => ({ ...prev, usageLimit: e.target.value ? Number(e.target.value) : null }))}
+                type="text"
+                value={formData.usage_limit || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, usage_limit: e.target.value || null }))}
                 className="w-full bg-gray-700 rounded-md px-3 py-2 text-white border border-gray-600"
+                placeholder="e.g., 100 or N/A"
               />
             </div>
           </div>
@@ -185,8 +245,8 @@ export default function AddItemModal({ onClose, onSubmit }: AddItemModalProps) {
           <div>
             <label className="text-gray-300 text-sm block mb-1">Preferred Zone</label>
             <select
-              value={formData.preferredZone || ''}
-              onChange={(e) => setFormData(prev => ({ ...prev, preferredZone: e.target.value || null }))}
+              value={formData.preferred_zone || ''}
+              onChange={(e) => setFormData(prev => ({ ...prev, preferred_zone: e.target.value || null }))}
               className="w-full bg-gray-700 rounded-md px-3 py-2 text-white border border-gray-600"
             >
               <option value="">No Preference</option>

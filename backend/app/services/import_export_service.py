@@ -1,31 +1,29 @@
 # /app/services/import_export_service.py
+import io
+import pandas as pd
 from sqlalchemy.orm import Session, joinedload
 from typing import List, Dict, Any, Optional
-import pandas as pd
-import io
-from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
+from werkzeug.utils import secure_filename
 from app.models_db import Item as DBItem, Container as DBContainer, Placement as DBPlacement, LogActionType
 from app.models_api import ImportResponse, ImportErrorDetail
 from .logging_service import create_log_entry
-from datetime import datetime
-import iso8601 # Use robust parser
 
 def export_containers(db: Session, user_id: Optional[str] = None) -> io.BytesIO:
     """Exports the current container data as a CSV file in a BytesIO buffer."""
     containers = db.query(DBContainer).all()
 
     output = io.StringIO()
-    # Define columns as per requirement
-    columns = ['ContainerID', 'Zone', 'Width', 'Depth', 'Height']
+    columns = ['ContainerID', 'Zone', 'ModuleID', 'Width', 'Depth', 'Height']
     data = []
     for c in containers:
         data.append({
-            'ContainerID': c.containerId,
+            'ContainerID': c.container_id,
             'Zone': c.zone,
-            'Width': c.width,
-            'Depth': c.depth,
-            'Height': c.height
+            'ModuleID': c.module_id,
+            'Width': c.width_cm,
+            'Depth': c.depth_cm,
+            'Height': c.height_cm
         })
 
     df = pd.DataFrame(data, columns=columns)
@@ -54,18 +52,20 @@ def export_items(db: Session, user_id: Optional[str] = None) -> List[Dict[str, A
     data = []
     for item in items:
         data.append({
-            'ItemID': item.itemId,
+            'ItemID': item.item_id,
             'Name': item.name,
-            'Width': item.width,
-            'Depth': item.depth,
-            'Height': item.height,
-            'Mass': item.mass,
+            'Category': item.category,
+            'Subcategory': item.subcategory,
+            'Width': item.width_cm,
+            'Depth': item.depth_cm,
+            'Height': item.height_cm,
+            'Mass': item.mass_kg,
             'Priority': item.priority,
-            'ExpiryDate': item.expiryDate.isoformat() if item.expiryDate else None,
-            'UsageLimit': item.usageLimit,
-            'PreferredZone': item.preferredZone,
+            'ExpiryDate': item.expiry_date,
+            'UsageLimit': item.usage_limit,
+            'PreferredZone': item.preferred_zone,
             'Status': item.status,
-            'CurrentUses': item.currentUses
+            'CurrentUses': item.current_uses
             
         })
 
@@ -106,81 +106,81 @@ def import_items_from_csv(db: Session, file: FileStorage, user_id: Optional[str]
         # --- Define Expected Columns (Case Insensitive) ---
         # Adjust these based on the exact expected CSV format
         required_columns = {
-            'itemid': 'itemId', 'name': 'name', 'width': 'width', 'depth': 'depth',
-            'height': 'height', 'mass': 'mass', 'priority': 'priority'
+            'itemid': 'item_id', 'name': 'name', 'category': 'category', 'subcategory': 'subcategory',
+            'width_cm': 'width_cm', 'depth_cm': 'depth_cm', 'height_cm': 'height_cm', 
+            'mass_kg': 'mass_kg', 'priority': 'priority'
         }
         optional_columns = {
-            'expirydate': 'expiryDate', 'usagelimit': 'usageLimit', 'preferredzone': 'preferredZone'
+            'expiry_date': 'expiry_date', 'usage_limit': 'usage_limit', 'preferred_zone': 'preferred_zone',
+            'current_uses': 'current_uses'
         }
         df.columns = df.columns.str.lower().str.replace(' ', '').str.replace('_', '') # Normalize column names
 
         missing_req = [col for col in required_columns.keys() if col not in df.columns]
         if missing_req:
-            errors.append(ImportErrorDetail(message=f"Missing required columns: {', '.join(missing_req)}"))
-            return ImportResponse(success=False, errors=errors)
+            return ImportResponse(success=False, errors=[ImportErrorDetail(message=f"Missing required columns: {missing_req}")])
 
-
-        # --- Iterate through rows and import ---
-        for index, row in df.iterrows():
-            row_num = index + 2 # Account for header and 0-based index
-            item_data = {}
+        # --- Process Each Row ---
+        for row_num, row in df.iterrows():
             current_row_errors = []
+            item_data = {}
 
-            # Map required columns
-            for csv_col, model_field in required_columns.items():
-                 item_data[model_field] = row.get(csv_col)
-
-            # Map optional columns
-            for csv_col, model_field in optional_columns.items():
-                 if csv_col in df.columns:
-                     item_data[model_field] = row.get(csv_col)
-
-            # --- Data Type Conversion and Validation ---
+            # --- Extract and Validate Required Fields ---
             try:
-                item_data['itemId'] = str(item_data['itemId'])
-                item_data['name'] = str(item_data['name'])
-                item_data['width'] = float(item_data['width'])
-                item_data['depth'] = float(item_data['depth'])
-                item_data['height'] = float(item_data['height'])
-                item_data['mass'] = float(item_data['mass'])
-                item_data['priority'] = int(item_data['priority'])
+                item_data['item_id'] = str(row[required_columns['itemid']]).strip()
+                item_data['name'] = str(row[required_columns['name']]).strip()
+                item_data['category'] = str(row[required_columns['category']]).strip()
+                item_data['subcategory'] = str(row[required_columns['subcategory']]).strip()
+                item_data['width_cm'] = float(row[required_columns['width_cm']])
+                item_data['depth_cm'] = float(row[required_columns['depth_cm']])
+                item_data['height_cm'] = float(row[required_columns['height_cm']])
+                item_data['mass_kg'] = float(row[required_columns['mass_kg']])
+                item_data['priority'] = int(row[required_columns['priority']])
 
-                if 'usageLimit' in item_data and pd.notna(item_data['usageLimit']):
-                     try:
-                         item_data['usageLimit'] = int(float(item_data['usageLimit'])) # Handle potential float like '10.0'
-                     except (ValueError, TypeError):
-                         current_row_errors.append(f"Invalid format for usageLimit ('{item_data['usageLimit']}')")
-                         item_data['usageLimit'] = None # Skip if invalid
+                # --- Extract Optional Fields ---
+                if 'expirydate' in df.columns:
+                    expiry_val = row['expirydate']
+                    if pd.isna(expiry_val) or expiry_val == '' or str(expiry_val).lower() == 'na':
+                        item_data['expiry_date'] = "N/A"
+                    else:
+                        item_data['expiry_date'] = str(expiry_val).strip()
                 else:
-                     item_data['usageLimit'] = None
+                    item_data['expiry_date'] = "N/A"
 
-
-                if 'expiryDate' in item_data and pd.notna(item_data['expiryDate']):
-                     try:
-                        # Attempt parsing various common date formats or ISO 8601
-                         if isinstance(item_data['expiryDate'], datetime):
-                              item_data['expiryDate'] = item_data['expiryDate'] # Already datetime
-                         else:
-                             item_data['expiryDate'] = iso8601.parse_date(str(item_data['expiryDate']))
-                     except (ValueError, TypeError, iso8601.ParseError):
-                        current_row_errors.append(f"Invalid date format for expiryDate ('{item_data['expiryDate']}')")
-                        item_data['expiryDate'] = None # Skip if invalid
+                if 'usagelimit' in df.columns:
+                    usage_val = row['usagelimit']
+                    if pd.isna(usage_val) or usage_val == '' or str(usage_val).lower() == 'na':
+                        item_data['usage_limit'] = "N/A"
+                    else:
+                        item_data['usage_limit'] = str(usage_val).strip()
                 else:
-                    item_data['expiryDate'] = None
+                    item_data['usage_limit'] = "N/A"
 
-                if 'preferredZone' in item_data and pd.notna(item_data['preferredZone']):
-                     item_data['preferredZone'] = str(item_data['preferredZone'])
+                if 'preferredzone' in df.columns:
+                    zone_val = row['preferredzone']
+                    if pd.isna(zone_val) or zone_val == '':
+                        item_data['preferred_zone'] = None
+                    else:
+                        item_data['preferred_zone'] = str(zone_val).strip()
                 else:
-                     item_data['preferredZone'] = None
+                    item_data['preferred_zone'] = None
 
+                if 'currentuses' in df.columns:
+                    current_uses_val = row['currentuses']
+                    if pd.isna(current_uses_val) or current_uses_val == '':
+                        item_data['current_uses'] = 0
+                    else:
+                        item_data['current_uses'] = int(current_uses_val)
+                else:
+                    item_data['current_uses'] = 0
 
-                # --- Check for mandatory field presence after potential nulls ---
-                if not all(k in item_data and pd.notna(item_data.get(k)) for k in required_columns.values()):
-                    current_row_errors.append("Missing value in one or more required columns")
-
-
-                # TODO: Add more specific validations (e.g., priority range, positive dimensions/mass)
-
+                # --- Validation ---
+                if item_data['priority'] < 0 or item_data['priority'] > 100:
+                    current_row_errors.append("Priority must be between 0 and 100")
+                if item_data['width_cm'] <= 0 or item_data['depth_cm'] <= 0 or item_data['height_cm'] <= 0:
+                    current_row_errors.append("Dimensions must be positive")
+                if item_data['mass_kg'] <= 0:
+                    current_row_errors.append("Mass must be positive")
 
             except (ValueError, TypeError) as e:
                  current_row_errors.append(f"Data type error: {e}")
@@ -191,26 +191,29 @@ def import_items_from_csv(db: Session, file: FileStorage, user_id: Optional[str]
                  continue # Skip this row
 
             # --- Upsert Logic (Update if exists, else Create) ---
-            existing_item = db.query(DBItem).filter(DBItem.itemId == item_data['itemId']).first()
+            existing_item = db.query(DBItem).filter(DBItem.item_id == item_data['item_id']).first()
             if existing_item:
                  # Update existing item (be careful what you update)
                  existing_item.name = item_data['name']
-                 existing_item.width = item_data['width']
-                 existing_item.depth = item_data['depth']
-                 existing_item.height = item_data['height']
-                 existing_item.mass = item_data['mass']
+                 existing_item.category = item_data['category']
+                 existing_item.subcategory = item_data['subcategory']
+                 existing_item.width_cm = item_data['width_cm']
+                 existing_item.depth_cm = item_data['depth_cm']
+                 existing_item.height_cm = item_data['height_cm']
+                 existing_item.mass_kg = item_data['mass_kg']
                  existing_item.priority = item_data['priority']
-                 existing_item.expiryDate = item_data.get('expiryDate')
-                 existing_item.usageLimit = item_data.get('usageLimit')
-                 existing_item.preferredZone = item_data.get('preferredZone')
-                 # Should status or currentUses be reset on import? Assume not.
-                 print(f"Updated item: {item_data['itemId']}")
+                 existing_item.expiry_date = item_data.get('expiry_date')
+                 existing_item.usage_limit = item_data.get('usage_limit')
+                 existing_item.preferred_zone = item_data.get('preferred_zone')
+                 existing_item.current_uses = item_data.get('current_uses')
+                 # Should status or current_uses be reset on import? Assume not.
+                 print(f"Updated item: {item_data['item_id']}")
             else:
                  # Create new item
                  new_item = DBItem(**item_data)
                  db.add(new_item)
                  items_imported_count += 1
-                 print(f"Created new item: {item_data['itemId']}")
+                 print(f"Created new item: {item_data['item_id']}")
 
         # --- Commit changes after processing all rows ---
         if items_imported_count > 0 or any(db.dirty): # Check if there's anything to commit
@@ -276,57 +279,60 @@ def import_containers_from_csv(db: Session, file: FileStorage, user_id: Optional
             df = pd.read_csv(file.stream, encoding='latin-1')
 
         # --- Define Expected Columns (Case Insensitive) ---
-        required_columns = {'containerid': 'containerId', 'zone': 'zone', 'width': 'width', 'depth': 'depth', 'height': 'height'}
-        df.columns = df.columns.str.lower().str.replace(' ', '').str.replace('_', '') # Normalize
+        required_columns = {
+            'container_id': 'container_id', 
+            'zone': 'zone', 
+            'module_id': 'module_id',
+            'width_cm': 'width_cm', 
+            'depth_cm': 'depth_cm', 
+            'height_cm': 'height_cm'
+        }
+        df.columns = df.columns.str.lower().str.replace(' ', '').str.replace('_', '')
 
         missing_req = [col for col in required_columns.keys() if col not in df.columns]
         if missing_req:
-            errors.append(ImportErrorDetail(message=f"Missing required columns: {', '.join(missing_req)}"))
-            return ImportResponse(success=False, errors=errors)
+            return ImportResponse(success=False, errors=[ImportErrorDetail(message=f"Missing required columns: {missing_req}")])
 
-        # --- Iterate and import ---
-        for index, row in df.iterrows():
-            row_num = index + 2
-            cont_data = {}
+        # --- Process Each Row ---
+        for row_num, row in df.iterrows():
             current_row_errors = []
+            cont_data = {}
 
-            for csv_col, model_field in required_columns.items():
-                 cont_data[model_field] = row.get(csv_col)
-
-            # --- Data Type Conversion and Validation ---
             try:
-                cont_data['containerId'] = str(cont_data['containerId'])
-                cont_data['zone'] = str(cont_data['zone'])
-                cont_data['width'] = float(cont_data['width'])
-                cont_data['depth'] = float(cont_data['depth'])
-                cont_data['height'] = float(cont_data['height'])
+                cont_data['container_id'] = str(row[required_columns['containerid']]).strip()
+                cont_data['zone'] = str(row[required_columns['zone']]).strip()
+                cont_data['module_id'] = str(row[required_columns['moduleid']]).strip()
+                cont_data['width_cm'] = float(row[required_columns['widthcm']])
+                cont_data['depth_cm'] = float(row[required_columns['depthcm']])
+                cont_data['height_cm'] = float(row[required_columns['heightcm']])
 
-                if not all(k in cont_data and pd.notna(cont_data.get(k)) for k in required_columns.values()):
-                     current_row_errors.append("Missing value in one or more required columns")
-                # TODO: Add more specific validations (positive dimensions)
+                # --- Validation ---
+                if cont_data['width_cm'] <= 0 or cont_data['depth_cm'] <= 0 or cont_data['height_cm'] <= 0:
+                    current_row_errors.append("Dimensions must be positive")
 
             except (ValueError, TypeError) as e:
-                 current_row_errors.append(f"Data type error: {e}")
+                current_row_errors.append(f"Data type error: {e}")
 
             if current_row_errors:
-                 errors.append(ImportErrorDetail(row=row_num, message="; ".join(current_row_errors)))
-                 continue
+                errors.append(ImportErrorDetail(row=row_num, message="; ".join(current_row_errors)))
+                continue
 
             # --- Upsert Logic ---
-            existing_cont = db.query(DBContainer).filter(DBContainer.containerId == cont_data['containerId']).first()
+            existing_cont = db.query(DBContainer).filter(DBContainer.container_id == cont_data['container_id']).first()
             if existing_cont:
                  # Update existing container
                  existing_cont.zone = cont_data['zone']
-                 existing_cont.width = cont_data['width']
-                 existing_cont.depth = cont_data['depth']
-                 existing_cont.height = cont_data['height']
-                 print(f"Updated container: {cont_data['containerId']}")
+                 existing_cont.module_id = cont_data['module_id']
+                 existing_cont.width_cm = cont_data['width_cm']
+                 existing_cont.depth_cm = cont_data['depth_cm']
+                 existing_cont.height_cm = cont_data['height_cm']
+                 print(f"Updated container: {cont_data['container_id']}")
             else:
                  # Create new container
                  new_cont = DBContainer(**cont_data)
                  db.add(new_cont)
                  containers_imported_count += 1
-                 print(f"Created new container: {cont_data['containerId']}")
+                 print(f"Created new container: {cont_data['container_id']}")
 
 
         # --- Commit changes ---
@@ -387,8 +393,8 @@ def export_current_arrangement(db: Session, user_id: Optional[str] = None) -> io
          coord1 = f"({p.start_w},{p.start_d},{p.start_h})"
          coord2 = f"({p.end_w},{p.end_d},{p.end_h})"
          data.append({
-             'ItemID': p.itemId_fk,
-             'ContainerID': p.containerId_fk,
+             'ItemID': p.item_id_fk,
+             'ContainerID': p.container_id_fk,
              'Coordinates(W1,D1,H1)': coord1,
              'Coordinates(W2,D2,H2)': coord2
          })

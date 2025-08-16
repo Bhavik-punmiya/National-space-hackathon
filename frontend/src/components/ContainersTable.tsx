@@ -118,7 +118,10 @@ export function ContainersTable() {
                 Container ID
               </TableHead>
               <TableHead className="text-gray-300 font-semibold">
-                Zone ID
+                Module ID
+              </TableHead>
+              <TableHead className="text-gray-300 font-semibold">
+                Zone
               </TableHead>
               <TableHead className="text-gray-300 font-semibold">
                 Dimensions
@@ -134,7 +137,7 @@ export function ContainersTable() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8">
+                <TableCell colSpan={6} className="text-center py-8">
                   <div className="flex items-center justify-center">
                     <svg
                       className="animate-spin h-6 w-6 text-indigo-400"
@@ -163,7 +166,7 @@ export function ContainersTable() {
             ) : error ? (
               <TableRow>
                 <TableCell
-                  colSpan={5}
+                  colSpan={6}
                   className="text-center text-red-500 py-6"
                 >
                   <div className="flex flex-col items-center justify-center">
@@ -187,7 +190,7 @@ export function ContainersTable() {
               </TableRow>
             ) : containers.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-12">
+                <TableCell colSpan={6} className="text-center py-12">
                   <div className="flex flex-col items-center justify-center text-gray-400">
                     <Box className="h-12 w-12 mb-4 text-gray-500" />
                     <p className="text-lg">No containers found</p>
@@ -200,12 +203,17 @@ export function ContainersTable() {
             ) : (
               containers.map((container) => (
                 <TableRow
-                  key={container.containerId}
+                  key={container.container_id}
                   className="hover:bg-indigo-900/20 transition border-b border-gray-700"
                 >
                   <TableCell className="font-medium">
                     <span className="px-2 py-1 bg-gray-700 rounded-md text-indigo-300 border border-gray-600">
-                      {container.containerId}
+                      {container.container_id}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <span className="px-2 py-1 bg-blue-500/20 rounded-md text-blue-300 border border-blue-800">
+                      {container.module_id}
                     </span>
                   </TableCell>
                   <TableCell>
@@ -213,7 +221,7 @@ export function ContainersTable() {
                   </TableCell>
                   <TableCell className="text-xs font-mono">
                     <span className="px-2 py-1 bg-gray-700 rounded-md border border-gray-600">
-                      {`${container.width}×${container.depth}×${container.height}`}
+                      {`${container.width_cm}×${container.depth_cm}×${container.height_cm}`}
                     </span>
                   </TableCell>
                   <TableCell>

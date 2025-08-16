@@ -1,51 +1,50 @@
 // /data/types.ts
 
-
-
 export enum ItemStatus {
-    ACTIVE = 'active',
-    WASTE_EXPIRED = 'expired',
-    WASTE_DEPLETED = 'depleted',
-    DISPOSED = 'disposed',
-  }
-  
+  ACTIVE = 'active',
+  WASTE_EXPIRED = 'expired',
+  WASTE_DEPLETED = 'depleted',
+  DISPOSED = 'disposed',
+}
 
 export interface Container {
-    containerId: string; // Corresponds to containerId
-    zone: string; // Corresponds to zone
-    width: number;
-    depth: number;
-    height: number;
-    item_count: number;
-    expired_item_count: number;
+  container_id: string; // Updated to snake_case
+  zone: string;
+  module_id: string; // New field
+  width_cm: number; // Updated to snake_case with _cm suffix
+  depth_cm: number;
+  height_cm: number;
+  item_count: number;
+  expired_item_count: number;
 }
 
 export interface Item {
-    itemId: string; // Corresponds to itemId
-    name: string;
-    containerId: string | null;
-    quantity: number; // Always 1 in this implementation
-    mass: number;
-    expiryDate: string | null; // ISO date string
-    width: number;
-    depth: number;
-    height: number;
-    priority: number;
-    usageLimit: number | null;
-    currentUses: number;
-    preferredZone: string | null;
-    currentZone: string | null;
-    status: ItemStatus;
-    expired: boolean;
-    depleted: boolean;
+  item_id: string; // Updated to snake_case
+  name: string;
+  category: string; // New field
+  subcategory: string; // New field
+  container_id: string | null; // Updated to snake_case
+  mass_kg: number; // Updated to snake_case with _kg suffix
+  expiry_date: string | null; // Updated to snake_case
+  width_cm: number; // Updated to snake_case with _cm suffix
+  depth_cm: number;
+  height_cm: number;
+  priority: number;
+  usage_limit: string | null; // Updated to snake_case and string type
+  current_uses: number; // Current usage count
+  preferred_zone: string | null; // Updated to snake_case
+  current_zone: string | null; // Updated to snake_case
+  status: ItemStatus;
+  expired: boolean;
+  depleted: boolean;
 }
 
 // Base pagination response structure
 interface PaginatedResponse<T> {
-    total: number;
-    page: number;
-    size: number;
-    items: T[];
+  total: number;
+  page: number;
+  size: number;
+  items: T[];
 }
 
 export type PaginatedContainerResponse = PaginatedResponse<Container>;

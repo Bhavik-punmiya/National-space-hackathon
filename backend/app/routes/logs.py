@@ -42,7 +42,7 @@ def handle_get_logs():
                 return jsonify({"error": f"Invalid endDate format: {end_date_str}. Use ISO 8601."}), 400
 
         if item_id:
-            query = query.filter(Log.itemId_fk == item_id)
+            query = query.filter(Log.item_id_fk == item_id)
         if user_id:
             query = query.filter(Log.userId == user_id)
         if action_type:
@@ -72,7 +72,7 @@ def handle_get_logs():
                 timestamp=log.timestamp,
                 userId=log.userId,
                 actionType=log.actionType.value,
-                itemId=log.itemId_fk,
+                itemId=log.item_id_fk,
                 details=details_dict
             ))
 

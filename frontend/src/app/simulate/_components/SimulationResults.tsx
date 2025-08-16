@@ -15,17 +15,17 @@ interface SimulationResponse {
   success: boolean;
   newDate: string;
   changes: {
-    itemsUsed: { itemId: string; name: string; remainingUses: number }[];
-    itemsExpired: { itemId: string; name: string }[];
-    itemsDepletedToday: { itemId: string; name: string }[];
+    itemsUsed: { item_id: string; name: string; remainingUses: number; timestamp: string }[];
+    itemsExpired: { item_id: string; name: string; timestamp: string }[];
+    itemsDepletedToday: { item_id: string; name: string; timestamp: string }[];
   };
 }
 
 interface SimulationResultsProps {
   simulationResult: SimulationResponse | null;
-  filter: "itemsUsed" | "itemsExpired" | "itemsDepletedToday";
+  filter: "itemsUsed" | "itemsExpired" | "itemsDepletedToday" | "allEvents";
   setFilter: React.Dispatch<
-    React.SetStateAction<"itemsUsed" | "itemsExpired" | "itemsDepletedToday">
+    React.SetStateAction<"itemsUsed" | "itemsExpired" | "itemsDepletedToday" | "allEvents">
   >;
 }
 
@@ -54,15 +54,74 @@ export function SimulationResults({
         return <AlertTriangle size={16} />;
       case "itemsDepletedToday":
         return <Award size={16} />;
+      case "allEvents":
+        return <Clock size={16} />;
       default:
         return null;
     }
+  };
+
+  // Create combined events for allEvents filter
+  const getAllEvents = () => {
+    if (!simulationResult) return [];
+    
+    const allEvents = [
+      ...simulationResult.changes.itemsUsed.map(item => ({ ...item, type: 'used' as const })),
+      ...simulationResult.changes.itemsExpired.map(item => ({ ...item, type: 'expired' as const })),
+      ...simulationResult.changes.itemsDepletedToday.map(item => ({ ...item, type: 'depleted' as const }))
+    ];
+    
+    return allEvents.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+  };
+
+  const getCurrentEvents = () => {
+    if (!simulationResult) return [];
+    
+    if (filter === "allEvents") {
+      return getAllEvents();
+    }
+    
+    return simulationResult.changes[filter];
   };
 
   return (
     <div className="p-6 bg-gray-900 min-h-64">
       {simulationResult ? (
         <>
+          {/* Summary Section */}
+          <div className="mb-6 p-4 bg-gray-800 rounded-md border-2 border-gray-700">
+            <div className="flex flex-wrap gap-6">
+              <div className="flex items-center gap-2">
+                <Zap size={16} className="text-indigo-400" />
+                <span className="text-gray-300">Items Used:</span>
+                <span className="font-semibold text-indigo-400">
+                  {simulationResult.changes.itemsUsed.length}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <AlertTriangle size={16} className="text-amber-400" />
+                <span className="text-gray-300">Items Expired:</span>
+                <span className="font-semibold text-amber-400">
+                  {simulationResult.changes.itemsExpired.length}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Award size={16} className="text-rose-400" />
+                <span className="text-gray-300">Items Depleted:</span>
+                <span className="font-semibold text-rose-400">
+                  {simulationResult.changes.itemsDepletedToday.length}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock size={16} className="text-green-400" />
+                <span className="text-gray-300">Simulation End Date:</span>
+                <span className="font-semibold text-green-400">
+                  {formatTimestamp(simulationResult.newDate).date}
+                </span>
+              </div>
+            </div>
+          </div>
+
           <div className="flex flex-wrap gap-3 mb-6">
             <button
               onClick={() => setFilter("itemsUsed")}
@@ -97,6 +156,17 @@ export function SimulationResults({
               <Award size={16} />
               <span>Items Depleted Today</span>
             </button>
+            <button
+              onClick={() => setFilter("allEvents")}
+              className={`px-4 py-3 rounded-md flex items-center gap-2 transition-all duration-200 border-2 ${
+                filter === "allEvents"
+                  ? "bg-green-600 text-white shadow-lg shadow-green-700/20 border-green-700"
+                  : "bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-gray-100 border-gray-700"
+              }`}
+            >
+              <Clock size={16} />
+              <span>Show All Events</span>
+            </button>
           </div>
 
           <div className="overflow-x-auto bg-gray-800 rounded-md border-2 border-gray-700 shadow-xl">
@@ -115,6 +185,14 @@ export function SimulationResults({
                       <span>Item</span>
                     </div>
                   </th>
+                  {filter === "allEvents" && (
+                    <th className="px-6 py-4 text-left font-medium">
+                      <div className="flex items-center space-x-2">
+                        <Clock size={16} className="text-indigo-400" />
+                        <span>Event Type</span>
+                      </div>
+                    </th>
+                  )}
                   {filter === "itemsUsed" && (
                     <th className="px-6 py-4 text-left font-medium">
                       <div className="flex items-center space-x-2">
@@ -126,52 +204,75 @@ export function SimulationResults({
                 </tr>
               </thead>
               <tbody>
-                {simulationResult.changes[filter].length > 0 ? (
-                  simulationResult.changes[filter].map((item, index) => {
-                    const { date, time } = formatTimestamp(
-                      simulationResult.newDate
-                    );
-                    return (
-                      <tr
-                        key={index}
-                        className="border-b border-gray-700 hover:bg-gray-700 transition-all duration-200"
-                      >
-                        <td className="px-6 py-4">
-                          <div className="font-medium">{date}</div>
-                          <div className="text-xs text-gray-400">{time}</div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center">
-                            <span className="font-mono text-xs px-2 py-1 rounded-md bg-gray-700 text-gray-300 mr-2 border border-gray-600">
-                              {item.itemId}
-                            </span>
-                            <span className="text-gray-100">{item.name}</span>
-                          </div>
-                        </td>
-                        {filter === "itemsUsed" && "remainingUses" in item && (
+                {getCurrentEvents().length > 0 ? (
+                  // Sort items by timestamp chronologically
+                  getCurrentEvents()
+                    .map((item, index) => {
+                      const { date, time } = formatTimestamp(item.timestamp);
+                      return (
+                        <tr
+                          key={index}
+                          className="border-b border-gray-700 hover:bg-gray-700 transition-all duration-200"
+                        >
+                          <td className="px-6 py-4">
+                            <div className="font-medium">{date}</div>
+                            <div className="text-xs text-gray-400">{time}</div>
+                          </td>
                           <td className="px-6 py-4">
                             <div className="flex items-center">
-                              <div
-                                className={`px-3 py-1 rounded-md ${
-                                  item.remainingUses > 3
-                                    ? "bg-green-500/20 text-green-300 border border-green-700"
-                                    : item.remainingUses > 1
-                                    ? "bg-amber-500/20 text-amber-300 border border-amber-700"
-                                    : "bg-red-500/20 text-red-300 border border-red-700"
-                                }`}
-                              >
-                                {item.remainingUses}
-                              </div>
+                              <span className="font-mono text-xs px-2 py-1 rounded-md bg-gray-700 text-gray-300 mr-2 border border-gray-600">
+                                {item.item_id}
+                              </span>
+                              <span className="text-gray-100">{item.name}</span>
                             </div>
                           </td>
-                        )}
-                      </tr>
-                    );
-                  })
+                          {filter === "allEvents" && (
+                            <td className="px-6 py-4">
+                              <div className="flex items-center">
+                                <div
+                                  className={`px-3 py-1 rounded-md ${
+                                    (item as any).type === 'used'
+                                      ? "bg-indigo-500/20 text-indigo-300 border border-indigo-700"
+                                      : (item as any).type === 'expired'
+                                      ? "bg-amber-500/20 text-amber-300 border border-amber-700"
+                                      : "bg-rose-500/20 text-rose-300 border border-rose-700"
+                                  }`}
+                                >
+                                  {(item as any).type.charAt(0).toUpperCase() + (item as any).type.slice(1)}
+                                </div>
+                              </div>
+                            </td>
+                          )}
+                          {filter === "itemsUsed" && "remainingUses" in item && (
+                            <td className="px-6 py-4">
+                              <div className="flex items-center">
+                                <div
+                                  className={`px-3 py-1 rounded-md ${
+                                    (item as any).remainingUses > 3
+                                      ? "bg-green-500/20 text-green-300 border border-green-700"
+                                      : (item as any).remainingUses > 1
+                                      ? "bg-amber-500/20 text-amber-300 border border-amber-700"
+                                      : "bg-red-500/20 text-red-300 border border-red-700"
+                                  }`}
+                                >
+                                  {(item as any).remainingUses}
+                                </div>
+                              </div>
+                            </td>
+                          )}
+                        </tr>
+                      );
+                    })
                 ) : (
                   <tr>
                     <td
-                      colSpan={filter === "itemsUsed" ? 3 : 2}
+                      colSpan={
+                        filter === "itemsUsed" 
+                          ? 3 
+                          : filter === "allEvents" 
+                          ? 4 
+                          : 2
+                      }
                       className="px-6 py-10"
                     >
                       <div className="flex flex-col items-center justify-center text-center">

@@ -5,9 +5,10 @@ class SearchResult(BaseModel):
     """Individual search result item."""
     id: str
     name: str
-    category: Optional[str] = None
-    containerId: Optional[str] = None
-    preferredZone: Optional[str] = None
+    category: Optional[str] = None  # Item category (e.g., Medical, Food, Equipment)
+    subcategory: Optional[str] = None  # Item subcategory (e.g., Antibiotic_Supply, Food_Packet)
+    container_id: Optional[str] = None  # Updated field name
+    preferred_zone: Optional[str] = None  # Updated field name
     
     # Additional fields for UI rendering/filtering
     type: str = "item"  # Used to differentiate between item/container/zone in UI

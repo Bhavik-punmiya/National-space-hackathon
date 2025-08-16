@@ -3,6 +3,7 @@
 from flask import Blueprint, request, jsonify
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
+from typing import Optional
 
 # Import services, schemas, and db session getter
 from app.services.tables import get_containers_service, get_items_service
@@ -91,6 +92,8 @@ def get_items():
         search = request.args.get('search', None, type=str)
         status_str = request.args.get('status', None, type=str)
         preferred_zone = request.args.get('preferred_zone', None, type=str)
+        category = request.args.get('category', None, type=str)
+        subcategory = request.args.get('subcategory', None, type=str)
 
         # Clamp size and page
         size = max(1, min(size, 100))
@@ -108,7 +111,9 @@ def get_items():
         filters = ItemFilterParams(
             search=search,
             status=status_enum,
-            preferred_zone=preferred_zone
+            preferred_zone=preferred_zone,
+            category=category,
+            subcategory=subcategory
         )
 
     except (ValidationError, ValueError) as e:

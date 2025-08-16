@@ -21,18 +21,18 @@ class BaseFilterParams(BaseModel):
 # --- Container Models ---
 
 class ContainerApiSchema(BaseModel):
-    id: str = Field(..., alias="containerId", description="Unique identifier of the container")
-    zoneId: str = Field(..., alias="zone", description="Storage zone identifier")
-    width: float
-    depth: float
-    height: float
+    id: str = Field(..., alias="container_id", description="Unique identifier of the container")
+    zone_id: str = Field(..., alias="zone", description="Storage zone identifier")
+    module_id: str = Field(..., description="Module identifier (e.g., M1, M2, M3)")
+    width_cm: float = Field(..., description="Width in centimeters")
+    depth_cm: float = Field(..., description="Depth in centimeters")
+    height_cm: float = Field(..., description="Height in centimeters")
     item_count: int = Field(..., description="Total number of items currently in the container")
     expired_item_count: int = Field(..., description="Number of expired items currently in the container")
 
     class Config:
-        orm_mode = True # For Pydantic V1
-        # from_attributes = True # For Pydantic V2+
-        allow_population_by_field_name = True # Allow using 'containerId' and 'zone' during creation
+        from_attributes = True # For Pydantic V2+
+        validate_by_name = True # Allow using 'container_id' and 'zone' during creation
 
 class PaginatedContainerResponse(BaseModel):
     total: int = Field(..., description="Total number of containers matching the criteria")
@@ -45,32 +45,34 @@ class PaginatedContainerResponse(BaseModel):
 class ItemFilterParams(BaseFilterParams):
     status: Optional[ItemStatus] = Field(None, description="Filter by item status")
     preferred_zone: Optional[str] = Field(None, description="Filter by preferred storage zone")
+    category: Optional[str] = Field(None, description="Filter by item category")
+    subcategory: Optional[str] = Field(None, description="Filter by item subcategory")
     # Add other specific filters if needed
 
 class ItemApiSchema(BaseModel):
-    id: str = Field(..., alias="itemId", description="Unique identifier of the item")
+    id: str = Field(..., alias="item_id", description="Unique identifier of the item")
     name: str
-    # category: Optional[str] = None # Not in DB model, uncomment if added
-    containerId: Optional[str] = Field(None, description="ID of the container holding the item, if placed")
+    category: str = Field(..., description="Item category (e.g., Medical, Food, Equipment)")
+    subcategory: str = Field(..., description="Item subcategory (e.g., Antibiotic_Supply, Food_Packet)")
+    container_id: Optional[str] = Field(None, description="ID of the container holding the item, if placed")
     quantity: int = Field(1, description="Quantity of this specific item (always 1 based on model)")
-    mass: float
-    expirationDate: Optional[datetime] = Field(None, alias="expiryDate")
-    width: float
-    depth: float
-    height: float
+    mass_kg: float = Field(..., description="Mass in kilograms")
+    expiry_date: Optional[str] = Field(None, description="Expiration date as string (e.g., '2026-06-12' or 'N/A')")
+    width_cm: float = Field(..., description="Width in centimeters")
+    depth_cm: float = Field(..., description="Depth in centimeters")
+    height_cm: float = Field(..., description="Height in centimeters")
     priority: int
-    usageLimit: Optional[int] = None
-    currentUses: int
-    preferredZone: Optional[str] = None
-    currentZone: Optional[str] = Field(None, description="Current zone where the item is located, if placed")
+    usage_limit: Optional[str] = Field(None, description="Usage limit as string (e.g., '314' or 'N/A')")
+    current_uses: int = Field(0, description="Current usage count")
+    preferred_zone: Optional[str] = None
+    current_zone: Optional[str] = Field(None, description="Current zone where the item is located, if placed")
     status: ItemStatus
     expired: bool = Field(..., description="True if status is WASTE_EXPIRED")
     depleted: bool = Field(..., description="True if status is WASTE_DEPLETED")
 
     class Config:
         from_attributes = True
-        # from_attributes = True # For Pydantic V2+
-        allow_population_by_field_name = True # Allow using 'itemId' and 'expiryDate'
+        validate_by_name = True # Allow using 'item_id' and 'expiry_date'
 
 class PaginatedItemResponse(BaseModel):
     total: int = Field(..., description="Total number of items matching the criteria")

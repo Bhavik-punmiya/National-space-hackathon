@@ -22,8 +22,8 @@ class PlacementFrontendService:
         # Get all items with placements
         items_with_placements = (
             db_session.query(Item, Placement, Container)
-            .join(Placement, Item.itemId == Placement.itemId_fk)
-            .join(Container, Placement.containerId_fk == Container.containerId)
+            .join(Placement, Item.item_id == Placement.item_id_fk)
+            .join(Container, Placement.container_id_fk == Container.container_id)
             .all()
         )
         
@@ -32,19 +32,20 @@ class PlacementFrontendService:
         for container in containers:
             container_responses.append(
                 ContainerFrontendResponse(
-                    id=container.containerId,
-                    name=container.containerId,  # Using containerId as name
+                    id=container.container_id,
+                    name=container.container_id,  # Using container_id as name
                     zoneId=container.zone,
-                    width=container.width,
-                    depth=container.depth,
-                    height=container.height,
+                    module_id=container.module_id,
+                    width_cm=container.width_cm,
+                    depth_cm=container.depth_cm,
+                    height_cm=container.height_cm,
                     # Adding default spatial coordinates
                     start_width=0.0,
                     start_depth=0.0,
                     start_height=0.0,
-                    end_width=container.width,
-                    end_depth=container.depth,
-                    end_height=container.height
+                    end_width=container.width_cm,
+                    end_depth=container.depth_cm,
+                    end_height=container.height_cm
                 )
             )
         
@@ -53,18 +54,20 @@ class PlacementFrontendService:
         for item, placement, container in items_with_placements:
             item_responses.append(
                 ItemFrontendResponse(
-                    id=item.itemId,
+                    id=item.item_id,
                     name=item.name,
-                    containerId=container.containerId,
-                    mass=item.mass,
-                    expirationDate=item.expiryDate,
-                    width=item.width,
-                    depth=item.depth,
-                    height=item.height,
+                    category=item.category,
+                    subcategory=item.subcategory,
+                    containerId=container.container_id,
+                    mass_kg=item.mass_kg,
+                    expirationDate=item.expiry_date,
+                    width_cm=item.width_cm,
+                    depth_cm=item.depth_cm,
+                    height_cm=item.height_cm,
                     priority=item.priority,
-                    usageLimit=item.usageLimit,
-                    usageCount=item.currentUses,
-                    preferredZone=item.preferredZone,
+                    usageLimit=item.usage_limit,
+                    usageCount=0,  # currentUses field was removed
+                    preferredZone=item.preferred_zone,
                     position_start_width=placement.start_w,
                     position_start_depth=placement.start_d,
                     position_start_height=placement.start_h,

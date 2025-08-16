@@ -12,10 +12,10 @@ import {
 import toast from "react-hot-toast";
 
 interface WasteItem {
-  itemId: string;
+  item_id: string;
   name: string;
   reason: string;
-  containerId: string;
+  container_id: string;
   position: {
     startCoordinates: { width: number; depth: number; height: number };
     endCoordinates: { width: number; depth: number; height: number };
@@ -26,13 +26,13 @@ interface WasteItem {
 interface ReturnStep {
   step: number;
   action: string;
-  itemId: string;
+  item_id: string;
   itemName: string;
 }
 
 interface ReturnPlanItem {
   step: number;
-  itemId: string;
+  item_id: string;
   itemName: string;
   fromContainer: string;
   toContainer: string;
@@ -42,7 +42,7 @@ interface ReturnManifest {
   undockingContainerId: string;
   undockingDate: string;
   returnItems: {
-    itemId: string;
+    item_id: string;
     name: string;
     reason: string;
   }[];
@@ -161,7 +161,7 @@ export default function WasteManagement() {
       setWasteItems((prevItems) =>
         prevItems.map((item) => ({
           ...item,
-          selected: selectedItemIds.includes(item.itemId),
+          selected: selectedItemIds.includes(item.item_id),
         }))
       );
       setShowReturnPlan(true);
@@ -433,11 +433,11 @@ export default function WasteManagement() {
                         : "border-gray-700 hover:bg-gray-700/30"
                     } transition-all duration-150`}
                   >
-                    <td className="px-4 py-3">{getIdBadge(item.itemId)}</td>
+                    <td className="px-4 py-3">{getIdBadge(item.item_id)}</td>
                     <td className="px-4 py-3 font-medium">{item.name}</td>
                     <td className="px-4 py-3">{getReasonBadge(item.reason)}</td>
                     <td className="px-4 py-3">
-                      {getIdBadge(item.containerId)}
+                      {getIdBadge(item.container_id)}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-300">
                       {formatPosition(item.position)}
@@ -476,7 +476,7 @@ export default function WasteManagement() {
                     </h4>
                     <div className="mt-2">
                       <div className="text-sm text-gray-300">
-                        {getIdBadge(step.itemId)}
+                        {getIdBadge(step.item_id)}
                       </div>
                       <div className="text-gray-300">{step.itemName}</div>
                     </div>
@@ -518,7 +518,7 @@ export default function WasteManagement() {
                         <div>
                           <div className="font-medium">{item.name}</div>
                           <div className="flex items-center space-x-2 text-sm">
-                            {getIdBadge(item.itemId)}
+                            {getIdBadge(item.item_id)}
                             <span className="text-gray-500">•</span>
                             <span className="text-gray-400">{item.reason}</span>
                           </div>

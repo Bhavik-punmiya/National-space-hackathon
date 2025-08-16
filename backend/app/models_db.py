@@ -46,17 +46,19 @@ class Item(Base):
     __tablename__ = "items"
 
     id = Column(Integer, primary_key=True, index=True) # Auto-incrementing primary key
-    itemId = Column(String, unique=True, index=True, nullable=False) # User-defined unique ID
-    name = Column(String, index=True, nullable=False) # Human-readable name
-    width = Column(Float, nullable=False)             # Dimension in meters/units
-    depth = Column(Float, nullable=False)             # Dimension in meters/units
-    height = Column(Float, nullable=False)            # Dimension in meters/units
-    mass = Column(Float, nullable=False)              # Mass in kg
+    item_id = Column(String, unique=True, index=True, nullable=False) # User-defined unique ID (e.g., 000001)
+    name = Column(String, index=True, nullable=False) # Human-readable name (e.g., Antibiotic_Supply_001)
+    category = Column(String, index=True, nullable=False) # Item category (e.g., Medical, Food, Equipment)
+    subcategory = Column(String, index=True, nullable=False) # Item subcategory (e.g., Antibiotic_Supply, Food_Packet)
+    width_cm = Column(Float, nullable=False)             # Dimension in centimeters
+    depth_cm = Column(Float, nullable=False)             # Dimension in centimeters
+    height_cm = Column(Float, nullable=False)            # Dimension in centimeters
+    mass_kg = Column(Float, nullable=False)              # Mass in kg
     priority = Column(Integer, nullable=False, default=50, index=True) # Placement/retrieval priority (e.g., 0-100)
-    expiryDate = Column(DateTime, nullable=True)      # Expiration date/time (UTC recommended)
-    usageLimit = Column(Integer, nullable=True)       # Maximum number of uses allowed
-    currentUses = Column(Integer, default=0, nullable=False) # Number of times used
-    preferredZone = Column(String, nullable=True, index=True) # Preferred storage zone identifier
+    expiry_date = Column(String, nullable=True)          # Expiration date as string (e.g., "2026-06-12" or "N/A")
+    usage_limit = Column(String, nullable=True)          # Usage limit as string (e.g., "314" or "N/A")
+    current_uses = Column(Integer, nullable=False, default=0)  # Current usage count
+    preferred_zone = Column(String, nullable=True, index=True) # Preferred storage zone identifier
     status = Column(SQLAlchemyEnum(ItemStatus), default=ItemStatus.ACTIVE, nullable=False, index=True) # Current status
 
     # Relationships
@@ -66,18 +68,19 @@ class Item(Base):
     logs = relationship("Log", back_populates="item", cascade="all, delete-orphan") # Cascade delete logs if item is deleted? Decide based on requirements.
 
     def __repr__(self):
-        return f"<Item(itemId='{self.itemId}', name='{self.name}', status='{self.status.value}')>"
+        return f"<Item(item_id='{self.item_id}', name='{self.name}', category='{self.category}', status='{self.status.value}')>"
 
 class Container(Base):
     """Represents a storage container."""
     __tablename__ = "containers"
 
     id = Column(Integer, primary_key=True, index=True) # Auto-incrementing primary key
-    containerId = Column(String, unique=True, index=True, nullable=False) # User-defined unique ID
-    zone = Column(String, index=True, nullable=False)  # Storage zone identifier
-    width = Column(Float, nullable=False)              # Internal dimension in meters/units
-    depth = Column(Float, nullable=False)              # Internal dimension in meters/units
-    height = Column(Float, nullable=False)             # Internal dimension in meters/units
+    zone = Column(String, index=True, nullable=False)  # Storage zone identifier (e.g., Airlock, Storage_Bay)
+    module_id = Column(String, index=True, nullable=False)  # Module identifier (e.g., M1, M2, M3)
+    container_id = Column(String, unique=True, index=True, nullable=False) # User-defined unique ID (e.g., M1-A001)
+    width_cm = Column(Float, nullable=False)              # Internal dimension in centimeters
+    depth_cm = Column(Float, nullable=False)              # Internal dimension in centimeters
+    height_cm = Column(Float, nullable=False)             # Internal dimension in centimeters
     # Optional: Add constraints like max_weight, environmental controls etc.
 
     # Relationships
@@ -85,7 +88,7 @@ class Container(Base):
     placements = relationship("Placement", back_populates="container", cascade="all, delete-orphan")
 
     def __repr__(self):
-        return f"<Container(containerId='{self.containerId}', zone='{self.zone}')>"
+        return f"<Container(container_id='{self.container_id}', zone='{self.zone}', module_id='{self.module_id}')>"
 
 class Placement(Base):
     """Represents the physical placement of an Item within a Container."""
@@ -94,8 +97,8 @@ class Placement(Base):
     id = Column(Integer, primary_key=True, index=True) # Auto-incrementing primary key
 
     # Foreign keys linking to the string IDs of Item and Container
-    itemId_fk = Column(String, ForeignKey("items.itemId"), nullable=False, unique=True, index=True)
-    containerId_fk = Column(String, ForeignKey("containers.containerId"), nullable=False, index=True)
+    item_id_fk = Column(String, ForeignKey("items.item_id"), nullable=False, unique=True, index=True)
+    container_id_fk = Column(String, ForeignKey("containers.container_id"), nullable=False, index=True)
 
     # Coordinates of the item's bounding box origin (typically front-bottom-left corner)
     # relative to the container's origin (e.g., internal front-bottom-left corner).
@@ -116,12 +119,12 @@ class Placement(Base):
     item = relationship("Item", back_populates="placement")
     container = relationship("Container", back_populates="placements")
 
-    # Ensure an item (identified by itemId_fk) can only have one placement entry.
-    __table_args__ = (UniqueConstraint('itemId_fk', name='_placement_itemId_uc'),)
+    # Ensure an item (identified by item_id_fk) can only have one placement entry.
+    __table_args__ = (UniqueConstraint('item_id_fk', name='_placement_item_id_uc'),)
 
     def __repr__(self):
         pos = f"({self.start_w},{self.start_d},{self.start_h})->({self.end_w},{self.end_d},{self.end_h})"
-        return f"<Placement(itemId='{self.itemId_fk}', containerId='{self.containerId_fk}', pos={pos})>"
+        return f"<Placement(item_id='{self.item_id_fk}', container_id='{self.container_id_fk}', pos={pos})>"
 
 
 class Log(Base):
@@ -133,7 +136,7 @@ class Log(Base):
     userId = Column(String, nullable=True, index=True) # Identifier for the user initiating the action (optional)
     actionType = Column(SQLAlchemyEnum(LogActionType), nullable=False, index=True) # Type of action performed
     # Foreign key to Item (optional, as some logs might not relate to a specific item)
-    itemId_fk = Column(String, ForeignKey("items.itemId"), nullable=True, index=True)
+    item_id_fk = Column(String, ForeignKey("items.item_id"), nullable=True, index=True)
     # Store detailed context as a JSON string in a Text field
     # Use Text for potentially long JSON strings, especially in SQLite/PostgreSQL. Use JSON type if DB supports it well.
     details_json = Column(Text, nullable=True)
@@ -143,4 +146,4 @@ class Log(Base):
 
     def __repr__(self):
         details_preview = (self.details_json[:30] + '...') if self.details_json and len(self.details_json) > 30 else self.details_json
-        return f"<Log(id={self.id}, timestamp='{self.timestamp}', action='{self.actionType.value}', itemId='{self.itemId_fk}', details='{details_preview}')>"
+        return f"<Log(id={self.id}, timestamp='{self.timestamp}', action='{self.actionType.value}', item_id='{self.item_id_fk}', details='{details_preview}')>"

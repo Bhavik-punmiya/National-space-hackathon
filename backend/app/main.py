@@ -16,6 +16,7 @@ from .routes.client_simulation import client_sim_bp
 from .routes.client_search_retrieve import client_search_retrieve_bp
 from .routes.search_frontend import search_frontend_bp
 from app.routes.client_tables import tables_bp
+from app.routes.agent import agent_bp
 import os
 import json
 
@@ -41,8 +42,9 @@ def create_app(config_class=Config):
     app.register_blueprint(client_search_retrieve_bp)
     app.register_blueprint(tables_bp)
     app.register_blueprint(search_frontend_bp)
+    app.register_blueprint(agent_bp)
 
-    # Initialize the database
+    # Initialize the database with updated models
     init_db()
 
     # Optional: Add a command to initialize the database
@@ -50,7 +52,7 @@ def create_app(config_class=Config):
     def init_db_command():
         """Clear existing data and create new tables."""
         init_db()
-        print("Initialized the database.")
+        print("Initialized the database with updated models.")
 
     # Teardown context to remove database session after each request
     @app.teardown_appcontext
@@ -61,7 +63,7 @@ def create_app(config_class=Config):
     # Simple root endpoint
     @app.route('/')
     def index():
-        return jsonify({"message": "Cargo Management API Operational"})
+        return jsonify({"message": "Cargo Management API Operational - Updated for new dataset structure"})
     
     @app.route('/api/client/iss_cargo', methods=['GET'])
     def iss_cargo():
