@@ -103,7 +103,7 @@ def get_items():
         status_enum: Optional[ItemStatus] = None
         if status_str:
             try:
-                status_enum = ItemStatus(status_str.lower())
+                status_enum = ItemStatus(status_str.upper())
             except ValueError:
                 return jsonify({"error": f"Invalid status value. Allowed values: {[s.value for s in ItemStatus]}"}), 400
 

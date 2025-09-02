@@ -11,7 +11,8 @@ from app.agent.models.agent_models import (
     CountResponse, ItemInfo, ContainerInfo, ZoneInfo,
     ExpiredItemsResponse, NearExpiryItemsResponse, TopUsedItemsResponse,
     ItemDetailsResponse, ContainerInventoryResponse, LocationResponse,
-    CodeMeaningResponse, UsageTrackingResponse, ConversationContext
+    CodeMeaningResponse, UsageTrackingResponse, ConversationContext,
+    CategoriesListResponse, SubcategoriesListResponse, ContainerDetailsResponse
 )
 
 class AgentService:
@@ -30,6 +31,18 @@ class AgentService:
     def classify_query(self, query: str) -> Tuple[AgentQueryType, Dict[str, Any]]:
         """Classify the query type and extract parameters"""
         query_lower = query.lower()
+        
+        # Check for container details queries (e.g., "M1-SB085", "container M1-SB085")
+        if re.search(r'M\d+-[A-Z]{2}\d+', query.upper()):
+            return AgentQueryType.CONTAINER_DETAILS, self._extract_parameters(query, AgentQueryType.CONTAINER_DETAILS)
+        
+        # Check for subcategories queries (more specific patterns) - must come before categories
+        if any(word in query_lower for word in ['subcategories', 'subcategory']) and any(word in query_lower for word in ['under', 'for', 'in']):
+            return AgentQueryType.SUBCATEGORIES_LIST, self._extract_parameters(query, AgentQueryType.SUBCATEGORIES_LIST)
+        
+        # Check for categories queries
+        if any(word in query_lower for word in ['categories', 'category', 'types', 'what categories', 'list categories']):
+            return AgentQueryType.CATEGORIES_LIST, self._extract_parameters(query, AgentQueryType.CATEGORIES_LIST)
         
         # Check for expired items first (high priority)
         if any(word in query_lower for word in ['expired', 'expiry', 'expiring', 'past due', 'out of date']):
@@ -66,6 +79,43 @@ class AgentService:
         params = {}
         query_lower = query.lower()
         
+        # Extract container ID for container details queries
+        if query_type == AgentQueryType.CONTAINER_DETAILS:
+            container_match = re.search(r'M\d+-[A-Z]{2}\d+', query.upper())
+            if container_match:
+                params['container_id'] = container_match.group(0)
+        
+        # Extract category for subcategories queries
+        if query_type == AgentQueryType.SUBCATEGORIES_LIST:
+            # Look for category after "under", "for", or "in"
+            category_patterns = [
+                r'under\s+([a-zA-Z_\s]+?)(?:\s+supplies?|\s+category|\s+items?)?$',
+                r'for\s+([a-zA-Z_\s]+?)(?:\s+supplies?|\s+category|\s+items?)?$',
+                r'in\s+([a-zA-Z_\s]+?)(?:\s+supplies?|\s+category|\s+items?)?$'
+            ]
+            
+            for pattern in category_patterns:
+                category_match = re.search(pattern, query_lower)
+                if category_match:
+                    category = category_match.group(1).strip()
+                    # Map common variations to actual category names
+                    category_mapping = {
+                        'food': 'Food',
+                        'medical': 'Medical',
+                        'equipment': 'Equipment',
+                        'life support system': 'Life_Support_System',
+                        'life support': 'Life_Support_System',
+                        'experiment sample': 'Experiment_Sample',
+                        'crew supplies': 'Crew_Supplies',
+                        'maintenance tools': 'Maintenance_Tools',
+                        'scientific research supplies': 'Scientific_Research_Supplies',
+                        'essential supplies': 'Essential_Supplies',
+                        'structural and spacecraft components': 'Structural_and_Spacecraft_Components',
+                        'entertainment and leisure items': 'Entertainment_and_Leisure_Items'
+                    }
+                    params['category'] = category_mapping.get(category.lower(), category.title())
+                    break
+        
         # Extract limit for top used/expiring items
         limit_match = re.search(r'top[:\s]+(\d+)', query_lower)
         if limit_match:
@@ -76,7 +126,7 @@ class AgentService:
         if days_match:
             params['days_threshold'] = int(days_match.group(1))
         
-        # Extract category
+        # Extract category for other queries
         category_match = re.search(r'(food|medical|equipment|supplies?|communication|research|experiment|space)', query_lower)
         if category_match:
             params['category'] = category_match.group(1).title()
@@ -108,6 +158,12 @@ class AgentService:
                 response_data = self._get_near_expiry_items(db, params)
             elif query_type == AgentQueryType.TOP_USED_ITEMS:
                 response_data = self._get_top_used_items(db, params)
+            elif query_type == AgentQueryType.CATEGORIES_LIST:
+                response_data = self._get_categories_list(db, params)
+            elif query_type == AgentQueryType.SUBCATEGORIES_LIST:
+                response_data = self._get_subcategories_list(db, params)
+            elif query_type == AgentQueryType.CONTAINER_DETAILS:
+                response_data = self._get_container_details(db, params)
             else:
                 response_data = {"error": "Unknown query type"}
             
@@ -191,13 +247,10 @@ class AgentService:
     
     def _get_expired_items(self, db: Session, params: Dict[str, Any]) -> Dict[str, Any]:
         """Get expired items with enhanced functionality"""
-        current_date = datetime.utcnow().date()
+        from app.models_db import ItemStatus
         
-        # Get items with expiry dates
-        db_query = db.query(DBItem).filter(
-            DBItem.expiry_date.isnot(None),
-            DBItem.expiry_date != "N/A"
-        )
+        # Query items that are marked as WASTE_EXPIRED in the database
+        db_query = db.query(DBItem).filter(DBItem.status == ItemStatus.WASTE_EXPIRED)
         
         # Apply category filter if specified
         if 'category' in params:
@@ -207,14 +260,8 @@ class AgentService:
         
         expired_items = []
         for item in items:
-            try:
-                if item.expiry_date:
-                    expiry_date = datetime.strptime(item.expiry_date, "%Y-%m-%d").date()
-                    if expiry_date < current_date:
-                        item_info = self._item_to_info(item, db)
-                        expired_items.append(item_info)
-            except:
-                continue
+            item_info = self._item_to_info(item, db)
+            expired_items.append(item_info)
         
         # Check if this is a count-only request
         query_lower = params.get('query', '').lower()
@@ -234,12 +281,16 @@ class AgentService:
     
     def _get_near_expiry_items(self, db: Session, params: Dict[str, Any]) -> Dict[str, Any]:
         """Get items near expiry with enhanced functionality"""
+        from app.models_db import ItemStatus
+        
         days_threshold = params.get('days_threshold', 30)
         limit = params.get('limit', 10)
         current_date = datetime.utcnow().date()
         threshold_date = current_date + timedelta(days=days_threshold)
         
+        # Query active items with expiry dates
         db_query = db.query(DBItem).filter(
+            DBItem.status == ItemStatus.ACTIVE,
             DBItem.expiry_date.isnot(None),
             DBItem.expiry_date != "N/A"
         )
@@ -249,11 +300,38 @@ class AgentService:
         for item in items:
             try:
                 if item.expiry_date:
-                    expiry_date = datetime.strptime(item.expiry_date, "%Y-%m-%d").date()
-                    if current_date <= expiry_date <= threshold_date:
+                    # Handle different date formats
+                    expiry_date_str = str(item.expiry_date).strip()
+                    
+                    # Try different date formats
+                    expiry_date = None
+                    date_formats = [
+                        "%Y-%m-%d",           # 2021-10-07
+                        "%Y-%m-%dT%H:%M:%S",  # 2021-10-07T00:00:00
+                        "%Y-%m-%dT%H:%M:%S.%fZ",  # 2021-10-07T00:00:00.000Z
+                        "%Y-%m-%dT%H:%M:%SZ",     # 2021-10-07T00:00:00Z
+                        "%d/%m/%Y",           # 07/10/2021
+                        "%m/%d/%Y",           # 10/07/2021
+                    ]
+                    
+                    for date_format in date_formats:
+                        try:
+                            if date_format.endswith('Z'):
+                                # Handle timezone format
+                                expiry_date = datetime.strptime(expiry_date_str, date_format).date()
+                            else:
+                                expiry_date = datetime.strptime(expiry_date_str, date_format).date()
+                            break
+                        except ValueError:
+                            continue
+                    
+                    # If item is near expiry (current_date <= expiry_date <= threshold_date)
+                    if expiry_date and current_date <= expiry_date <= threshold_date:
                         item_info = self._item_to_info(item, db)
                         near_expiry_items.append(item_info)
-            except:
+            except Exception as e:
+                # Log the error but continue processing other items
+                print(f"Error processing item {item.item_id} expiry date: {e}")
                 continue
         
         # Sort by expiry date (nearest first)
@@ -272,6 +350,8 @@ class AgentService:
     
     def _get_top_used_items(self, db: Session, params: Dict[str, Any]) -> Dict[str, Any]:
         """Get top used items based on log entries"""
+        from app.models_db import ItemStatus
+        
         limit = params.get('limit', 10)
         
         # Query logs to count usage events per item
@@ -285,10 +365,13 @@ class AgentService:
             func.count(Log.id).desc()
         ).limit(limit).all()
         
-        # Get item details for each item with usage
+        # Get item details for each item with usage (only active items)
         top_items = []
         for item_id, usage_count in usage_counts:
-            item_query = db.query(DBItem).filter(DBItem.item_id == item_id)
+            item_query = db.query(DBItem).filter(
+                DBItem.item_id == item_id,
+                DBItem.status == ItemStatus.ACTIVE
+            )
             item = item_query.first()
             if item:
                 item_info = self._item_to_info(item, db)
@@ -328,3 +411,75 @@ class AgentService:
             container_id=container_id,
             zone=zone
         )
+    
+    def _get_categories_list(self, db: Session, params: Dict[str, Any]) -> Dict[str, Any]:
+        """Get list of all categories"""
+        categories_result = db.query(DBItem.category).distinct().all()
+        categories = [cat[0] for cat in categories_result if cat[0]]
+        categories.sort()
+        
+        return CategoriesListResponse(
+            categories=categories,
+            count=len(categories),
+            message=f"Found {len(categories)} unique categories"
+        ).dict()
+    
+    def _get_subcategories_list(self, db: Session, params: Dict[str, Any]) -> Dict[str, Any]:
+        """Get list of subcategories for a specific category"""
+        category = params.get('category', 'Food')
+        
+        # Query subcategories for the specified category
+        subcategories_result = db.query(DBItem.subcategory).filter(
+            DBItem.category == category
+        ).distinct().all()
+        
+        subcategories = [sub[0] for sub in subcategories_result if sub[0]]
+        subcategories.sort()
+        
+        return SubcategoriesListResponse(
+            category=category,
+            subcategories=subcategories,
+            count=len(subcategories),
+            message=f"Found {len(subcategories)} subcategories under {category}"
+        ).dict()
+    
+    def _get_container_details(self, db: Session, params: Dict[str, Any]) -> Dict[str, Any]:
+        """Get detailed information about a specific container"""
+        container_id = params.get('container_id')
+        if not container_id:
+            return {"error": "Container ID not provided"}
+        
+        # Get container information
+        container = db.query(DBContainer).filter(DBContainer.container_id == container_id).first()
+        if not container:
+            return {"error": f"Container {container_id} not found"}
+        
+        # Get zone code from container ID (e.g., M1-SB085 -> SB)
+        zone_code = container_id.split('-')[1][:2]
+        
+        # Get items in this container
+        items_query = db.query(DBItem).join(DBPlacement).filter(
+            DBPlacement.container_id_fk == container_id
+        )
+        items = items_query.all()
+        
+        # Convert items to ItemInfo
+        item_infos = []
+        for item in items:
+            item_info = self._item_to_info(item, db)
+            item_infos.append(item_info)
+        
+        return ContainerDetailsResponse(
+            container_id=container.container_id,
+            module_id=container.module_id,
+            zone=container.zone,
+            zone_code=zone_code,
+            dimensions={
+                "width_cm": container.width_cm,
+                "depth_cm": container.depth_cm,
+                "height_cm": container.height_cm
+            },
+            item_count=len(item_infos),
+            items=item_infos,
+            message=f"Container {container_id} is located in {container.zone} (Module {container.module_id}) and contains {len(item_infos)} items"
+        ).dict()

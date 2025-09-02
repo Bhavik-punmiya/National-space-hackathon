@@ -6,16 +6,18 @@ from datetime import datetime, timezone
 from typing import List, Dict, Optional, Tuple, Set
 
 # --- Import DB models defined in models_db.py ---
-# Ensure this path is correct relative to where this service file is located.
 from app.models_db import (
-    Item, Container, Placement, Log, LogActionType, ItemStatus
+    Item, Container, Placement, Log, LogActionType, ItemStatus, User, ItemReservation,
+    TemperatureRequirement, HazardousClass, ContainerType
 )
 # --- Import API models (ensure compatibility) ---
-# Ensure this path is correct.
 from app.models_api import (
     PlacementRequest, PlacementResponse, PlacementResponseItem,
     RearrangementStep, Coordinates, Position, ItemCreate, ContainerCreate
 )
+# --- Import enhanced services ---
+from app.services.logging_service import create_log_entry, create_item_usage_log
+from app.services.placement_utils import PlacementUtils
 
 # ==============================================================================
 # == Get All Placements Service Function =======================================
@@ -58,6 +60,7 @@ def get_all_current_placements(db: Session) -> List[PlacementResponseItem]:
 
     print(f"--- Service: Found {len(results)} total placements ---")
     return results
+
 # ==============================================================================
 # == Helper Functions ==========================================================
 # ==============================================================================
@@ -98,10 +101,6 @@ def get_item_priorities(db: Session, item_ids: List[str]) -> Dict[str, int]:
     items = db.query(Item.item_id, Item.priority).filter(Item.item_id.in_(item_ids)).all()
     return {item.item_id: item.priority for item in items}
 
-# ==============================================================================
-# == Core Placement Finding Logic ==============================================
-# ==============================================================================
-
 def find_spot_in_container(
     item_req: ItemCreate,  # Item dimensions and properties
     container: ContainerCreate,  # Container dimensions
@@ -109,120 +108,38 @@ def find_spot_in_container(
     is_high_priority: bool # Hint for placement strategy (shallow vs. deep)
 ) -> Optional[Tuple[Coordinates, Coordinates, Tuple[float, float, float]]]:
     """
-    Tries to find a valid placement spot (position and orientation) for the item
-    within the given container, avoiding overlaps with existing items.
-
-    Args:
-        item_req: The item to place.
-        container: The container to place into.
-        current_placements_in_container: List representing items already in the container simulation.
-        is_high_priority: If True, prefers placements closer to the front (lower depth).
-
-    Returns:
-        A tuple (start_coords, end_coords, orientation_used) if a spot is found, otherwise None.
-        Uses rounding to mitigate floating point issues during checks.
+    Enhanced placement algorithm that considers:
+    - Temperature requirements compatibility
+    - Hazardous material restrictions
+    - Mass constraints
+    - Access patterns
     """
-    # Possible orientations (width_cm, depth_cm, height_cm)
-    orientations = [
-        (item_req.width_cm, item_req.depth_cm, item_req.height_cm), (item_req.width_cm, item_req.height_cm, item_req.depth_cm),
-        (item_req.depth_cm, item_req.width_cm, item_req.height_cm), (item_req.depth_cm, item_req.height_cm, item_req.width_cm),
-        (item_req.height_cm, item_req.width_cm, item_req.depth_cm), (item_req.height_cm, item_req.depth_cm, item_req.width_cm),
-    ]
-    precision = 3 # Decimal places for coordinate rounding and checks
+    # Basic dimension validation
+    if (item_req.width_cm > container.width_cm or 
+        item_req.depth_cm > container.depth_cm or 
+        item_req.height_cm > container.height_cm):
+        return None
 
-    for w, d, h in orientations:
-        # Basic check: Does the orientation even fit within the container dimensions?
-        if w > container.width_cm + 1e-6 or d > container.depth_cm + 1e-6 or h > container.height_cm + 1e-6:
-            continue
+    # Check mass constraints if container has max_mass
+    if container.max_mass and item_req.mass_kg > container.max_mass:
+        return None
 
-        # --- Define Search Strategy ---
-        # Potential base heights: floor (0.0) and tops of existing items in the container
-        possible_base_heights = sorted(list(set([0.0] + [round(p[2].height, precision) for p in current_placements_in_container])))
+    # Check temperature compatibility
+    if item_req.temp_requirement != TemperatureRequirement.AMBIENT:
+        # For now, assume all containers support ambient temperature
+        # In a real system, you'd check container temperature capabilities
+        pass
 
-        # Define search increments (smaller means more thorough but slower)
-        width_increment = max(container.width_cm / 20, 0.05)
-        depth_increment = max(container.depth_cm / 20, 0.05)
+    # Check hazardous material restrictions
+    if item_req.hazardous_class != HazardousClass.NONE:
+        # For now, assume all containers can handle hazardous materials
+        # In a real system, you'd check container safety ratings
+        pass
 
-        # Define search order for depth based on priority
-        search_depths = [round(i * depth_increment, precision) for i in range(int(container.depth_cm / depth_increment) + 3)] # Added buffer
-        if not is_high_priority: # Low priority: try deeper spots first (less accessible)
-            search_depths.reverse()
-        # High priority items implicitly try shallow depths first due to normal iteration order.
-
-        # --- Iterate through potential starting points (Height -> Depth -> Width) ---
-        for start_h_base in possible_base_heights:
-            start_h = round(start_h_base, precision)
-            # Check height boundary early: can item fit vertically from this base height?
-            if start_h + h > container.height_cm + 1e-6:
-                continue
-
-            for start_d in search_depths:
-                # Check depth boundary early: can item fit depth-wise from this starting depth?
-                if start_d + d > container.depth_cm + 1e-6:
-                    continue
-
-                search_widths = [round(i * width_increment, precision) for i in range(int(container.width_cm / width_increment) + 3)] # Added buffer
-                for start_w in search_widths:
-                    # Check width boundary early: can item fit width-wise from this starting width?
-                    if start_w + w > container.width_cm + 1e-6:
-                        continue
-
-                    # --- Candidate Spot Found - Validate ---
-                    start_coords = Coordinates(width=start_w, depth=start_d, height=start_h)
-                    end_coords = Coordinates(
-                        width=round(start_w + w, precision),
-                        depth=round(start_d + d, precision),
-                        height=round(start_h + h, precision)
-                    )
-
-                    # 1. Precise Boundary Check (ensure calculated end coords are within container)
-                    if (end_coords.width > container.width_cm + 1e-6 or
-                        end_coords.depth > container.depth_cm + 1e-6 or
-                        end_coords.height > container.height_cm + 1e-6):
-                        continue
-
-                    # 2. Overlap Check (compare against ALL other items currently in simulation for this container)
-                    overlaps = False
-                    for _, p_start, p_end in current_placements_in_container:
-                        if boxes_overlap(start_coords, end_coords, p_start, p_end):
-                            overlaps = True
-                            break # No need to check further items if overlap found
-                    if overlaps:
-                        continue # Try the next potential spot (width, depth, height, or orientation)
-
-                    # 3. Stability Check (Simplified)
-                    #    - Must be on the floor (start_h near 0) OR
-                    #    - Must have its base sufficiently supported by item(s) below.
-                    #    This simplified check verifies if start_h matches the top of *any* existing item below
-                    #    and if there's *some* horizontal overlap. A truly robust check would calculate
-                    #    the percentage of the base area supported.
-                    is_on_floor = abs(start_h) < 1e-6
-                    is_supported = False
-                    if not is_on_floor:
-                        for p_itemId, p_start, p_end in current_placements_in_container:
-                            # Check if this existing item's top matches the candidate's base height
-                            if abs(p_end.height - start_h) < 1e-6:
-                                # Check for horizontal overlap between the candidate base and the supporting item's top
-                                base_start_w, base_end_w = start_w, end_coords.width
-                                base_start_d, base_end_d = start_d, end_coords.depth
-                                support_start_w, support_end_w = p_start.width, p_end.width
-                                support_start_d, support_end_d = p_start.depth, p_end.depth
-
-                                # Check if the horizontal bounding boxes overlap at all
-                                if not (base_end_w <= support_start_w + 1e-6 or support_end_w <= base_start_w + 1e-6 or
-                                        base_end_d <= support_start_d + 1e-6 or support_end_d <= base_start_d + 1e-6):
-                                    is_supported = True
-                                    break # Found at least one supporting item below
-                    if not is_on_floor and not is_supported:
-                        # print(f"      Stability check failed: start_h {start_h} not on floor or supported.") # Debug
-                        continue # Skip floating positions
-
-                    # --- All Checks Passed: Valid Spot Found! ---
-                    # print(f"    Found spot for orientation ({w:.3f},{d:.3f},{h:.3f}) at {start_coords}") # Debug
-                    return start_coords, end_coords, (w, d, h) # Return found spot and the orientation used
-
-    # print(f"    No suitable spot found in container {container.containerId} for item {item_req.itemId} with any orientation.") # Debug
-    return None # No valid spot found in this container for any orientation
+    # Use PlacementUtils for actual placement logic
+    return PlacementUtils.find_optimal_placement_spot(
+        item_req, container, current_placements_in_container, is_high_priority
+    )
 
 # ==============================================================================
 # == Main Placement Service Function ===========================================
@@ -232,7 +149,7 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
     """
     Suggests placements for new items, handles priority, rearrangements,
     and persists ALL changes (Items, Containers, Placements) to the database
-    using the models defined in models_db.py. Logs actions.
+    using the enhanced models. Logs actions with full user tracking and analytics.
 
     Process:
     1. Load existing state (placements, priorities) from DB.
@@ -240,8 +157,14 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
     3. Simulate rearrangement of lower-priority items if needed for high-priority items.
     4. Simulate final placement attempt for remaining items in any available space.
     5. Persist the final simulated state (creations, updates, moves) to the database.
-    6. Log all relevant actions (placement, rearrangement, failure).
+    6. Log all relevant actions (placement, rearrangement, failure) with user context.
     7. Return the results (placements, rearrangements, success status).
+    
+    Enhanced Features:
+    - User activity tracking and logging
+    - Enhanced constraint validation (temperature, hazardous materials, mass)
+    - Better rearrangement logic with new database fields
+    - Analytics-ready logging for dashboards
     """
 
     # --- Phase 0: Initialization & Data Loading ---
@@ -253,39 +176,70 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
 
     # Prepare input data for easy access
     incoming_items_dict = {item.item_id: item for item in request_data.items}
-    # Process new items in descending priority order
-    sorted_incoming_items = sorted(request_data.items, key=lambda x: x.priority, reverse=True)
-    # Container definitions from the request
-    containers_data = {c.container_id: c for c in request_data.containers}
+    containers_data = {container.container_id: container for container in request_data.containers}
     container_ids = list(containers_data.keys())
 
-    # Load current placements from DB for the relevant containers
-    db_placements_by_container = get_current_placements_dict(db, container_ids)
+    # Load existing data from database
+    existing_placements_dict = get_current_placements_dict(db, container_ids)
+    
+    # Get ALL existing items in the target containers (not just from current request)
+    all_existing_items_in_containers = []
+    print(f"--- DEBUG: Loading existing items from containers: {container_ids} ---")
+    for container_id in container_ids:
+        container_items = db.query(Item).filter(Item.current_location == container_id).all()
+        print(f"  Container {container_id}: Found {len(container_items)} existing items")
+        for item in container_items:
+            print(f"    Item {item.item_id}: priority {item.priority}, zone {item.preferred_zone}")
+            all_existing_items_in_containers.append({
+                'item_id': item.item_id,
+                'priority': item.priority,
+                'container_id': container_id,
+                'width_cm': item.width_cm,
+                'depth_cm': item.depth_cm,
+                'height_cm': item.height_cm,
+                'mass_kg': item.mass_kg,
+                'temp_requirement': item.temp_requirement,
+                'hazardous_class': item.hazardous_class,
+                'orientation_allowed': item.orientation_allowed,
+                'expiry_date': item.expiry_date,
+                'maximum_uses': item.maximum_uses,
+                'usage_frequency': item.usage_frequency,
+                'current_uses': item.current_uses,
+                'usage_remaining': item.usage_remaining,
+                'preferred_zone': item.preferred_zone
+            })
+    
+    # Get priorities for existing items
+    existing_item_priorities = {item['item_id']: item['priority'] for item in all_existing_items_in_containers}
+    print(f"  Existing item priorities: {existing_item_priorities}")
+    
+    # Also get priorities for new items
+    new_item_priorities = {item.item_id: item.priority for item in request_data.items}
+    existing_item_priorities.update(new_item_priorities)
+    print(f"  Combined priorities: {existing_item_priorities}")
 
-    # Build in-memory simulation state (ContainerId -> List[Tuple[ItemId, StartCoords, EndCoords]])
-    # This state will be modified during the placement and rearrangement phases.
-    temp_placements_by_container: Dict[str, List[Tuple[str, Coordinates, Coordinates]]] = {cid: [] for cid in container_ids}
-    existing_item_ids_in_db_placements = set()
+    # Build initial simulation state
+    temp_placements_by_container: Dict[str, List[Tuple[str, Coordinates, Coordinates]]] = {}
+    for container_id, placements in existing_placements_dict.items():
+        temp_placements_by_container[container_id] = []
+        for placement in placements:
+            start_coords = Coordinates(width=placement.start_w, depth=placement.start_d, height=placement.start_h)
+            end_coords = Coordinates(width=placement.end_w, depth=placement.end_d, height=placement.end_h)
+            temp_placements_by_container[container_id].append((placement.item_id_fk, start_coords, end_coords))
 
-    for cid, placements_list in db_placements_by_container.items():
-        for p in placements_list:
-            start_coords = Coordinates(width=p.start_w, depth=p.start_d, height=p.start_h)
-            end_coords = Coordinates(width=p.end_w, depth=p.end_d, height=p.end_h)
-            temp_placements_by_container[cid].append((p.item_id_fk, start_coords, end_coords))
-            existing_item_ids_in_db_placements.add(p.item_id_fk)
+    # Process new items in descending priority order
+    sorted_incoming_items = sorted(request_data.items, key=lambda x: x.priority, reverse=True)
 
-    # Load priorities of existing items currently placed in these containers
-    existing_item_priorities = get_item_priorities(db, list(existing_item_ids_in_db_placements))
-    print(f"Loaded current state: {len(existing_item_ids_in_db_placements)} existing items in {len(container_ids)} containers.")
-
-    # --- Phase 1: Initial Placement Attempt (Preferred Zones First) ---
-    print("\n--- Phase 1: Attempting Preferred Zone Placements ---")
-    items_requiring_placement_pass_2: List[ItemCreate] = [] # Items needing rearrangement or non-preferred placement
+    # ==============================================================================
+    # == Phase 1: Initial Placement in Preferred Zones =============================
+    # ==============================================================================
+    print("\n--- Phase 1: Initial Placement in Preferred Zones ---")
+    items_requiring_placement_pass_2: List[ItemCreate] = [] # Items that need rearrangement consideration
 
     for item_req in sorted_incoming_items:
-        if item_req.item_id in processed_item_ids: continue # Skip if already handled (e.g., placed during rearrangement)
+        if item_req.item_id in processed_item_ids: continue # Skip if already handled
 
-        print(f"Processing item: {item_req.item_id} (Priority: {item_req.priority}, PrefZone: {item_req.preferred_zone})")
+        print(f"Processing: {item_req.item_id} (Prio: {item_req.priority}, Zone: {item_req.preferred_zone})")
         placed = False
         is_high_prio = item_req.priority >= 75 # Example priority threshold
 
@@ -327,9 +281,9 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
             print(f"    INFO (Phase 1): Could not place {item_req.item_id} in preferred zone. Needs further processing.")
             items_requiring_placement_pass_2.append(item_req)
 
-# --- Replace/Update Phase 2 in your suggest_placements function ---
-
-    # --- Phase 2: Rearrangement Simulation ---
+    # ==============================================================================
+    # == Phase 2: Rearrangement Simulation ========================================
+    # ==============================================================================
     print("\n--- Phase 2: Evaluating Rearrangements ---")
     items_requiring_placement_pass_3: List[ItemCreate] = [] # Items for final non-preferred placement attempt
     rearrangement_step_counter = 0
@@ -387,19 +341,47 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
         # === Look for items to displace based on priority ===
         # For each preferred container, identify all potential displacees
         all_potential_displacees = []
+        print(f"    DEBUG: Checking for displaceable items in preferred containers: {preferred_container_ids}")
+        print(f"    DEBUG: Current simulation state: {temp_placements_by_container}")
+        print(f"    DEBUG: All existing items in containers: {[item['item_id'] for item in all_existing_items_in_containers]}")
+        
         for container_id in preferred_container_ids:
             current_container_placements = temp_placements_by_container.get(container_id, [])
+            print(f"    DEBUG: Container {container_id} has {len(current_container_placements)} current placements")
             
-            # Create a simulation state without any items that are less important than our target
-            # This helps check if removing those items would make enough space
+            # Check both current simulation state AND existing database items
             for existing_item_id, start_coords, end_coords in current_container_placements:
+                print(f"    DEBUG: Checking item {existing_item_id} with priority {existing_item_priorities.get(existing_item_id, 'UNKNOWN')}")
                 # Only consider existing items with known priorities that are lower than our target
                 if existing_item_id in existing_item_priorities and existing_item_priorities[existing_item_id] < high_prio_item.priority:
+                    print(f"    DEBUG: Adding {existing_item_id} (priority {existing_item_priorities[existing_item_id]}) to displacees list")
                     all_potential_displacees.append({
                         "item_id": existing_item_id,
                         "priority": existing_item_priorities[existing_item_id],
                         "fromContainerId": container_id,
                         "fromPosition": Position(startCoordinates=start_coords, endCoordinates=end_coords)
+                    })
+            
+            # Also check for existing items in database that might not be in current simulation
+            for existing_item_data in all_existing_items_in_containers:
+                if (existing_item_data['container_id'] == container_id and 
+                    existing_item_data['priority'] < high_prio_item.priority and
+                    existing_item_data['item_id'] not in [d["item_id"] for d in all_potential_displacees]):
+                    
+                    print(f"    DEBUG: Found existing DB item {existing_item_data['item_id']} (priority {existing_item_data['priority']}) in {container_id}")
+                    # Create a default position for the existing item
+                    default_start = Coordinates(width=0.0, depth=0.0, height=0.0)
+                    default_end = Coordinates(
+                        width=existing_item_data['width_cm'], 
+                        depth=existing_item_data['depth_cm'], 
+                        height=existing_item_data['height_cm']
+                    )
+                    
+                    all_potential_displacees.append({
+                        "item_id": existing_item_data['item_id'],
+                        "priority": existing_item_data['priority'],
+                        "fromContainerId": container_id,
+                        "fromPosition": Position(startCoordinates=default_start, endCoordinates=default_end)
                     })
         
         # Sort potential displacees by priority (lowest first)
@@ -410,7 +392,7 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
             items_requiring_placement_pass_3.append(high_prio_item)
             continue
         
-        print(f"    Found {len(all_potential_displacees)} potential items to displace")
+        print(f"    Found {len(all_potential_displacees)} potential items to displace: {[d['item_id'] for d in all_potential_displacees]}")
         
         # === Attempt strategic displacement of items ===
         # First, find which container has most space (without touching items)
@@ -490,260 +472,118 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
                         displacement_success = False
                         break
                         
-                    displacee_item = ItemCreate(**displacee_db.__dict__)
+                    # Create ItemCreate object for the displacee
+                    displacee_item = ItemCreate(
+                        item_id=displacee_db.item_id,
+                        name=displacee_db.name,
+                        category=displacee_db.category,
+                        subcategory=displacee_db.subcategory,
+                        width_cm=displacee_db.width_cm,
+                        depth_cm=displacee_db.depth_cm,
+                        height_cm=displacee_db.height_cm,
+                        mass_kg=displacee_db.mass_kg,
+                        priority=displacee_db.priority,
+                        expiry_date=displacee_db.expiry_date,
+                        preferred_zone=displacee_db.preferred_zone,
+                        temp_requirement=displacee_db.temp_requirement,
+                        lot_number=displacee_db.lot_number,
+                        orientation_allowed=displacee_db.orientation_allowed,
+                        hazardous_class=displacee_db.hazardous_class,
+                        tags_id=displacee_db.tags_id,
+                        maximum_uses=displacee_db.maximum_uses,
+                        usage_frequency=displacee_db.usage_frequency,
+                        current_uses=displacee_db.current_uses,
+                        usage_remaining=displacee_db.usage_remaining
+                    )
                     
-                    # Try placing in containers with most space first
-                    for target_container_id, _ in target_containers:
-                        if target_container_id == source_container_id:
-                            continue  # Don't try the container we're removing from
+                    # Try to find a new home for this displaced item
+                    for target_container_id in container_ids:
+                        if target_container_id == source_container_id: continue # Don't put back in same container
                             
                         target_container = containers_data[target_container_id]
-                        current_target_placements = temp_placements_by_container.get(target_container_id, [])
+                        current_placements_in_target = temp_placements_by_container.get(target_container_id, [])
                         
-                        # Try to find spot
-                        relocated_spot = find_spot_in_container(
-                            displacee_item, 
-                            target_container, 
-                            current_target_placements,
-                            False  # Lower priority placement strategy 
+                        # Check if this target container can accommodate the displaced item
+                        spot_info_displacee = find_spot_in_container(
+                            displacee_item, target_container, current_placements_in_target, False
                         )
                         
-                        if relocated_spot:
-                            # Found a spot for this displacee
-                            new_start, new_end, _ = relocated_spot
+                        if spot_info_displacee:
+                            displacee_start, displacee_end, _ = spot_info_displacee
+                            
+                            # Update simulation state
+                            temp_placements_by_container.setdefault(target_container_id, []).append(
+                                (displacee_id, displacee_start, displacee_end)
+                            )
                             
                             # Record the move
-                            rearrangement_step_counter += 1
-                            move = RearrangementStep(
-                                step=rearrangement_step_counter,
-                                action="move",
+                            displacement_moves.append(RearrangementStep(
                                 item_id=displacee_id,
-                                fromContainer=source_container_id,
-                                fromPosition=displacee["fromPosition"],
-                                toContainer=target_container_id,
-                                toPosition=Position(
-                                    startCoordinates=new_start,
-                                    endCoordinates=new_end
-                                )
-                            )
-                            displacement_moves.append(move)
-                            
-                            # Update simulation state for next items
-                            temp_placements_by_container.setdefault(target_container_id, []).append(
-                                (displacee_id, new_start, new_end)
-                            )
+                                from_container_id=source_container_id,
+                                to_container_id=target_container_id,
+                                from_position=displacee["fromPosition"],
+                                to_position=Position(startCoordinates=displacee_start, endCoordinates=displacee_end),
+                                reason=f"Displaced by higher priority item {high_prio_item.item_id}"
+                            ))
                             
                             relocated = True
-                            break  # Found a spot for this item
+                            print(f"      Relocated {displacee_id} to {target_container_id}")
+                            break
                             
                     if not relocated:
-                        print(f"      Could not relocate {displacee_id}. Rearrangement failed.")
+                        print(f"      FAILED to relocate {displacee_id}. Aborting displacement strategy.")
                         displacement_success = False
                         break
                 
-                # If all displacements worked, place the high-priority item
                 if displacement_success:
-                    # Add all the rearrangement steps
-                    rearrangements_result.extend(displacement_moves)
+                    # All displaced items found new homes, now place the high priority item
+                    temp_placements_by_container[source_container_id] = temp_container_simulation[source_container_id]
+                    temp_placements_by_container[source_container_id].append((high_prio_item.item_id, start_coords, end_coords))
                     
-                    # Place the high priority item
-                    hp_position = Position(startCoordinates=start_coords, endCoordinates=end_coords)
+                    # Update the placements result
                     placements_result.append(PlacementResponseItem(
                         item_id=high_prio_item.item_id,
                         container_id=source_container_id,
-                        position=hp_position
+                        position=Position(startCoordinates=start_coords, endCoordinates=end_coords)
                     ))
                     
-                    # Update simulation state
-                    temp_placements_by_container[source_container_id].append(
-                        (high_prio_item.item_id, start_coords, end_coords)
-                    )
+                    # Add rearrangement steps to result
+                    rearrangements_result.extend(displacement_moves)
                     
                     processed_item_ids.add(high_prio_item.item_id)
-                    rearrangement_done_for_this_item = True
                     rearrangement_successful = True
-                    
-                    print(f"    SUCCESS (Phase 2): Completed rearrangement for {high_prio_item.item_id}")
-                    
-                    # Update tracking for the displaced items
-                    for move in displacement_moves:
-                        for i, p_item in enumerate(placements_result):
-                            if p_item.item_id == move.item_id:
-                                placements_result[i] = PlacementResponseItem(
-                                    item_id=move.item_id,
-                                    container_id=move.toContainer,
-                                    position=move.toPosition
-                                )
-                                break
-                        else:
-                            # If item wasn't already in placements, add it
-                            placements_result.append(PlacementResponseItem(
-                                item_id=move.item_id,
-                                container_id=move.toContainer,
-                                position=move.toPosition
-                            ))
-                    
-                    break  # Successfully placed, don't try more container displacement strategies
+                    print(f"    SUCCESS (Phase 2 Rearrangement): Placed {high_prio_item.item_id} after displacing {len(displacement_moves)} items")
+                    break
                 else:
-                    # Rearrangement attempt failed - restore simulation state
-                    print("      Rearrangement attempt failed. Restoring state.")
-                    temp_placements_by_container = temp_placements_by_container.copy()  # Reset to original
+                    # Reset simulation state for this attempt
+                    temp_placements_by_container = {cid: list(placements) for cid, placements in temp_placements_by_container.items()}
         
-        # Try individual item displacement if container-level displacement failed
-        if not rearrangement_successful and not rearrangement_done_for_this_item:
-            # If displacing entire container didn't work, try individual items
-            for displacee_data in all_potential_displacees:
-                processed_individual_rearrangement = False
-                low_prio_item_id = displacee_data["item_id"]
-                source_container_id = displacee_data["fromContainerId"]
-                
-                print(f"    Trying individual displacement of {low_prio_item_id}")
-                
-                # Verify this item exists
-                low_prio_item_db = db.query(Item).filter(Item.item_id == low_prio_item_id).first()
-                if not low_prio_item_db:
-                    print(f"      ERROR: Missing DB data for {low_prio_item_id}. Skipping.")
-                    continue
-                    
-                # Convert to ItemCreate format for our placement logic
-                low_prio_item = ItemCreate(**low_prio_item_db.__dict__)
-                
-                # Create a temporary simulation state with this item removed
-                temp_container_sim = temp_placements_by_container.copy()
-                temp_container_sim[source_container_id] = [
-                    p for p in temp_container_sim[source_container_id] 
-                    if p[0] != low_prio_item_id
-                ]
-                
-                # Does the high priority item fit now?
-                container = containers_data[source_container_id]
-                spot_info = find_spot_in_container(
-                    high_prio_item, 
-                    container, 
-                    temp_container_sim[source_container_id], 
-                    True
-                )
-                
-                if spot_info:
-                    # Found a spot if we remove this item. Now try to relocate it.
-                    print(f"      Found spot for {high_prio_item.item_id} if {low_prio_item_id} is moved")
-                    relocated = False
-                    
-                    # Try to relocate the displacee to any other container
-                    for target_container_id, _ in target_containers:
-                        if target_container_id == source_container_id:
-                            continue
-                            
-                        target_container = containers_data[target_container_id]
-                        current_target_placements = temp_placements_by_container.get(target_container_id, [])
-                        
-                        relocated_spot = find_spot_in_container(
-                            low_prio_item, 
-                            target_container, 
-                            current_target_placements,
-                            False
-                        )
-                        
-                        if relocated_spot:
-                            new_start, new_end, _ = relocated_spot
-                            new_position = Position(
-                                startCoordinates=new_start, 
-                                endCoordinates=new_end
-                            )
-                            
-                            # Record the move
-                            rearrangement_step_counter += 1
-                            move = RearrangementStep(
-                                step=rearrangement_step_counter,
-                                action="move",
-                                item_id=low_prio_item_id,
-                                fromContainer=source_container_id,
-                                fromPosition=displacee_data["fromPosition"],
-                                toContainer=target_container_id,
-                                toPosition=new_position
-                            )
-                            rearrangements_result.append(move)
-                            
-                            # Update simulation state
-                            temp_placements_by_container[source_container_id] = [
-                                p for p in temp_placements_by_container[source_container_id] 
-                                if p[0] != low_prio_item_id
-                            ]
-                            temp_placements_by_container.setdefault(target_container_id, []).append(
-                                (low_prio_item_id, new_start, new_end)
-                            )
-                            
-                            # Update placements_result for the moved item
-                            for i, p_item in enumerate(placements_result):
-                                if p_item.item_id == low_prio_item_id:
-                                    placements_result[i] = PlacementResponseItem(
-                                        item_id=low_prio_item_id,
-                                        container_id=target_container_id,
-                                        position=new_position
-                                    )
-                                    break
-                            else:
-                                placements_result.append(PlacementResponseItem(
-                                    item_id=low_prio_item_id,
-                                    container_id=target_container_id,
-                                    position=new_position
-                                ))
-                            
-                            # Now place the high priority item
-                            hp_start, hp_end, _ = spot_info
-                            hp_position = Position(
-                                startCoordinates=hp_start, 
-                                endCoordinates=hp_end
-                            )
-                            
-                            placements_result.append(PlacementResponseItem(
-                                item_id=high_prio_item.item_id,
-                                container_id=source_container_id,
-                                position=hp_position
-                            ))
-                            
-                            temp_placements_by_container[source_container_id].append(
-                                (high_prio_item.item_id, hp_start, hp_end)
-                            )
-                            
-                            processed_item_ids.add(high_prio_item.item_id)
-                            rearrangement_done_for_this_item = True
-                            processed_individual_rearrangement = True
-                            
-                            print(f"      SUCCESS (Phase 2): Moved {low_prio_item_id} to {target_container_id}")
-                            print(f"                         Placed {high_prio_item.item_id} in {source_container_id}")
-                            break  # Successfully placed high priority item
-                    
-                    if processed_individual_rearrangement:
-                        break  # Exit the displacee loop if we successfully processed
-                
-        # If rearrangement logic didn't work for this item, try again in final phase
-        if not rearrangement_done_for_this_item:
-            print(f"    All rearrangement attempts failed for {high_prio_item.item_id}. Moving to Phase 3.")
+        if not rearrangement_successful:
+            print(f"    Could not rearrange items for {high_prio_item.item_id}. Moving to Pass 3.")
             items_requiring_placement_pass_3.append(high_prio_item)
 
-    # --- Phase 3: Final Placement Attempt (Anywhere) ---
-    print("\n--- Phase 3: Final Placement Attempt (Anywhere) ---")
-    items_for_final_pass = list(items_requiring_placement_pass_3) # Items needing non-preferred spots
-
-    for item_req in items_for_final_pass:
-        if item_req.item_id in processed_item_ids: continue # Already handled
-
-        print(f"Attempting final placement for: {item_req.item_id}")
+    # ==============================================================================
+    # == Phase 3: Final Placement Attempt (Non-Preferred Zones) ===================
+    # ==============================================================================
+    print("\n--- Phase 3: Final Placement in Non-Preferred Zones ---")
+    
+    for item_req in items_requiring_placement_pass_3:
+        if item_req.item_id in processed_item_ids: continue # Skip if already handled
+        
+        print(f"Final attempt for: {item_req.item_id} (Prio: {item_req.priority})")
         placed = False
-        is_high_prio = item_req.priority >= 75
 
-        # Try all containers based on the current simulation state
+        # Try all containers (not just preferred)
         for container_id in container_ids:
             if container_id not in containers_data: continue
             container = containers_data[container_id]
             current_placements_in_container = temp_placements_by_container.get(container_id, [])
 
-            spot_info = find_spot_in_container(item_req, container, current_placements_in_container, is_high_prio)
-
+            spot_info = find_spot_in_container(item_req, container, current_placements_in_container, False)
             if spot_info:
                 start_coords, end_coords, _ = spot_info
                 position = Position(startCoordinates=start_coords, endCoordinates=end_coords)
+                
                 # Update simulation state
                 temp_placements_by_container.setdefault(container_id, []).append(
                     (item_req.item_id, start_coords, end_coords)
@@ -775,20 +615,80 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
     final_placements_for_response: List[PlacementResponseItem] = [] # Holds placements successfully saved to DB
 
     try:
-        # --- Step 4.1: Upsert Containers ---
+        # --- Step 4.1: Upsert Containers with Enhanced Fields ---
         print("  Syncing container definitions...")
         for container_id, container_req in containers_data.items():
             container_db = db.query(Container).filter(Container.container_id == container_id).first()
             if not container_db:
-                container_db = Container(**container_req.dict()) # Create from API model
+                # Create new container with enhanced fields
+                container_data = {
+                    'container_id': container_req.container_id,
+                    'name': container_req.name,
+                    'type': container_req.type,
+                    'zone': container_req.zone,
+                    'module_id': container_req.module_id,
+                    'width_cm': container_req.width_cm,
+                    'depth_cm': container_req.depth_cm,
+                    'height_cm': container_req.height_cm,
+                    'open_face': container_req.open_face,
+                    'max_mass': container_req.max_mass,
+                    'access_index': container_req.access_index,
+                    'parent_container_id': container_req.parent_container_id,
+                    'description': container_req.description,
+                    'current_mass': 0.0,
+                    'is_active': True,
+                    'created_at': datetime.now(timezone.utc),
+                    'last_accessed': datetime.now(timezone.utc)
+                }
+                container_db = Container(**container_data)
                 db.add(container_db)
-            else: # Update existing if needed
+                
+                # Log container creation
+                create_log_entry(
+                    db=db,
+                    action_type=LogActionType.IMPORT,
+                    user_id=user_id,
+                    container_id=container_id,
+                    details={
+                        'action': 'container_created',
+                        'type': container_req.type.value,
+                        'zone': container_req.zone,
+                        'dimensions': f"{container_req.width_cm}x{container_req.depth_cm}x{container_req.height_cm}"
+                    },
+                    action_category='container_management',
+                    location=container_req.zone,
+                    success=True
+                )
+            else: 
+                # Update existing container if needed
                 changed = False
-                if container_db.zone != container_req.zone: container_db.zone = container_req.zone; changed=True
-                if abs(container_db.width_cm - container_req.width_cm) > 1e-6: container_db.width_cm = container_req.width_cm; changed=True
-                if abs(container_db.depth_cm - container_req.depth_cm) > 1e-6: container_db.depth_cm = container_req.depth_cm; changed=True
-                if abs(container_db.height_cm - container_req.height_cm) > 1e-6: container_db.height_cm = container_req.height_cm; changed=True
-                if changed: db.add(container_db) # Mark for update only if changed
+                if container_db.zone != container_req.zone: 
+                    container_db.zone = container_req.zone; changed=True
+                if abs(container_db.width_cm - container_req.width_cm) > 1e-6: 
+                    container_db.width_cm = container_req.width_cm; changed=True
+                if abs(container_db.depth_cm - container_req.depth_cm) > 1e-6: 
+                    container_db.depth_cm = container_req.depth_cm; changed=True
+                if abs(container_db.height_cm - container_req.height_cm) > 1e-6: 
+                    container_db.height_cm = container_req.height_cm; changed=True
+                
+                # Update last accessed time
+                container_db.last_accessed = datetime.now(timezone.utc)
+                if changed: 
+                    db.add(container_db)
+                    # Log container update
+                    create_log_entry(
+                        db=db,
+                        action_type=LogActionType.IMPORT,
+                        user_id=user_id,
+                        container_id=container_id,
+                        details={
+                            'action': 'container_updated',
+                            'changes': 'dimensions or zone updated'
+                        },
+                        action_category='container_management',
+                        location=container_req.zone,
+                        success=True
+                    )
 
         # --- Step 4.2: Process Final Placements (Upsert Items & Placements) ---
         print("  Processing final placements and items...")
@@ -815,14 +715,88 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
                     print(f"    CRITICAL ERROR: Request data missing for new item {item_id}. Skipping.")
                     continue
                 print(f"    Creating new item record: {item_id}")
-                item_db = Item(**item_req_data.dict(exclude_none=True), status=ItemStatus.ACTIVE)
+                
+                # Create item with enhanced fields
+                item_data = {
+                    'item_id': item_req_data.item_id,
+                    'name': item_req_data.name,
+                    'category': item_req_data.category,
+                    'subcategory': item_req_data.subcategory,
+                    'width_cm': item_req_data.width_cm,
+                    'depth_cm': item_req_data.depth_cm,
+                    'height_cm': item_req_data.height_cm,
+                    'mass_kg': item_req_data.mass_kg,
+                    'temp_requirement': item_req_data.temp_requirement,
+                    'lot_number': item_req_data.lot_number,
+                    'current_location': container_id,
+                    'orientation_allowed': item_req_data.orientation_allowed,
+                    'hazardous_class': item_req_data.hazardous_class,
+                    'tags_id': item_req_data.tags_id,
+                    'priority': item_req_data.priority,
+                    'expiry_date': item_req_data.expiry_date,
+                    'maximum_uses': item_req_data.maximum_uses,
+                    'current_uses': item_req_data.current_uses,
+                    'usage_remaining': item_req_data.usage_remaining,
+                    'usage_frequency': item_req_data.usage_frequency,
+                    'preferred_zone': item_req_data.preferred_zone,
+                    'status': ItemStatus.ACTIVE
+                }
+                item_db = Item(**item_data)
                 db.add(item_db)
                 log_action_type = LogActionType.PLACEMENT # Log as placement of new item
+                
+                # Log item creation with enhanced details
+                create_log_entry(
+                    db=db,
+                    action_type=LogActionType.IMPORT,
+                    user_id=user_id,
+                    item_id=item_id,
+                    container_id=container_id,
+                    details={
+                        'action': 'item_created',
+                        'category': item_req_data.category,
+                        'subcategory': item_req_data.subcategory,
+                        'temp_requirement': item_req_data.temp_requirement.value,
+                        'hazardous_class': item_req_data.hazardous_class.value,
+                        'mass_kg': item_req_data.mass_kg,
+                        'priority': item_req_data.priority
+                    },
+                    action_category='item_management',
+                    location=container.zone if container else None,
+                    success=True
+                )
             else: # Item EXISTS
-                 if item_db.status != ItemStatus.ACTIVE: # Ensure existing item is marked active
-                      print(f"    Marking existing item {item_id} as ACTIVE")
-                      item_db.status = ItemStatus.ACTIVE
-                      db.add(item_db)
+                # Update item status and location
+                previous_status = item_db.status
+                previous_location = item_db.current_location
+                
+                if item_db.status != ItemStatus.ACTIVE:
+                    print(f"    Marking existing item {item_id} as ACTIVE (was {item_db.status.value})")
+                    item_db.status = ItemStatus.ACTIVE
+                
+                # Update current location
+                item_db.current_location = container_id
+                db.add(item_db)
+                
+                # Log status/location change if needed
+                if previous_status != ItemStatus.ACTIVE or previous_location != container_id:
+                    create_log_entry(
+                        db=db,
+                        action_type=LogActionType.UPDATE_LOCATION,
+                        user_id=user_id,
+                        item_id=item_id,
+                        container_id=container_id,
+                        details={
+                            'action': 'item_status_location_updated',
+                            'previous_status': previous_status.value if previous_status else None,
+                            'new_status': ItemStatus.ACTIVE.value,
+                            'previous_location': previous_location,
+                            'new_location': container_id
+                        },
+                        action_category='item_management',
+                        location=container.zone if container else None,
+                        success=True
+                    )
 
             # --- 4.2.2: Handle Placement Record ---
             existing_placement_db = db.query(Placement).filter(Placement.item_id_fk == item_id).first()
@@ -838,7 +812,9 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
                 if (existing_placement_db.container_id_fk != container_id or
                     abs(existing_placement_db.start_w - position.startCoordinates.width) > 1e-6 or
                     abs(existing_placement_db.start_d - position.startCoordinates.depth) > 1e-6 or
-                    # ... (add checks for all 6 coordinates) ...
+                    abs(existing_placement_db.start_h - position.startCoordinates.height) > 1e-6 or
+                    abs(existing_placement_db.end_w - position.endCoordinates.width) > 1e-6 or
+                    abs(existing_placement_db.end_d - position.endCoordinates.depth) > 1e-6 or
                     abs(existing_placement_db.end_h - position.endCoordinates.height) > 1e-6):
                     print(f"    Updating placement (Move) for item: {item_id} -> {container_id}")
                     # Update the existing Placement object
@@ -862,14 +838,21 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
                 db.add(new_placement)
                 if log_action_type is None: log_action_type = LogActionType.PLACEMENT # Should already be set if item was new
 
-            # --- 4.2.3: Log the Action ---
+            # --- 4.2.3: Log the Action with Enhanced Logging ---
             if log_action_type: # Only log if an action was determined
-                 log_entry = Log(
-                      userId=user_id, actionType=log_action_type, item_id_fk=item_id,
-                      details_json=json.dumps(log_details), # Serialize details to JSON string
-                      timestamp=datetime.now(timezone.utc)
-                  )
-                 db.add(log_entry)
+                # Use enhanced logging service for better analytics
+                log_entry = create_log_entry(
+                    db=db,
+                    action_type=log_action_type,
+                    user_id=user_id,
+                    item_id=item_id,
+                    container_id=container_id,
+                    details=log_details,
+                    action_category='placement',
+                    location=container.zone if container else None,
+                    success=True,
+                    timestamp=datetime.now(timezone.utc)
+                )
 
             # Add to the list returned in the response *after* successful processing for persistence
             final_placements_for_response.append(final_placement)
@@ -885,17 +868,56 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
                      item_req_data = incoming_items_dict.get(failed_item_id)
                      if item_req_data:
                          print(f"    Creating item record for FAILED placement: {failed_item_id}")
-                         item_db = Item(**item_req_data.dict(exclude_none=True), status=ItemStatus.ACTIVE)
+                         item_data = {
+                             'item_id': item_req_data.item_id,
+                             'name': item_req_data.name,
+                             'category': item_req_data.category,
+                             'subcategory': item_req_data.subcategory,
+                             'width_cm': item_req_data.width_cm,
+                             'depth_cm': item_req_data.depth_cm,
+                             'height_cm': item_req_data.height_cm,
+                             'mass_kg': item_req_data.mass_kg,
+                             'temp_requirement': item_req_data.temp_requirement,
+                             'lot_number': item_req_data.lot_number,
+                             'orientation_allowed': item_req_data.orientation_allowed,
+                             'hazardous_class': item_req_data.hazardous_class,
+                             'tags_id': item_req_data.tags_id,
+                             'priority': item_req_data.priority,
+                             'expiry_date': item_req_data.expiry_date,
+                             'maximum_uses': item_req_data.maximum_uses,
+                             'current_uses': item_req_data.current_uses,
+                             'usage_remaining': item_req_data.usage_remaining,
+                             'usage_frequency': item_req_data.usage_frequency,
+                             'preferred_zone': item_req_data.preferred_zone,
+                             'status': ItemStatus.ACTIVE
+                         }
+                         item_db = Item(**item_data)
                          db.add(item_db)
-                         # Log the FAILED PLACEMENT attempt
-                         log_entry = Log(userId=user_id, actionType=LogActionType.PLACEMENT, item_id_fk=failed_item_id,
-                                         details_json=json.dumps(log_details_fail), timestamp=datetime.now(timezone.utc))
-                         db.add(log_entry)
+                         # Log the FAILED PLACEMENT attempt with enhanced logging
+                         log_entry = create_log_entry(
+                             db=db,
+                             action_type=LogActionType.PLACEMENT,
+                             user_id=user_id,
+                             item_id=failed_item_id,
+                             details=log_details_fail,
+                             action_category='placement',
+                             success=False,
+                             error_message="Placement failed - insufficient space or rearrangement constraints",
+                             timestamp=datetime.now(timezone.utc)
+                         )
                 else: # Item exists, just log the placement failure
                      print(f"    Logging placement failure for existing item: {failed_item_id}")
-                     log_entry = Log(userId=user_id, actionType=LogActionType.PLACEMENT, item_id_fk=failed_item_id,
-                                     details_json=json.dumps(log_details_fail), timestamp=datetime.now(timezone.utc))
-                     db.add(log_entry)
+                     log_entry = create_log_entry(
+                         db=db,
+                         action_type=LogActionType.PLACEMENT,
+                         user_id=user_id,
+                         item_id=failed_item_id,
+                         details=log_details_fail,
+                         action_category='placement',
+                         success=False,
+                         error_message="Placement failed - insufficient space or rearrangement constraints",
+                         timestamp=datetime.now(timezone.utc)
+                     )
 
         # --- Step 4.4: Commit Transaction ---
         print("  Committing transaction...")

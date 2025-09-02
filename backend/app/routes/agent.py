@@ -10,6 +10,7 @@ from app.agent.models.agent_models import (
 from app.agent.services.agent_service import AgentService
 from app.agent.services.voice_service import VoiceService
 from app.agent.services.context_service import ContextService
+from app.models_db import Item as DBItem, ItemStatus
 
 # Initialize services
 agent_service = AgentService()
@@ -241,6 +242,81 @@ def health_check():
         return jsonify({
             "success": False,
             "status": "unhealthy",
+            "error": str(e),
+            "timestamp": datetime.utcnow().isoformat()
+        }), 500
+
+@agent_bp.route('/fix-expired-status', methods=['POST'])
+def fix_expired_status():
+    """Fix expired item statuses by updating them to 'EXPIRED'"""
+    try:
+        # Get database session
+        db_gen = get_db()
+        db = next(db_gen)
+        try:
+            current_date = datetime.utcnow().date()
+            updated_count = 0
+            
+            # Get all items with expiry dates
+            items = db.query(DBItem).filter(
+                DBItem.expiry_date.isnot(None),
+                DBItem.expiry_date != "N/A"
+            ).all()
+            
+            for item in items:
+                try:
+                    if item.expiry_date:
+                        # Handle different date formats
+                        expiry_date_str = str(item.expiry_date).strip()
+                        
+                        # Try different date formats
+                        expiry_date = None
+                        date_formats = [
+                            "%Y-%m-%d",           # 2021-10-07
+                            "%Y-%m-%dT%H:%M:%S",  # 2021-10-07T00:00:00
+                            "%Y-%m-%dT%H:%M:%S.%fZ",  # 2021-10-07T00:00:00.000Z
+                            "%Y-%m-%dT%H:%M:%SZ",     # 2021-10-07T00:00:00Z
+                            "%d/%m/%Y",           # 07/10/2021
+                            "%m/%d/%Y",           # 10/07/2021
+                        ]
+                        
+                        for date_format in date_formats:
+                            try:
+                                if date_format.endswith('Z'):
+                                    # Handle timezone format
+                                    expiry_date = datetime.strptime(expiry_date_str, date_format).date()
+                                else:
+                                    expiry_date = datetime.strptime(expiry_date_str, date_format).date()
+                                break
+                            except ValueError:
+                                continue
+                        
+                        # If item is expired and status is not already expired
+                        if expiry_date and expiry_date < current_date and item.status.value != "WASTE_EXPIRED":
+                            item.status = ItemStatus.WASTE_EXPIRED
+                            updated_count += 1
+                            
+                except Exception as e:
+                    print(f"Error processing item {item.item_id} expiry date: {e}")
+                    continue
+            
+            # Commit changes
+            db.commit()
+            
+            return jsonify({
+                "success": True,
+                "message": f"Updated {updated_count} expired items status to WASTE_EXPIRED",
+                "updated_count": updated_count,
+                "timestamp": datetime.utcnow().isoformat()
+            }), 200
+            
+        finally:
+            next(db_gen, None)
+            db.close()
+            
+    except Exception as e:
+        return jsonify({
+            "success": False,
             "error": str(e),
             "timestamp": datetime.utcnow().isoformat()
         }), 500

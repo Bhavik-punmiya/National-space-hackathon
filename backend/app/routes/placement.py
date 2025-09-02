@@ -2,9 +2,13 @@
 import traceback
 from flask import Blueprint, request, jsonify
 from sqlalchemy.orm import Session # Import Session type hint
+from datetime import datetime, timezone
 
 from app.database import get_db # Use the generator
 from app.services import placement_service
+from app.services.auth_service import AuthService
+from app.services.logging_service import create_user_activity_log
+from app.models_db import LogActionType, UserRole
 # Import the correct Pydantic models from models_api
 from app.models_api import PlacementRequest, PlacementResponse
 from pydantic import ValidationError
@@ -44,10 +48,33 @@ def handle_placement_api(): # Renamed slightly for clarity
     API: Endpoint for Placement Recommendations (System Testing).
     Receives a list of items and container definitions, returns suggested placements
     and any necessary rearrangement steps. Response format is rigid.
+    
+    Enhanced with user authentication and activity logging.
     """
     db_gen = get_db()
     db: Session = next(db_gen) # Get the actual session object
     try:
+        # --- Enhanced User Authentication ---
+        user_id = request.headers.get("X-User-ID", "system")
+        auth_token = request.headers.get("Authorization")
+        authenticated_user = None
+        
+        # Verify user if token provided
+        if auth_token and auth_token.startswith("Bearer "):
+            token = auth_token.split(" ")[1]
+            token_data = AuthService.verify_token(token)
+            if token_data:
+                authenticated_user = AuthService.get_user_by_id(db, token_data.get("user_id"))
+                if authenticated_user:
+                    user_id = authenticated_user.user_id
+                    # Check permissions for placement operations
+                    if not AuthService.validate_user_permission(authenticated_user, UserRole.ASTRONAUT):
+                        return jsonify({
+                            "success": False, 
+                            "error": "Insufficient permissions for placement operations"
+                        }), 403
+        
+        # --- Request Validation ---
         try:
             json_data = request.get_json()
             if not json_data:
@@ -58,7 +85,29 @@ def handle_placement_api(): # Renamed slightly for clarity
         except Exception as e:
             return jsonify({"success": False, "error": f"Invalid request format: {e}"}), 400
 
-        user_id = request.headers.get("X-User-ID", "system")
+        # --- Log API Access ---
+        create_user_activity_log(
+            db=db,
+            user_id=user_id,
+            action_type=LogActionType.SIMULATION_USE,
+            purpose='placement_api_request',
+            item_id=None,
+            container_id=None,
+            action_category='placement',
+            location=None,
+            success=True,
+            timestamp=datetime.now(timezone.utc),
+            details={
+                'action': 'placement_api_request',
+                'items_count': len(request_data.items),
+                'containers_count': len(request_data.containers),
+                'endpoint': '/api/placement',
+                'authenticated': authenticated_user is not None,
+                'user_role': authenticated_user.role.value if authenticated_user else None
+            }
+        )
+
+        # --- Call Enhanced Placement Service ---
         response_data: PlacementResponse = placement_service.suggest_placements(db, request_data, user_id)
 
         status_code = 200 if response_data.success else 207

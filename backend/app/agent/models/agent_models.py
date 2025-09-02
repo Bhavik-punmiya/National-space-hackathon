@@ -19,6 +19,9 @@ class AgentQueryType(str, Enum):
     CONTAINER_LOCATION = "container_location"
     CODE_MEANING = "code_meaning"
     USAGE_TRACKING = "usage_tracking"
+    CATEGORIES_LIST = "categories_list"
+    SUBCATEGORIES_LIST = "subcategories_list"
+    CONTAINER_DETAILS = "container_details"
 
 class AgentQueryRequest(BaseModel):
     """Request model for agent queries"""
@@ -115,6 +118,30 @@ class UsageTrackingResponse(BaseModel):
     item_id: Optional[str]
     logs: List[Dict[str, Any]]
     total_usage: int
+    message: str
+
+class CategoriesListResponse(BaseModel):
+    """Response for categories list query"""
+    categories: List[str]
+    count: int
+    message: str
+
+class SubcategoriesListResponse(BaseModel):
+    """Response for subcategories list query"""
+    category: str
+    subcategories: List[str]
+    count: int
+    message: str
+
+class ContainerDetailsResponse(BaseModel):
+    """Response for container details query"""
+    container_id: str
+    module_id: str
+    zone: str
+    zone_code: str
+    dimensions: Dict[str, float]
+    item_count: int
+    items: List[ItemInfo]
     message: str
 
 class AgentQueryResponse(BaseModel):
