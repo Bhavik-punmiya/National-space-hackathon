@@ -9,8 +9,9 @@ import { Package, Archive } from "lucide-react";
 export function DataTablesTabs() {
   const handleExport = async () => {
     try {
+      const baseUrl = 'http://localhost:8000'; // Hardcoded for testing
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/export/arrangement`
+        `${baseUrl}/api/export/arrangement`
       );
 
       if (!response.ok) {

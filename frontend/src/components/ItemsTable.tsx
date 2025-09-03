@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Item, PaginatedItemResponse, ItemStatus } from "@/data/types";
+import { Item, PaginatedItemResponse, ItemStatus, TableFilters, FilterState } from "@/data/types";
 import { format } from "date-fns";
 import { Search, FileDown, Filter } from "lucide-react";
 import { MoreVertical } from "lucide-react";
@@ -46,8 +46,16 @@ export function ItemsTable() {
   const [statusFilter, setStatusFilter] = useState<ItemStatus | "">("");
   const [preferredZoneFilter, setPreferredZoneFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
+  const [subcategoryFilter, setSubcategoryFilter] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
   const [isPlaceModalOpen, setIsPlaceModalOpen] = useState(false);
+  const [filterOptions, setFilterOptions] = useState<TableFilters>({
+    categories: [],
+    subcategories: [],
+    zones: [],
+    statuses: [],
+    container_types: []
+  });
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [containerId, setContainerId] = useState("");
   const [startWidth, setStartWidth] = useState(0);
@@ -56,6 +64,9 @@ export function ItemsTable() {
   const [endWidth, setEndWidth] = useState(0);
   const [endDepth, setEndDepth] = useState(0);
   const [endHeight, setEndHeight] = useState(0);
+
+  // Get base URL for API calls
+  const baseUrl = 'http://localhost:8000'; // Hardcoded for testing
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -76,12 +87,11 @@ export function ItemsTable() {
     if (preferredZoneFilter)
       params.append("preferred_zone", preferredZoneFilter);
     if (categoryFilter) params.append("category", categoryFilter);
+    if (subcategoryFilter) params.append("subcategory", subcategoryFilter);
 
     try {
       const response = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_BASE_URL
-        }/api/tables/items?${params.toString()}`
+        `${baseUrl}/api/tables/items?${params.toString()}`
       );
       if (!response.ok) throw new Error(`Error ${response.status}`);
       const data: PaginatedItemResponse = await response.json();
@@ -99,11 +109,32 @@ export function ItemsTable() {
     } finally {
       setIsLoading(false);
     }
-  }, [currentPage, debouncedSearchTerm, statusFilter, preferredZoneFilter, categoryFilter]);
+  }, [currentPage, debouncedSearchTerm, statusFilter, preferredZoneFilter, categoryFilter, subcategoryFilter, baseUrl]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  // Fetch filter options on component mount
+  useEffect(() => {
+    const fetchFilterOptions = async () => {
+      try {
+        console.log('Fetching filter options from:', `${baseUrl}/api/tables/filters`);
+        console.log('Environment variable:', process.env.NEXT_PUBLIC_BASE_URL);
+        console.log('Using baseUrl:', baseUrl);
+        
+        const response = await fetch(`${baseUrl}/api/tables/filters`);
+        if (response.ok) {
+          const data = await response.json();
+          setFilterOptions(data);
+        }
+      } catch (error) {
+        console.error('Error fetching filter options:', error);
+      }
+    };
+    
+    fetchFilterOptions();
+  }, [baseUrl]);
 
   const handleExport = () => {
     console.log("Export Items Table Data...");
@@ -116,7 +147,7 @@ export function ItemsTable() {
     const toastId = toast.loading("Placing item...");
   
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/place`, {
+              const response = await fetch(`${baseUrl}/api/place`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -182,16 +213,28 @@ export function ItemsTable() {
       WASTE_EXPIRED: "bg-rose-600",
       WASTE_DEPLETED: "bg-amber-500",
       DISPOSED: "bg-gray-600",
+      IN_USE: "bg-blue-600",
+      PLANNED: "bg-purple-600",
+      SCHEDULED: "bg-indigo-600",
+      WASTE: "bg-red-600",
+      LOST: "bg-gray-500",
+      BROKEN: "bg-red-800",
     };
 
     const colorClass = colorMap[normalizedStatus] ?? "bg-gray-500";
 
     // Map status to display text
     let displayText = '';
-    if (status === 'active') displayText = 'Active';
-    else if (status === 'expired') displayText = 'Waste Expired';
-    else if (status === 'depleted') displayText = 'Waste Depleted';
-    else if (status === 'disposed') displayText = 'Disposed';
+    if (status === 'ACTIVE') displayText = 'Active';
+    else if (status === 'WASTE_EXPIRED') displayText = 'Expired';
+    else if (status === 'WASTE_DEPLETED') displayText = 'Depleted';
+    else if (status === 'DISPOSED') displayText = 'Disposed';
+    else if (status === 'IN_USE') displayText = 'In Use';
+    else if (status === 'PLANNED') displayText = 'Planned';
+    else if (status === 'SCHEDULED') displayText = 'Scheduled';
+    else if (status === 'WASTE') displayText = 'Waste';
+    else if (status === 'LOST') displayText = 'Lost';
+    else if (status === 'BROKEN') displayText = 'Broken';
     else displayText = String(status).charAt(0).toUpperCase() + String(status).slice(1);
 
     return (
@@ -246,10 +289,10 @@ export function ItemsTable() {
             </SelectTrigger>
             <SelectContent className="bg-gray-800 border-2 border-gray-700 text-white">
               <SelectItem value="all">All Statuses</SelectItem>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="expired">Waste Expired</SelectItem>
-              <SelectItem value="depleted">Waste Depleted</SelectItem>
-              <SelectItem value="disposed">Disposed</SelectItem>
+              <SelectItem value="ACTIVE">Active</SelectItem>
+              <SelectItem value="WASTE_EXPIRED">Waste Expired</SelectItem>
+              <SelectItem value="WASTE_DEPLETED">Waste Depleted</SelectItem>
+              <SelectItem value="DISPOSED">Disposed</SelectItem>
             </SelectContent>
           </Select>
           <div className="relative">
@@ -263,17 +306,49 @@ export function ItemsTable() {
               className="w-[180px] bg-gray-700 text-white border-2 border-gray-600 pl-10 py-6 focus:ring-indigo-500 focus:border-indigo-500 shadow-lg shadow-black/10"
             />
           </div>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Filter size={16} className="text-gray-400" />
-            </div>
-            <Input
-              placeholder="Filter Category"
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="w-[180px] bg-gray-700 text-white border-2 border-gray-600 pl-10 py-6 focus:ring-indigo-500 focus:border-indigo-500 shadow-lg shadow-black/10"
-            />
-          </div>
+          <Select
+            value={categoryFilter || "all"}
+            onValueChange={(value) =>
+              setCategoryFilter(value === "all" ? "" : value)
+            }
+          >
+            <SelectTrigger className="w-[180px] bg-gray-700 text-white border-2 border-gray-600 shadow-lg shadow-black/10 py-6">
+              <div className="flex items-center gap-2">
+                <Filter size={16} className="text-indigo-400" />
+                <SelectValue placeholder="Filter by Category" />
+              </div>
+            </SelectTrigger>
+            <SelectContent className="bg-gray-800 border-2 border-gray-700 text-white">
+              <SelectItem value="all">All Categories</SelectItem>
+              {filterOptions.categories?.map((category) => (
+                <SelectItem key={category} value={category}>
+                  {category}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          
+          <Select
+            value={subcategoryFilter || "all"}
+            onValueChange={(value) =>
+              setSubcategoryFilter(value === "all" ? "" : value)
+            }
+          >
+            <SelectTrigger className="w-[180px] bg-gray-700 text-white border-2 border-gray-600 shadow-lg shadow-black/10 py-6">
+              <div className="flex items-center gap-2">
+                <Filter size={16} className="text-indigo-400" />
+                <SelectValue placeholder="Filter by Subcategory" />
+              </div>
+            </SelectTrigger>
+            <SelectContent className="bg-gray-800 border-2 border-gray-700 text-white">
+              <SelectItem value="all">All Subcategories</SelectItem>
+              {filterOptions.subcategories?.map((subcategory) => (
+                <SelectItem key={subcategory} value={subcategory}>
+                  {subcategory}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <Button
           onClick={handleExport}
@@ -330,6 +405,12 @@ export function ItemsTable() {
                 Mass
               </TableHead>
               <TableHead className="text-gray-300 font-semibold">
+                Temperature
+              </TableHead>
+              <TableHead className="text-gray-300 font-semibold">
+                Hazardous
+              </TableHead>
+              <TableHead className="text-gray-300 font-semibold">
               Actions
             </TableHead>
             </TableRow>
@@ -337,7 +418,7 @@ export function ItemsTable() {
           <TableBody>
             {isLoading ? (
               <TableRow key="loading">
-                <TableCell colSpan={14} className="text-center py-8">
+                <TableCell colSpan={16} className="text-center py-8">
                   <div className="flex items-center justify-center">
                     <svg
                       className="animate-spin h-6 w-6 text-indigo-400"
@@ -366,7 +447,7 @@ export function ItemsTable() {
             ) : error ? (
               <TableRow key="error">
                 <TableCell
-                  colSpan={14}
+                  colSpan={16}
                   className="text-center text-red-500 py-6"
                 >
                   <div className="flex flex-col items-center justify-center">
@@ -390,7 +471,7 @@ export function ItemsTable() {
               </TableRow>
             ) : items.length === 0 ? (
               <TableRow key="no-items">
-                <TableCell colSpan={14} className="text-center py-12">
+                <TableCell colSpan={16} className="text-center py-12">
                   <div className="flex flex-col items-center justify-center text-gray-400">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -460,29 +541,33 @@ export function ItemsTable() {
                     )}
                   </TableCell>
                   <TableCell>
-                    {item.expiry_date ? (
+                    {item.expiry_date && item.expiry_date !== "N/A" ? (
                       <span className="text-amber-300">
                         {format(new Date(item.expiry_date), "PP")}
                       </span>
                     ) : (
-                      <span className="text-gray-500">N/A</span>
+                      <span className="text-gray-500">No Expiry</span>
                     )}
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center">
                       <span
                         className={`font-medium ${
-                          item.usage_limit && item.current_uses / parseInt(item.usage_limit) > 0.8
-                            ? "text-red-400"
-                            : item.usage_limit && item.current_uses / parseInt(item.usage_limit) > 0.5
-                            ? "text-amber-400"
+                          item.usage_limit && item.usage_limit !== "N/A" && parseInt(item.usage_limit) > 0
+                            ? (item.current_uses / parseInt(item.usage_limit) > 0.8
+                                ? "text-red-400"
+                                : item.current_uses / parseInt(item.usage_limit) > 0.5
+                                ? "text-amber-400"
+                                : "text-green-400")
                             : "text-green-400"
                         }`}
                       >
                         {item.current_uses}
                       </span>
                       <span className="text-gray-400 mx-1">/</span>
-                      <span>{item.usage_limit ?? "∞"}</span>
+                      <span>
+                        {item.usage_limit && item.usage_limit !== "N/A" ? item.usage_limit : "∞"}
+                      </span>
                     </div>
                   </TableCell>
                   <TableCell>
@@ -506,6 +591,37 @@ export function ItemsTable() {
                   <TableCell>
                     <span className="font-medium">{item.mass_kg}</span>
                     <span className="text-gray-400 text-xs ml-1">kg</span>
+                  </TableCell>
+                  <TableCell>
+                    {item.temp_requirement ? (
+                      <span className={`px-2 py-1 rounded-md text-xs ${
+                        item.temp_requirement === 'COLD' ? 'bg-blue-500/20 text-blue-300 border border-blue-800' :
+                        item.temp_requirement === 'WARM' ? 'bg-red-500/20 text-red-300 border border-red-800' :
+                        item.temp_requirement === 'AMBIENT' ? 'bg-green-500/20 text-green-300 border border-green-800' :
+                        'bg-gray-500/20 text-gray-300 border border-gray-800'
+                      }`}>
+                        {item.temp_requirement}
+                      </span>
+                    ) : (
+                      <span className="text-gray-500">N/A</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {item.hazardous_class && item.hazardous_class !== 'NONE' ? (
+                      <span className={`px-2 py-1 rounded-md text-xs ${
+                        item.hazardous_class === 'FLAMMABLE' ? 'bg-orange-500/20 text-orange-300 border border-orange-800' :
+                        item.hazardous_class === 'CORROSIVE' ? 'bg-purple-500/20 text-purple-300 border border-purple-800' :
+                        item.hazardous_class === 'BIOHAZARD' ? 'bg-red-500/20 text-red-300 border border-red-800' :
+                        item.hazardous_class === 'TOXIC' ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-800' :
+                        item.hazardous_class === 'RADIOACTIVE' ? 'bg-pink-500/20 text-pink-300 border border-pink-800' :
+                        item.hazardous_class === 'PRESSURIZED' ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-800' :
+                        'bg-gray-500/20 text-gray-300 border border-gray-800'
+                      }`}>
+                        {item.hazardous_class}
+                      </span>
+                    ) : (
+                      <span className="text-gray-500">Safe</span>
+                    )}
                   </TableCell>
                 <TableCell>
                   <Button 

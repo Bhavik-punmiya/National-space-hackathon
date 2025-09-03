@@ -3,7 +3,8 @@ import { Inter } from 'next/font/google';
 import { Share_Tech_Mono } from 'next/font/google';
 import './globals.css';
 import Providers from '@/providers/Providers';
-import { ChatBot } from '@/components/ChatBot';
+import ChatBotWrapper from '@/components/ChatBotWrapper';
+import AuthProvider from '@/providers/AuthProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 const spaceMono = Share_Tech_Mono({ 
@@ -17,6 +18,8 @@ export const metadata: Metadata = {
   description: 'Manage and track inventory on the International Space Station',
 };
 
+
+
 export default function RootLayout({
   children,
 }: {
@@ -25,8 +28,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning className={`${inter.className} ${spaceMono.variable}`}>
-        <Providers>{children}</Providers>
-        <ChatBot />
+        <Providers>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </Providers>
+        <ChatBotWrapper />
       </body>
     </html>
   );

@@ -6,6 +6,7 @@ import ISS from "@/components/ISS";
 import ZoomControl from "@/components/ZoomControl";
 import "@/app/globals.css";
 import Search from "@/components/SearchRetrieve";
+import UserDropdown from "@/components/UserDropdown";
 
 export default function HomePage() {
   const [translateX, setTranslateX] = useState<number>(0);
@@ -16,8 +17,9 @@ export default function HomePage() {
     x: 0,
     y: 0,
     title: "",
-    totalContainers: 0,
     totalItems: 0,
+    totalContainers: 0,
+    totalZones: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -30,6 +32,7 @@ export default function HomePage() {
 
   const [containers, setContainers] = useState<any[]>([]);
   const [items, setItems] = useState<Item[]>([]);
+  const [currentUser, setCurrentUser] = useState<{username: string, userId: string} | null>(null);
 
   // SVG dimensions
   const svgWidth = 1804;
@@ -88,9 +91,33 @@ export default function HomePage() {
       })
       .finally(() => setIsLoading(false));
 
-
-
   }, []);
+
+  // Load current user from localStorage
+  useEffect(() => {
+    const savedUser = localStorage.getItem("space_user");
+    if (savedUser) {
+      try {
+        const userData = JSON.parse(savedUser);
+        setCurrentUser({ username: userData.username, userId: userData.userId });
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        localStorage.removeItem("space_user");
+      }
+    }
+  }, []);
+
+  // Handle sign out
+  const handleSignOut = () => {
+    localStorage.removeItem("space_user");
+    
+    // Dispatch custom event to notify ChatBotWrapper
+    window.dispatchEvent(new Event('authStateChanged'));
+    
+    setCurrentUser(null);
+    // Redirect to signin page
+    window.location.href = '/signin';
+  };
 
   // Apply constraints whenever scale changes
   useEffect(() => {
@@ -134,7 +161,16 @@ export default function HomePage() {
     >
       <div className="relative h-screen max-h-screen ">
         <div className="fixed top-0 left-0 right-0 z-50 pt-6 pb-4 px-4">
-          <Search />
+          <div className="flex justify-between items-start">
+            <div className="flex-1">
+              <Search />
+            </div>
+            {currentUser && (
+              <div className="ml-4">
+                <UserDropdown username={currentUser.username} onSignOut={handleSignOut} />
+              </div>
+            )}
+          </div>
         </div>
         <div className="relative z-10 pt-20">
           {!isLoading && (
@@ -148,8 +184,6 @@ export default function HomePage() {
                 setScale={setScale}
                 tooltip={tooltip}
                 setTooltip={setTooltip}
-                containers={containers}
-                items={items}
               />
               <ZoomControl
                 scale={scale}

@@ -17,6 +17,8 @@ from .routes.client_search_retrieve import client_search_retrieve_bp
 from .routes.search_frontend import search_frontend_bp
 from app.routes.client_tables import tables_bp
 from app.routes.agent import agent_bp
+from .routes.reservation_routes import reservation_bp
+from .routes.auth_routes import auth_bp
 import os
 import json
 
@@ -43,6 +45,8 @@ def create_app(config_class=Config):
     app.register_blueprint(tables_bp)
     app.register_blueprint(search_frontend_bp)
     app.register_blueprint(agent_bp)
+    app.register_blueprint(reservation_bp)
+    app.register_blueprint(auth_bp)
 
     # Initialize the database with updated models
     init_db()

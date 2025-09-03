@@ -111,11 +111,10 @@ class PlacementResponse(BaseModel):
 
 class RetrievalStep(BaseModel):
     """Model for retrieval operations."""
+    step: int
+    action: str  # "remove", "setAside", "retrieve", "placeBack"
     item_id: str
-    container_id: str
-    position: Position
-    action: str  # "retrieve", "placeBack", etc.
-    reason: Optional[str] = None
+    itemName: str
 
 class RetrieveRequest(BaseModel):
     """Request model for item retrieval."""
@@ -499,6 +498,14 @@ class SearchResponse(BaseModel):
     found: Optional[bool] = None
     item: Optional[SearchResponseItem] = None
     retrievalSteps: Optional[List[RetrievalStep]] = None
+
+class ItemSearchResponse(BaseModel):
+    """Response model for item search with retrieval steps."""
+    success: bool
+    found: bool
+    item: Optional[SearchResponseItem] = None
+    retrievalSteps: List[RetrievalStep] = []
+    error: Optional[str] = None
     
 # --- Waste Management Models ---
 
@@ -527,6 +534,8 @@ class WasteReturnPlanRequest(BaseModel):
     undocking_container_id: str
     user_id: str
     undocking_date: datetime
+    maxWeight: float
+    maxVolume: Optional[float] = None  # New volume limit field
 
 class WasteReturnPlanResponse(BaseModel):
     """Response model for waste return planning."""
@@ -556,6 +565,7 @@ class WasteReturnManifestItem(BaseModel):
     name: str
     category: str
     subcategory: str
+    reason: str
     mass_kg: float
     volume_cm3: float
 

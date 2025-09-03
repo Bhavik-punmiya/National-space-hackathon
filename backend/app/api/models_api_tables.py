@@ -29,6 +29,14 @@ class ContainerApiSchema(BaseModel):
     height_cm: float = Field(..., description="Height in centimeters")
     item_count: int = Field(..., description="Total number of items currently in the container")
     expired_item_count: int = Field(..., description="Number of expired items currently in the container")
+    name: Optional[str] = Field(None, description="Container name")
+    type: Optional[str] = Field(None, description="Container type")
+    open_face: Optional[str] = Field(None, description="Access orientation")
+    max_mass: Optional[float] = Field(None, description="Maximum weight capacity")
+    current_mass: Optional[float] = Field(None, description="Current total mass")
+    access_index: Optional[int] = Field(None, description="Access difficulty (0-100)")
+    is_active: Optional[bool] = Field(None, description="Container operational status")
+    description: Optional[str] = Field(None, description="Additional notes")
 
     class Config:
         from_attributes = True # For Pydantic V2+
@@ -69,6 +77,8 @@ class ItemApiSchema(BaseModel):
     status: ItemStatus
     expired: bool = Field(..., description="True if status is WASTE_EXPIRED")
     depleted: bool = Field(..., description="True if status is WASTE_DEPLETED")
+    temp_requirement: Optional[str] = Field(None, description="Temperature requirement (COLD, AMBIENT, WARM, N/A)")
+    hazardous_class: Optional[str] = Field(None, description="Hazardous classification (NONE, FLAMMABLE, CORROSIVE, etc.)")
 
     class Config:
         from_attributes = True

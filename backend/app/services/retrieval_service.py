@@ -1,8 +1,8 @@
 # /app/services/retrieval_service.py
 from sqlalchemy.orm import Session, joinedload
 from typing import List, Tuple, Optional
-from app.models_db import Item as DBItem, Container as DBContainer, Placement as DBPlacement, LogActionType, ItemStatus
-from app.models_api import Position, Coordinates, RetrievalStep, SearchResponse, SearchResponseItem, PlaceUpdateRequest, SuccessResponse, RetrieveRequest
+from app.models_db import Item as DBItem, Container as DBContainer, Placement as DBPlacement, LogActionType, ItemStatus, TemperatureRequirement, HazardousClass
+from app.models_api import Position, Coordinates, RetrievalStep, ItemSearchResponse, SearchResponseItem, PlaceUpdateRequest, SuccessResponse, RetrieveRequest
 from app.utils import geometry
 from .logging_service import create_log_entry
 from datetime import datetime
@@ -54,7 +54,7 @@ def get_blocking_items(
     return blockers
 
 
-def search_for_item(db: Session, item_id: Optional[str], item_name: Optional[str], user_id: Optional[str] = None) -> SearchResponse:
+def search_for_item(db: Session, item_id: Optional[str], item_name: Optional[str], user_id: Optional[str] = None) -> ItemSearchResponse:
     """
     Searches for an item by ID or name and determines retrieval steps.
     If multiple found by name, chooses the one easiest to retrieve (fewest direct blockers).
@@ -68,18 +68,19 @@ def search_for_item(db: Session, item_id: Optional[str], item_name: Optional[str
     elif item_name:
          # Join with Item table to filter by name
          query = query.join(DBItem, DBPlacement.item_id_fk == DBItem.item_id).\
-             filter(DBItem.name == item_name)
+             filter(DBItem.name == item_name, DBItem.status == ItemStatus.ACTIVE)
     else:
         # Should be caught by route validation, but double-check
-        return SearchResponse(success=False, found=False, error="itemId or itemName is required")
+        return ItemSearchResponse(success=False, found=False, error="itemId or itemName is required")
 
-    # Filter for active items only
-    query = query.filter(DBItem.status == ItemStatus.ACTIVE)
+    # Filter for active items only (only for item_id searches)
+    if item_id:
+        query = query.filter(DBItem.status == ItemStatus.ACTIVE)
 
     possible_placements: List[DBPlacement] = query.all()
 
     if not possible_placements:
-        return SearchResponse(success=True, found=False)
+        return ItemSearchResponse(success=True, found=False)
 
     best_placement: Optional[DBPlacement] = None
     min_blockers = float('inf')
@@ -147,14 +148,24 @@ def search_for_item(db: Session, item_id: Optional[str], item_name: Optional[str
             found_item_details = SearchResponseItem(
                 item_id=item_info.item_id,
                 name=item_info.name,
+                category=item_info.category,
+                subcategory=item_info.subcategory,
+                status=item_info.status,
                 container_id=container_info.container_id,
                 zone=container_info.zone,
-                position=target_pos
+                position=target_pos,
+                priority=item_info.priority,
+                temp_requirement=item_info.temp_requirement,
+                hazardous_class=item_info.hazardous_class,
+                current_uses=item_info.current_uses,
+                maximum_uses=item_info.maximum_uses,
+                expiry_date=item_info.expiry_date,
+                last_used=None  # Will be populated from logs if needed
             )
 
     # If loop finished and we found a best placement
     if found_item_details:
-        return SearchResponse(
+        return ItemSearchResponse(
             success=True,
             found=True,
             item=found_item_details,
@@ -163,7 +174,7 @@ def search_for_item(db: Session, item_id: Optional[str], item_name: Optional[str
     else:
          # This case should technically not be reached if possible_placements was not empty
          # unless all placements had inconsistent data.
-        return SearchResponse(success=True, found=False, item=None, retrievalSteps=[])
+        return ItemSearchResponse(success=True, found=False, item=None, retrievalSteps=[])
 
 
 def log_item_retrieval(db: Session, request_data: RetrieveRequest) -> SuccessResponse:
@@ -187,23 +198,21 @@ def log_item_retrieval(db: Session, request_data: RetrieveRequest) -> SuccessRes
 
     # --- Decrement Usage Count ---
     remaining_uses = None
-    if item.usage_limit is not None and item.usage_limit != "N/A":
+    if item.maximum_uses is not None:
         try:
-            usage_limit_int = int(item.usage_limit)
             current_uses = getattr(item, 'current_uses', 0)
             current_uses += 1
             item.current_uses = current_uses
-            remaining_uses = usage_limit_int - current_uses
+            remaining_uses = item.maximum_uses - current_uses
             if remaining_uses < 0:
                  # This shouldn't ideally happen if checks are done, but handle defensively
-                 print(f"Warning: Item {item_id} used more times ({current_uses}) than limit ({usage_limit_int}).")
+                 print(f"Warning: Item {item_id} used more times ({current_uses}) than limit ({item.maximum_uses}).")
                  remaining_uses = 0 # Cap at 0
                  return SuccessResponse(success=False, error="Usage limit exceeded.")
 
             # --- Update Status if Depleted ---
             if remaining_uses == 0:
                 item.status = ItemStatus.WASTE_DEPLETED
-                action_type = LogActionType.SIMULATION_DEPLETED # Or a specific RETRIEVAL_DEPLETED? Use generic for now.
                 log_details = {
                     "reason": "Usage limit reached upon retrieval",
                     "remainingUses": remaining_uses
@@ -218,8 +227,8 @@ def log_item_retrieval(db: Session, request_data: RetrieveRequest) -> SuccessRes
                      details=log_details
                 )
         except (ValueError, TypeError):
-            # Handle invalid usage_limit format
-            print(f"Warning: Invalid usage_limit format for item {item_id}: {item.usage_limit}")
+            # Handle invalid maximum_uses format
+            print(f"Warning: Invalid maximum_uses format for item {item_id}: {item.maximum_uses}")
             remaining_uses = None
 
 

@@ -11,6 +11,7 @@ from app.api.models_api_tables import (
     PaginationParams, BaseFilterParams, ItemFilterParams,
     PaginatedContainerResponse, PaginatedItemResponse, ItemStatus
 )
+from app.models_db import Item, Container, ContainerType
 from ..database import get_db # Use the dependency injection style getter
 
 tables_bp = Blueprint('tables', __name__, url_prefix='/api/tables')
@@ -42,6 +43,8 @@ def get_containers():
         page = request.args.get('page', 1, type=int)
         size = request.args.get('size', 10, type=int)
         search = request.args.get('search', None, type=str)
+        zone_filter = request.args.get('zone', None, type=str)
+        container_type_filter = request.args.get('type', None, type=str)
 
         # Clamp size to reasonable limits
         size = max(1, min(size, 100))
@@ -55,7 +58,7 @@ def get_containers():
 
     db: Session = next(get_session()) # Get DB session
     try:
-        containers_dto, total_count = get_containers_service(db, pagination, filters)
+        containers_dto, total_count = get_containers_service(db, pagination, filters, zone_filter, container_type_filter)
 
         response_data = PaginatedContainerResponse(
             total=total_count,
@@ -69,6 +72,66 @@ def get_containers():
     except Exception as e:
         # Log the exception e
         print(f"Error fetching containers: {e}") # Basic logging
+        return jsonify({"error": "An unexpected error occurred"}), 500
+    finally:
+        db.close()
+
+
+@tables_bp.route('/filters', methods=['GET'])
+def get_table_filters():
+    """
+    API endpoint to get available filter options for tables.
+    Returns categories, subcategories, zones, and statuses.
+    """
+    try:
+        db: Session = next(get_session())
+        
+        # Get unique categories
+        categories = db.query(Item.category).distinct().all()
+        categories = [cat[0] for cat in categories if cat[0]]
+        
+        # Get unique subcategories
+        subcategories = db.query(Item.subcategory).distinct().all()
+        subcategories = [sub[0] for sub in subcategories if sub[0]]
+        
+        # Get unique zones
+        zones = db.query(Container.zone).distinct().all()
+        zones = [zone[0] for zone in zones if zone[0]]
+        
+        # Get available statuses
+        statuses = [status.value for status in ItemStatus]
+        
+        return jsonify({
+            "success": True,
+            "categories": categories,
+            "subcategories": subcategories,
+            "zones": zones,
+            "statuses": statuses
+        })
+        
+    except Exception as e:
+        print(f"Error fetching table filters: {e}")
+        return jsonify({"error": "An unexpected error occurred"}), 500
+    finally:
+        db.close()
+
+
+@tables_bp.route('/container-types', methods=['GET'])
+def get_container_types():
+    """
+    API endpoint to get available container types.
+    """
+    try:
+        from app.models_db import ContainerType
+        container_types = [ct.value for ct in ContainerType]
+        
+        return jsonify({
+            "success": True,
+            "container_types": container_types
+        })
+        
+    except Exception as e:
+        print(f"Error fetching container types: {e}")
         return jsonify({"error": "An unexpected error occurred"}), 500
 
 
@@ -85,6 +148,7 @@ def get_items():
     - status (str, optional): Filter by item status (e.g., 'active', 'expired').
     - preferred_zone (str, optional): Filter by item's preferred zone.
     """
+    print(f"DEBUG: get_items called with args: {request.args}")
     try:
         # Parse pagination and filter parameters
         page = request.args.get('page', 1, type=int)
@@ -115,13 +179,18 @@ def get_items():
             category=category,
             subcategory=subcategory
         )
+        print(f"DEBUG: Created pagination: {pagination}")
+        print(f"DEBUG: Created filters: {filters}")
 
     except (ValidationError, ValueError) as e:
         return jsonify({"error": "Invalid query parameters", "details": str(e)}), 400
 
     db: Session = next(get_session()) # Get DB session
+    print(f"DEBUG: Got DB session: {db}")
     try:
+        print("DEBUG: Calling get_items_service")
         items_dto, total_count = get_items_service(db, pagination, filters)
+        print(f"DEBUG: get_items_service returned {len(items_dto)} items, total_count={total_count}")
 
         response_data = PaginatedItemResponse(
             total=total_count,
@@ -134,5 +203,10 @@ def get_items():
 
     except Exception as e:
         # Log the exception e
-        print(f"Error fetching items: {e}") # Basic logging
+        print(f"ERROR in get_items route: {e}")
+        print(f"ERROR type: {type(e)}")
+        import traceback
+        print(f"ERROR traceback: {traceback.format_exc()}")
         return jsonify({"error": "An unexpected error occurred"}), 500
+    finally:
+        db.close()

@@ -14,8 +14,9 @@ export default function SpaceStationPage() {
     x: 0,
     y: 0, 
     title: "",
-    totalContainers : 0,
-    totalItems : 0
+    totalItems: 0,
+    totalContainers: 0,
+    totalZones: 0
   });
   const [containers, setContainers] = useState<any[]>([]);
   const [items, setItems] = useState<any[]>([]);
@@ -56,8 +57,6 @@ export default function SpaceStationPage() {
           setScale={setScale}
           tooltip={tooltip}
           setTooltip={setTooltip}
-          containers={containers}
-          items={items}
         />
         <ZoomControl scale={scale} setScale={setScale} resetView={resetView} />
       </div>

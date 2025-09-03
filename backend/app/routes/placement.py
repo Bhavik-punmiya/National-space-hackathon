@@ -156,6 +156,53 @@ def get_placement_frontend():
             print(f"Error during DB generator exhaustion in Frontend GET: {e}")
 
 
+@client_placement_bp.route('/stats', methods=['GET'])
+def get_module_stats():
+    """ Frontend API: Get module statistics for ISS """
+    db_gen = get_db()
+    db: Session = next(db_gen)
+    try:
+        # For now, return mock data structure
+        # In the future, this should query the actual database for real stats
+        modules_data = {
+            "module-1": {
+                "totalItems": 45,
+                "totalContainers": 12
+            },
+            "module-2": {
+                "totalItems": 32,
+                "totalContainers": 8
+            },
+            "module-3": {
+                "totalItems": 67,
+                "totalContainers": 15
+            },
+            "module-4": {
+                "totalItems": 28,
+                "totalContainers": 7
+            },
+            "module-5": {
+                "totalItems": 89,
+                "totalContainers": 22
+            }
+        }
+        
+        return jsonify({
+            "success": True,
+            "modules": modules_data
+        }), 200
+        
+    except Exception as e:
+        print(f"Error in /client/placement/stats route: {e}")
+        traceback.print_exc()
+        return jsonify({"success": False, "error": "An internal server error occurred."}), 500
+    finally:
+        try:
+            next(db_gen, None)
+        except Exception as e:
+            print(f"Error during DB generator exhaustion in stats route: {e}")
+
+
 @client_placement_bp.route('', methods=['POST'])
 def handle_placement_frontend():
     """

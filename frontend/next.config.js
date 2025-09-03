@@ -5,6 +5,9 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  env: {
+    NEXT_PUBLIC_BASE_URL: 'http://localhost:8000',
+  },
   async headers() {
     return [
       {

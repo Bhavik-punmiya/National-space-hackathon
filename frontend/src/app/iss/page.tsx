@@ -15,16 +15,18 @@ const Page: React.FC = () => {
     x: number;
     y: number;
     title: string;
-    totalContainers: number;
     totalItems: number;
+    totalContainers: number;
+    totalZones: number;
   }
   const [tooltip, setTooltip] = useState<TooltipProps>({
     visible: false,
     x: 0,
     y: 0,
     title: "",
-    totalContainers: 0,
     totalItems: 0,
+    totalContainers: 0,
+    totalZones: 0,
   });
   
 
@@ -50,8 +52,6 @@ const [items, setItems] = useState<{ id: string; containerId: string }[]>([]);
         setScale={setScale}
         tooltip={tooltip}
         setTooltip={setTooltip}
-        containers={containers}
-        items={items}
       />
       <ZoomControl scale={scale} setScale={setScale} resetView={resetView} />
       <Controls date={date} setDate={setDate} />

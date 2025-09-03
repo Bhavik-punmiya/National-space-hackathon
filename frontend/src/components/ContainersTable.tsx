@@ -11,8 +11,15 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Container, PaginatedContainerResponse } from "@/data/types";
-import { Search, FileDown, Box, AlertTriangle } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Container, PaginatedContainerResponse, TableFilters } from "@/data/types";
+import { Search, FileDown, Box, AlertTriangle, Filter } from "lucide-react";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -26,6 +33,18 @@ export function ContainersTable() {
   const [totalContainers, setTotalContainers] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
+  const [zoneFilter, setZoneFilter] = useState("");
+  const [containerTypeFilter, setContainerTypeFilter] = useState("");
+  const [filterOptions, setFilterOptions] = useState<TableFilters>({
+    categories: [],
+    subcategories: [],
+    zones: [],
+    statuses: [],
+    container_types: []
+  });
+
+  // Get base URL for API calls
+  const baseUrl = 'http://localhost:8000'; // Hardcoded for testing
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -45,12 +64,16 @@ export function ContainersTable() {
     if (debouncedSearchTerm) {
       params.append("search", debouncedSearchTerm);
     }
+    if (zoneFilter) {
+      params.append("zone", zoneFilter);
+    }
+    if (containerTypeFilter) {
+      params.append("type", containerTypeFilter);
+    }
 
     try {
       const response = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_BASE_URL
-        }/api/tables/containers?${params.toString()}`
+        `${baseUrl}/api/tables/containers?${params.toString()}`
       );
       if (!response.ok) throw new Error(`Error ${response.status}`);
       const data: PaginatedContainerResponse = await response.json();
@@ -68,11 +91,32 @@ export function ContainersTable() {
     } finally {
       setIsLoading(false);
     }
-  }, [currentPage, debouncedSearchTerm]);
+  }, [currentPage, debouncedSearchTerm, zoneFilter, containerTypeFilter, baseUrl]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  // Fetch filter options on component mount
+  useEffect(() => {
+    const fetchFilterOptions = async () => {
+      try {
+        console.log('Fetching filter options from:', `${baseUrl}/api/tables/filters`);
+        console.log('Environment variable:', process.env.NEXT_PUBLIC_BASE_URL);
+        console.log('Using baseUrl:', baseUrl);
+        
+        const response = await fetch(`${baseUrl}/api/tables/filters`);
+        if (response.ok) {
+          const data = await response.json();
+          setFilterOptions(data);
+        }
+      } catch (error) {
+        console.error('Error fetching filter options:', error);
+      }
+    };
+    
+    fetchFilterOptions();
+  }, [baseUrl]);
 
   const handleExport = () => {
     console.log("Export Containers Table Data...");
@@ -88,16 +132,64 @@ export function ContainersTable() {
 
       {/* Filters */}
       <div className="p-4 border-b border-gray-700 bg-gray-800 flex flex-col sm:flex-row justify-between gap-4">
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search size={16} className="text-gray-400" />
+        <div className="flex flex-wrap gap-2">
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search size={16} className="text-gray-400" />
+            </div>
+            <Input
+              placeholder="Search ID or Zone..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="bg-gray-700 text-white border-2 border-gray-600 pl-10 py-6 focus:ring-indigo-500 focus:border-indigo-500 shadow-lg shadow-black/10"
+            />
           </div>
-          <Input
-            placeholder="Search ID or Zone..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="bg-gray-700 text-white border-2 border-gray-600 pl-10 py-6 focus:ring-indigo-500 focus:border-indigo-500 shadow-lg shadow-black/10"
-          />
+          
+          <Select
+            value={zoneFilter || "all"}
+            onValueChange={(value) =>
+              setZoneFilter(value === "all" ? "" : value)
+            }
+          >
+            <SelectTrigger className="w-[180px] bg-gray-700 text-white border-2 border-gray-600 shadow-lg shadow-black/10 py-6">
+              <div className="flex items-center gap-2">
+                <Filter size={16} className="text-indigo-400" />
+                <SelectValue placeholder="Filter by Zone" />
+              </div>
+            </SelectTrigger>
+            <SelectContent className="bg-gray-800 border-2 border-gray-700 text-white">
+              <SelectItem value="all">All Zones</SelectItem>
+              {filterOptions.zones?.map((zone) => (
+                <SelectItem key={zone} value={zone}>
+                  {zone}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          
+          <Select
+            value={containerTypeFilter || "all"}
+            onValueChange={(value) =>
+              setContainerTypeFilter(value === "all" ? "" : value)
+            }
+          >
+            <SelectTrigger className="w-[180px] bg-gray-700 text-white border-2 border-gray-600 shadow-lg shadow-black/10 py-6">
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
+                  <Filter size={16} className="text-indigo-400" />
+                  <SelectValue placeholder="Filter by Type" />
+                </div>
+              </div>
+            </SelectTrigger>
+            <SelectContent className="bg-gray-800 border-2 border-gray-700 text-white">
+              <SelectItem value="all">All Types</SelectItem>
+              {filterOptions.container_types?.map((type) => (
+                <SelectItem key={type} value={type}>
+                  {type}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <Button
           onClick={handleExport}
@@ -132,12 +224,21 @@ export function ContainersTable() {
               <TableHead className="text-gray-300 font-semibold">
                 Expired
               </TableHead>
+              <TableHead className="text-gray-300 font-semibold">
+                Type
+              </TableHead>
+              <TableHead className="text-gray-300 font-semibold">
+                Mass (kg)
+              </TableHead>
+              <TableHead className="text-gray-300 font-semibold">
+                Access Index
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8">
+                <TableCell colSpan={10} className="text-center py-8">
                   <div className="flex items-center justify-center">
                     <svg
                       className="animate-spin h-6 w-6 text-indigo-400"
@@ -166,7 +267,7 @@ export function ContainersTable() {
             ) : error ? (
               <TableRow>
                 <TableCell
-                  colSpan={6}
+                  colSpan={10}
                   className="text-center text-red-500 py-6"
                 >
                   <div className="flex flex-col items-center justify-center">
@@ -190,7 +291,7 @@ export function ContainersTable() {
               </TableRow>
             ) : containers.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-12">
+                <TableCell colSpan={10} className="text-center py-12">
                   <div className="flex flex-col items-center justify-center text-gray-400">
                     <Box className="h-12 w-12 mb-4 text-gray-500" />
                     <p className="text-lg">No containers found</p>
@@ -248,6 +349,31 @@ export function ContainersTable() {
                         0
                       </span>
                     )}
+                  </TableCell>
+                  <TableCell>
+                    <span className="px-2 py-1 bg-purple-500/20 rounded-md text-purple-300 border border-purple-800">
+                      {container.type || 'N/A'}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center space-x-1">
+                      <span className="text-green-300">{container.current_mass || 0}</span>
+                      {container.max_mass && (
+                        <>
+                          <span className="text-gray-400">/</span>
+                          <span className="text-gray-300">{container.max_mass}</span>
+                        </>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <span className={`px-2 py-1 rounded-md text-xs ${
+                      (container.access_index || 0) <= 25 ? 'bg-green-500/20 text-green-300 border border-green-800' :
+                      (container.access_index || 0) <= 50 ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-800' :
+                      'bg-red-500/20 text-red-300 border border-red-800'
+                    }`}>
+                      {container.access_index || 'N/A'}
+                    </span>
                   </TableCell>
                 </TableRow>
               ))

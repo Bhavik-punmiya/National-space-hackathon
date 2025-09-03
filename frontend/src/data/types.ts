@@ -16,6 +16,14 @@ export interface Container {
   height_cm: number;
   item_count: number;
   expired_item_count: number;
+  name?: string; // Container name
+  type?: string; // Container type
+  open_face?: string; // Access orientation
+  max_mass?: number; // Maximum weight capacity
+  current_mass?: number; // Current total mass
+  access_index?: number; // Access difficulty (0-100)
+  is_active?: boolean; // Container operational status
+  description?: string; // Additional notes
 }
 
 export interface Item {
@@ -37,6 +45,12 @@ export interface Item {
   status: ItemStatus;
   expired: boolean;
   depleted: boolean;
+  temp_requirement?: string; // Temperature requirement
+  lot_number?: string; // Manufacturing/batch lot reference
+  orientation_allowed?: boolean; // Can item be rotated/reoriented
+  hazardous_class?: string; // Hazardous classification
+  tags_id?: string[]; // Multiple identifiers (barcode, RFID, QR)
+  usage_frequency?: number; // Average daily/weekly uses for forecasting
 }
 
 // Base pagination response structure
@@ -49,3 +63,23 @@ interface PaginatedResponse<T> {
 
 export type PaginatedContainerResponse = PaginatedResponse<Container>;
 export type PaginatedItemResponse = PaginatedResponse<Item>;
+
+// Filter options for tables
+export interface TableFilters {
+  categories: string[];
+  subcategories: string[];
+  zones: string[];
+  statuses: string[];
+  container_types: string[];
+}
+
+// Filter state for tables
+export interface FilterState {
+  search: string;
+  status: string;
+  preferred_zone: string;
+  category: string;
+  subcategory: string;
+  container_type?: string;
+  zone?: string;
+}

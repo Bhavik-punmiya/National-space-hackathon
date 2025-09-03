@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useRef, useState } from "react";
-import { Package } from "lucide-react";
+import { Package, Zap, Clock, AlertTriangle } from "lucide-react";
 import { Command as CommandPrimitive } from "cmdk";
 import {
   CommandGroup,
@@ -12,6 +12,12 @@ import {
 interface Item {
   itemId: string;
   name: string;
+  category?: string;
+  subcategory?: string;
+  usage_frequency?: number;
+  maximum_uses?: number;
+  current_uses?: number;
+  expiry_date?: string;
 }
 
 interface SearchBarProps {
@@ -87,6 +93,44 @@ export function SearchBar({
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const getItemStatusIcon = (item: Item) => {
+    if (item.expiry_date && item.expiry_date !== "N/A") {
+      const expiryDate = new Date(item.expiry_date);
+      const daysUntilExpiry = Math.ceil((expiryDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+      
+      if (daysUntilExpiry <= 7) return <AlertTriangle size={14} className="text-red-400" />;
+      if (daysUntilExpiry <= 15) return <AlertTriangle size={14} className="text-orange-400" />;
+      if (daysUntilExpiry <= 30) return <AlertTriangle size={14} className="text-yellow-400" />;
+    }
+    
+    if (item.maximum_uses && item.current_uses) {
+      const remainingUses = item.maximum_uses - item.current_uses;
+      if (remainingUses <= 3) return <Zap size={14} className="text-red-400" />;
+      if (remainingUses <= 10) return <Zap size={14} className="text-orange-400" />;
+    }
+    
+    return <Package size={14} className="text-indigo-400" />;
+  };
+
+  const getItemStatusText = (item: Item) => {
+    if (item.expiry_date && item.expiry_date !== "N/A") {
+      const expiryDate = new Date(item.expiry_date);
+      const daysUntilExpiry = Math.ceil((expiryDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+      
+      if (daysUntilExpiry <= 7) return `Expires in ${daysUntilExpiry} days`;
+      if (daysUntilExpiry <= 15) return `Expires in ${daysUntilExpiry} days`;
+      if (daysUntilExpiry <= 30) return `Expires in ${daysUntilExpiry} days`;
+    }
+    
+    if (item.maximum_uses && item.current_uses) {
+      const remainingUses = item.maximum_uses - item.current_uses;
+      if (remainingUses <= 3) return `${remainingUses} uses left`;
+      if (remainingUses <= 10) return `${remainingUses} uses left`;
+    }
+    
+    return "";
+  };
+
   return (
     <div className="relative w-full md:w-3/5">
       <div ref={commandRef} className="relative">
@@ -116,14 +160,45 @@ export function SearchBar({
                         e.stopPropagation();
                       }}
                       onSelect={() => handleSelectOption(item)}
-                      className="flex w-full items-center gap-2 hover:bg-indigo-600/20 cursor-pointer px-3 py-2 rounded-md my-1 mx-1 transition-colors duration-200 text-gray-100"
+                      className="flex w-full items-center gap-3 hover:bg-indigo-600/20 cursor-pointer px-3 py-3 rounded-md my-1 mx-1 transition-colors duration-200 text-gray-100"
                     >
-                      <Package size={16} className="text-indigo-400" />
-                      <div>
-                        <div>{item.name}</div>
-                        <div className="text-xs text-gray-400">
-                          {item.itemId}
+                      {getItemStatusIcon(item)}
+                      <div className="flex-1">
+                        <div className="font-medium">{item.name}</div>
+                        <div className="flex items-center gap-2 text-xs text-gray-400 mt-1">
+                          <span className="font-mono">{item.itemId}</span>
+                          {item.category && (
+                            <>
+                              <span>•</span>
+                              <span>{item.category}</span>
+                            </>
+                          )}
+                          {item.subcategory && (
+                            <>
+                              <span>•</span>
+                              <span>{item.subcategory}</span>
+                            </>
+                          )}
                         </div>
+                        <div className="flex items-center gap-3 text-xs text-gray-500 mt-1">
+                          {item.usage_frequency && (
+                            <span className="flex items-center gap-1">
+                              <Clock size={12} />
+                              {item.usage_frequency}/day
+                            </span>
+                          )}
+                          {item.maximum_uses && item.current_uses && (
+                            <span className="flex items-center gap-1">
+                              <Zap size={12} />
+                              {item.current_uses}/{item.maximum_uses}
+                            </span>
+                          )}
+                        </div>
+                        {getItemStatusText(item) && (
+                          <div className="text-xs text-amber-400 mt-1 font-medium">
+                            {getItemStatusText(item)}
+                          </div>
+                        )}
                       </div>
                     </CommandItem>
                   ))}
