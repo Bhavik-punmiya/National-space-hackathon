@@ -9,24 +9,40 @@ import { useRouter } from 'next/navigation'
 interface Item {
   id: string
   name: string
-  position_start_width: number
-  position_start_depth: number
-  position_start_height: number
-  position_end_width: number
-  position_end_depth: number
-  position_end_height: number
   category: string
+  subcategory: string
+  containerId: string
   mass_kg: number
-  quantity: number
+  width_cm: number
+  depth_cm: number
+  height_cm: number
   priority: number
+  expiry_date: string
+  preferred_zone: string
+  temp_requirement: string
+  hazardous_class: string
+  maximum_uses: number
+  current_uses: number
+  usage_frequency: number
+  lot_number: string
+  orientation_allowed: boolean
+  tags_id: string[]
+  x?: number
+  y?: number
+  z?: number
 }
 
 interface Container {
   id: string
   name: string
+  type: string
+  zoneId: string
+  module_id: string
   width_cm: number
   depth_cm: number
   height_cm: number
+  currentWeight: number
+  maxWeight: number
 }
 
 interface ItemMeshProps {
@@ -82,17 +98,34 @@ const getItemColor = (priority: number, category: string, itemId: string): strin
   // Get the base color
   let color = colorPalette[finalIndex];
   
-  // Adjust brightness based on priority (higher priority = brighter)
+  // Create a THREE.Color object for manipulation
   const threeColor = new THREE.Color(color);
   const hsl = { h: 0, s: 0, l: 0 };
-  threeColor.getHSL(hsl as THREE.HSL);
+  threeColor.getHSL(hsl);
   
-  // Adjust lightness based on priority (higher priority/lower number = brighter)
-  const lightness = Math.max(0.3, Math.min(0.7, 0.7 - (priority / 200)));
-  threeColor.setHSL(hsl.h, hsl.s, lightness);
+  // Higher priority items get brighter colors
+  const priorityBrightness = Math.min(0.9, 0.2 + (priority / 100) * 0.7);
+  hsl.l = Math.max(0.1, Math.min(0.9, priorityBrightness));
   
-  return '#' + threeColor.getHexString();
-}
+  // Increase saturation for better visibility
+  hsl.s = Math.min(1.0, hsl.s * 1.2);
+  
+  threeColor.setHSL(hsl.h, hsl.s, hsl.l);
+  const finalColor = threeColor.getHexString();
+  
+  // Ensure we always return a valid hex color
+  if (!finalColor || finalColor === '000000') {
+    // Fallback to a bright color if something goes wrong
+    const fallbackColor = colorPalette[Math.abs(itemId.charCodeAt(0)) % colorPalette.length];
+    console.warn(`Color generation failed for item ${itemId}, using fallback: ${fallbackColor}`);
+    return fallbackColor;
+  }
+  
+  // Debug logging
+  console.log(`Item ${itemId} (${category}): Priority ${priority}, Base: ${color}, Final: #${finalColor}`);
+  
+  return finalColor;
+};
 
 // Single item mesh component
 const ItemMesh: React.FC<ItemMeshProps> = ({ item, setHoveredItem, maxDimension, colorScale }) => {
@@ -100,14 +133,14 @@ const ItemMesh: React.FC<ItemMeshProps> = ({ item, setHoveredItem, maxDimension,
   const [hovered, setHovered] = useState(false)
   
   // Calculate item dimensions
-  const width = Math.abs(item.position_end_width - item.position_start_width)
-  const height = Math.abs(item.position_end_height - item.position_start_height)
-  const depth = Math.abs(item.position_end_depth - item.position_start_depth)
+  const width = Math.abs(item.width_cm)
+  const height = Math.abs(item.height_cm)
+  const depth = Math.abs(item.depth_cm)
   
   // Calculate position (center of the item)
-  const positionX = (item.position_start_width + item.position_end_width) / 2 / maxDimension - 0.5
-  const positionY = (item.position_start_height + item.position_end_height) / 2 / maxDimension - 0.5
-  const positionZ = (item.position_start_depth + item.position_end_depth) / 2 / maxDimension - 0.5
+  const positionX = (item.x || 0) / maxDimension - 0.5
+  const positionY = (item.y || 0) / maxDimension - 0.5
+  const positionZ = (item.z || 0) / maxDimension - 0.5
   
   // Calculate scale (normalized to container size)
   const scaleX = width / maxDimension
@@ -115,7 +148,14 @@ const ItemMesh: React.FC<ItemMeshProps> = ({ item, setHoveredItem, maxDimension,
   const scaleZ = depth / maxDimension
   
   // Color based on priority, category and ID for more variation
-  const color = colorScale(item.priority, item.category, item.id)
+  let color = colorScale(item.priority, item.category, item.id)
+  
+  // Fallback color if the main color function fails
+  if (!color || color === '#000000') {
+    const fallbackIndex = (item.id.charCodeAt(0) + item.priority) % colorPalette.length
+    color = colorPalette[fallbackIndex]
+    console.log(`Using fallback color for item ${item.id}: ${color}`)
+  }
   
   // Handle hover events
   const handlePointerOver = (e: any) => {
@@ -156,9 +196,11 @@ const ItemMesh: React.FC<ItemMeshProps> = ({ item, setHoveredItem, maxDimension,
       <meshStandardMaterial 
         color={color} 
         transparent 
-        opacity={hovered ? 0.9 : 0.7}
+        opacity={hovered ? 0.95 : 0.85}
         emissive={hovered ? color : '#000000'}
-        emissiveIntensity={hovered ? 0.5 : 0}
+        emissiveIntensity={hovered ? 0.3 : 0}
+        metalness={0.1}
+        roughness={0.3}
       />
     </mesh>
   )
@@ -238,15 +280,60 @@ const ItemInfoPanel: React.FC<{ item: Item | null }> = ({ item }) => {
     <div className="absolute top-4 left-4 bg-gray-900 bg-opacity-80 p-4 rounded-lg text-white max-w-xs">
       <h3 className="text-lg font-bold mb-2">{item.name}</h3>
       <p className="text-sm mb-1">Category: {item.category}</p>
-      <p className="text-sm mb-1">Quantity: {item.quantity}</p>
+      <p className="text-sm mb-1">Quantity: {item.current_uses}/{item.maximum_uses}</p>
       <p className="text-sm mb-1">Mass: {item.mass_kg} kg</p>
       <p className="text-sm mb-1">Priority: {item.priority}</p>
       <div className="text-xs mt-2 text-gray-300">
-        <p>Dimensions: {(item.position_end_width - item.position_start_width).toFixed(1)} × 
-                       {(item.position_end_depth - item.position_start_depth).toFixed(1)} × 
-                       {(item.position_end_height - item.position_start_height).toFixed(1)}</p>
-        <p>Position: ({item.position_start_width.toFixed(1)}, {item.position_start_height.toFixed(1)}, {item.position_start_depth.toFixed(1)}) to</p>
-        <p>({item.position_end_width.toFixed(1)}, {item.position_end_height.toFixed(1)}, {item.position_end_depth.toFixed(1)})</p>
+        <p>Dimensions: {item.width_cm.toFixed(1)} × {item.depth_cm.toFixed(1)} × {item.height_cm.toFixed(1)}</p>
+        <p>Position: ({item.x?.toFixed(1) || 'N/A'}, {item.y?.toFixed(1) || 'N/A'}, {item.z?.toFixed(1) || 'N/A'})</p>
+      </div>
+    </div>
+  )
+}
+
+// Debug panel to show color assignments
+const ColorDebugPanel: React.FC<{ items: Item[] }> = ({ items }) => {
+  const [showDebug, setShowDebug] = useState(false)
+  
+  if (!showDebug) {
+    return (
+      <button
+        onClick={() => setShowDebug(true)}
+        className="absolute bottom-4 left-4 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm"
+      >
+        Show Color Debug
+      </button>
+    )
+  }
+  
+  return (
+    <div className="absolute bottom-4 left-4 bg-gray-900 bg-opacity-90 p-4 rounded-lg text-white max-w-xs max-h-60 overflow-y-auto">
+      <div className="flex justify-between items-center mb-2">
+        <h4 className="font-bold">Color Debug</h4>
+        <button
+          onClick={() => setShowDebug(false)}
+          className="text-gray-400 hover:text-white"
+        >
+          ×
+        </button>
+      </div>
+      <div className="text-xs space-y-1">
+        {items.slice(0, 10).map((item) => {
+          const color = getItemColor(item.priority, item.category, item.id)
+          return (
+            <div key={item.id} className="flex items-center space-x-2">
+              <div 
+                className="w-3 h-3 rounded-sm" 
+                style={{ backgroundColor: `#${color}` }}
+              />
+              <span>{item.name}</span>
+              <span className="text-gray-400">({item.category})</span>
+            </div>
+          )
+        })}
+        {items.length > 10 && (
+          <p className="text-gray-400">... and {items.length - 10} more items</p>
+        )}
       </div>
     </div>
   )
@@ -273,10 +360,11 @@ const Scene: React.FC<{
   return (
     <>
       {/* Lights */}
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[10, 10, 5]} intensity={1} />
-      <directionalLight position={[-10, -10, -5]} intensity={0.5} />
-      <hemisphereLight args={['#ffffff', '#303030', 0.5]} />
+      <ambientLight intensity={0.8} />
+      <directionalLight position={[10, 10, 5]} intensity={1.2} />
+      <directionalLight position={[-10, -10, -5]} intensity={0.6} />
+      <hemisphereLight args={['#ffffff', '#404040', 0.6]} />
+      <pointLight position={[0, 5, 0]} intensity={0.5} />
       
       {/* Container wireframe */}
       <ContainerMesh container={container} maxDimension={maxDimension} />
@@ -314,6 +402,22 @@ interface ContainerItemViewer3DProps {
 const ContainerItemViewer3D: React.FC<ContainerItemViewer3DProps> = ({ items, container }) => {
   const [hoveredItem, setHoveredItem] = useState<Item | null>(null)
   
+  // Debug logging for colors
+  useEffect(() => {
+    console.log('ContainerItemViewer3D mounted with:', {
+      itemCount: items.length,
+      container: container.name,
+      categories: [...new Set(items.map(item => item.category))],
+      sampleColors: items.slice(0, 5).map(item => ({
+        id: item.id,
+        name: item.name,
+        category: item.category,
+        priority: item.priority,
+        color: getItemColor(item.priority, item.category, item.id)
+      }))
+    })
+  }, [items, container])
+  
   return (
     <div className="relative w-full h-[600px]">
       <Canvas dpr={[1, 2]} shadows>
@@ -340,6 +444,9 @@ const ContainerItemViewer3D: React.FC<ContainerItemViewer3DProps> = ({ items, co
         <p className="mb-1">🖱️ Right-click + drag: Pan</p>
         <p>🖱️ Scroll: Zoom</p>
       </div>
+
+      {/* Debug panel */}
+      <ColorDebugPanel items={items} />
     </div>
   )
 }

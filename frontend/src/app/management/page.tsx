@@ -18,20 +18,45 @@ interface Item {
   depth_cm: number | null;
   height_cm: number | null;
   mass_kg: number | null;
+  // Enhanced fields from models_db.py
+  temp_requirement: string | null;
+  lot_number: string | null;
+  current_location: string | null;
+  orientation_allowed: boolean | null;
+  hazardous_class: string | null;
+  tags_id: string | null; // JSON string array
   priority: number | null;
   expiry_date: string | null;
-  usage_limit: string | null;
+  maximum_uses: number | null;
+  current_uses: number | null;
+  usage_remaining: number | null;
+  usage_frequency: number | null;
   preferred_zone: string | null;
+  status: string | null;
+  // Legacy field for compatibility
+  usage_limit: string | null;
   _key?: string;
 }
 
 interface Container {
   container_id: string;
+  name: string | null;
+  type: string | null;
   zone: string | null;
   module_id: string;
   width_cm: number | null;
   depth_cm: number | null;
   height_cm: number | null;
+  // Enhanced fields from models_db.py
+  open_face: string | null;
+  max_mass: number | null;
+  current_mass: number | null;
+  access_index: number | null;
+  parent_container_id: string | null;
+  is_active: boolean | null;
+  description: string | null;
+  created_at: string | null;
+  last_accessed: string | null;
   _key?: string;
 }
 
@@ -185,18 +210,26 @@ export default function ManagementPage() {
       depth_cm: parseFloat(row['depth_cm']) || null,
       height_cm: parseFloat(row['height_cm']) || null,
       mass_kg: parseFloat(row['mass_kg']) || null,
+      // Enhanced fields
+      temp_requirement: row['temp_requirement'] || 'AMBIENT',
+      lot_number: row['lot_number'] || null,
+      current_location: row['current_location'] || null,
+      orientation_allowed: row['orientation_allowed'] === 'true' || row['orientation_allowed'] === '1' || true,
+      hazardous_class: row['hazardous_class'] || 'NONE',
+      tags_id: row['tags_id'] || null, // Store as JSON string
       priority: parseInt(row['priority'], 10) || null,
       expiry_date: row['expiry_date'] && row['expiry_date'].toUpperCase() !== 'N/A' ? new Date(row['expiry_date']).toISOString() : null,
-      usage_limit: row['usage_limit'] ? String(row['usage_limit']) : null,
+      maximum_uses: row['maximum_uses'] ? parseInt(row['maximum_uses'], 10) : null,
+      current_uses: parseInt(row['current_uses']) || 0,
+      usage_remaining: row['usage_remaining'] ? parseInt(row['usage_remaining'], 10) : null,
+      usage_frequency: parseFloat(row['usage_frequency']) || null,
       preferred_zone: row['preferred_zone'] || null,
+      status: row['status'] || 'ACTIVE',
+      // Legacy compatibility
+      usage_limit: row['usage_limit'] || row['maximum_uses'] ? String(row['usage_limit'] || row['maximum_uses']) : null,
     })).filter(item => item.name !== 'Unnamed Item');
 
-    // Ensure usage_limit is always a string in the state
-    const processedItems = newItems.map(item => ({
-      ...item,
-      usage_limit: item.usage_limit ? String(item.usage_limit) : null
-    }));
-    setItems(prevItems => [...prevItems, ...processedItems]);
+    setItems(prevItems => [...prevItems, ...newItems]);
     toast.success(`Added ${newItems.length} items`);
   };
 
@@ -204,11 +237,23 @@ export default function ManagementPage() {
     const newContainers: Container[] = data.map((row, index) => ({
       _key: `csv-cont-${Date.now()}-${index}`,
       container_id: row['container_id'] || `generated-cont-${Date.now()}-${index}`,
+      name: row['name'] || row['container_id'] || 'Unnamed Container',
+      type: row['type'] || 'LOCKER',
       zone: row['zone'] || 'Default Zone',
       module_id: row['module_id'] || 'M1',
       width_cm: parseFloat(row['width_cm']) || null,
       depth_cm: parseFloat(row['depth_cm']) || null,
       height_cm: parseFloat(row['height_cm']) || null,
+      // Enhanced fields
+      open_face: row['open_face'] || '+X',
+      max_mass: parseFloat(row['max_mass']) || null,
+      current_mass: parseFloat(row['current_mass']) || 0.0,
+      access_index: parseInt(row['access_index'], 10) || 50,
+      parent_container_id: row['parent_container_id'] || null,
+      is_active: row['is_active'] === 'true' || row['is_active'] === '1' || true,
+      description: row['description'] || null,
+      created_at: row['created_at'] || new Date().toISOString(),
+      last_accessed: row['last_accessed'] || null,
     })).filter(cont => cont.zone !== 'Default Zone');
 
     setContainers(prevContainers => [...prevContainers, ...newContainers]);
@@ -216,11 +261,17 @@ export default function ManagementPage() {
   };
 
   const handleAddItemManually = (newItem: Omit<Item, '_key'>) => {
-    // Format the date as ISO string if it exists
+    // Format the item with enhanced fields
     const formattedItem = {
       ...newItem,
       expiry_date: newItem.expiry_date ? new Date(newItem.expiry_date).toISOString() : null,
-      usage_limit: newItem.usage_limit ? String(newItem.usage_limit) : null,
+      usage_limit: newItem.usage_limit || (newItem.maximum_uses ? String(newItem.maximum_uses) : null),
+      temp_requirement: newItem.temp_requirement || 'AMBIENT',
+      hazardous_class: newItem.hazardous_class || 'NONE',
+      status: newItem.status || 'ACTIVE',
+      current_uses: newItem.current_uses || 0,
+      orientation_allowed: newItem.orientation_allowed !== false, // Default to true
+      created_at: new Date().toISOString(),
     };
     
     setItems(prevItems => [...prevItems, { ...formattedItem, _key: `manual-${Date.now()}` }]);
@@ -228,12 +279,19 @@ export default function ManagementPage() {
   };
 
   const handleAddContainerManually = (newContainer: Omit<Container, '_key'>) => {
-    // Ensure all numerical values are proper numbers, not strings
+    // Format container with enhanced fields
     const formattedContainer = {
       ...newContainer,
       width_cm: typeof newContainer.width_cm === 'string' ? parseFloat(newContainer.width_cm) : newContainer.width_cm,
       depth_cm: typeof newContainer.depth_cm === 'string' ? parseFloat(newContainer.depth_cm) : newContainer.depth_cm,
       height_cm: typeof newContainer.height_cm === 'string' ? parseFloat(newContainer.height_cm) : newContainer.height_cm,
+      max_mass: typeof newContainer.max_mass === 'string' ? parseFloat(newContainer.max_mass) : newContainer.max_mass,
+      current_mass: newContainer.current_mass || 0.0,
+      access_index: newContainer.access_index || 50,
+      type: newContainer.type || 'LOCKER',
+      open_face: newContainer.open_face || '+X',
+      is_active: newContainer.is_active !== false, // Default to true
+      created_at: new Date().toISOString(),
     };
     
     setContainers(prevContainers => [...prevContainers, { ...formattedContainer, _key: `manual-cont-${Date.now()}` }]);
@@ -257,7 +315,7 @@ export default function ManagementPage() {
         const batch = remainingItems.slice(0, batchSize);
         remainingItems = remainingItems.slice(batchSize);
 
-        // Ensure all items have properly formatted data
+        // Ensure all items have properly formatted data with enhanced fields
         const formattedItems = batch.map(item => ({
           item_id: item.item_id,
           name: item.name,
@@ -267,11 +325,21 @@ export default function ManagementPage() {
           depth_cm: Number(item.depth_cm),
           height_cm: Number(item.height_cm),
           mass_kg: Number(item.mass_kg),
+          // Enhanced fields
+          temp_requirement: item.temp_requirement || 'AMBIENT',
+          lot_number: item.lot_number,
+          current_location: item.current_location,
+          orientation_allowed: item.orientation_allowed !== false,
+          hazardous_class: item.hazardous_class || 'NONE',
+          tags_id: item.tags_id ? (typeof item.tags_id === 'string' ? JSON.parse(item.tags_id) : item.tags_id) : [],
           priority: Number(item.priority),
-          // Format date with Z timezone indicator
           expiry_date: item.expiry_date ? item.expiry_date.endsWith('Z') ? item.expiry_date : `${new Date(item.expiry_date).toISOString().split('.')[0]}Z` : null,
-          usage_limit: item.usage_limit ? String(item.usage_limit) : null,
+          maximum_uses: item.maximum_uses ? Number(item.maximum_uses) : null,
+          current_uses: Number(item.current_uses) || 0,
+          usage_remaining: item.usage_remaining ? Number(item.usage_remaining) : null,
+          usage_frequency: item.usage_frequency ? Number(item.usage_frequency) : null,
           preferred_zone: item.preferred_zone,
+          status: item.status || 'ACTIVE',
         })).filter(item => 
           item.item_id && 
           item.name && 
@@ -282,14 +350,24 @@ export default function ManagementPage() {
           !isNaN(item.priority)
         );
 
-        // Ensure all containers have properly formatted data
+        // Ensure all containers have properly formatted data with enhanced fields
         const formattedContainers = containers.map(cont => ({
           container_id: cont.container_id,
+          name: cont.name,
+          type: cont.type || 'LOCKER',
           zone: cont.zone,
           module_id: cont.module_id,
           width_cm: Number(cont.width_cm),
           depth_cm: Number(cont.depth_cm),
           height_cm: Number(cont.height_cm),
+          // Enhanced fields
+          open_face: cont.open_face || '+X',
+          max_mass: cont.max_mass ? Number(cont.max_mass) : null,
+          current_mass: Number(cont.current_mass) || 0.0,
+          access_index: Number(cont.access_index) || 50,
+          parent_container_id: cont.parent_container_id,
+          is_active: cont.is_active !== false,
+          description: cont.description,
         })).filter(cont => 
           cont.container_id && 
           cont.zone && 
@@ -304,7 +382,7 @@ export default function ManagementPage() {
         };
 
         console.log("Sending to Placement API (Batch):", JSON.stringify(apiPayload, null, 2));
-        console.log("Sample usage_limit values:", formattedItems.slice(0, 3).map(item => ({ item_id: item.item_id, usage_limit: item.usage_limit, type: typeof item.usage_limit })));
+        console.log("Sample usage info:", formattedItems.slice(0, 3).map(item => ({ item_id: item.item_id, maximum_uses: item.maximum_uses, current_uses: item.current_uses })));
 
         const apiUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:8000';
         const response = await fetch(`${apiUrl}/api/placement`, {

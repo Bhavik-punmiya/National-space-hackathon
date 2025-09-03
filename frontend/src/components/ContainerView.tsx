@@ -1,68 +1,83 @@
-import { Container } from '../types/storage';
+import React from 'react';
+import { Container, Item } from '@/types/storage';
 
 interface ContainerViewProps {
   container: Container;
-  onBack: () => void;
+  items: Item[];
 }
 
-export default function ContainerView({ container, onBack }: ContainerViewProps) {
+export default function ContainerView({ container, items }: ContainerViewProps) {
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <button 
-        onClick={onBack}
-        className="mb-4 text-blue-600 hover:text-blue-800 flex items-center gap-2 font-semibold"
-      >
-        ← Back to Zone
-      </button>
-      
-      <h2 className="text-2xl font-bold mb-6 text-blue-900">{container.zone} - Container {container.id}</h2>
-      
-      <div className="grid gap-6">
-        <div className="border-2 border-blue-200 rounded-lg p-4 bg-blue-50">
-          <h3 className="font-bold text-blue-900 text-lg mb-3">Container Details</h3>
-          <div className="text-sm text-blue-800 font-medium">
-            <p className="mb-2">Dimensions: <span className="text-blue-700">{container.width}x{container.depth}x{container.height} cm</span></p>
-            <p>Location: <span className="text-blue-700">{container.zone}</span></p>
-          </div>
-        </div>
-        
+    <div className="bg-gray-700 rounded-lg p-6">
+      <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="font-bold text-blue-900 text-lg mb-4">Stored Items</h3>
-          <div className="grid gap-4">
-            {container.items.map((item) => (
-              <div key={item.id} className="border-2 border-blue-200 rounded-lg p-4 bg-blue-50 hover:bg-blue-100 transition-colors">
-                <h4 className="font-bold text-blue-900 text-base mb-3">{item.name}</h4>
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <p>
-                    <span className="text-blue-800 font-medium">Priority: </span>
-                    <span className={`font-semibold ${
-                      item.priority >= 90 ? 'text-red-700' :
-                      item.priority >= 70 ? 'text-orange-700' :
-                      'text-green-700'
-                    }`}>{item.priority}</span>
-                  </p>
-                  <p>
-                    <span className="text-blue-800 font-medium">Mass: </span>
-                    <span className="text-blue-900 font-semibold">{item.mass}kg</span>
-                  </p>
-                  <p>
-                    <span className="text-blue-800 font-medium">Uses: </span>
-                    <span className="text-blue-900 font-semibold">{item.usageCount}/{item.usageLimit}</span>
-                  </p>
-                  {item.expiryDate && (
-                    <p>
-                      <span className="text-blue-800 font-medium">Expires: </span>
-                      <span className="text-red-700 font-semibold">{item.expiryDate}</span>
-                    </p>
-                  )}
-                </div>
-              </div>
-            ))}
-            {container.items.length === 0 && (
-              <p className="text-blue-800 font-medium">No items in this container</p>
-            )}
+          <h2 className="text-xl font-semibold text-white">{container.name}</h2>
+          <div className="flex gap-2 mt-1">
+            <span className="px-2 py-1 text-xs bg-indigo-500 text-white rounded">
+              {container.type}
+            </span>
+            <span className="px-2 py-1 text-xs bg-gray-600 text-gray-200 rounded">
+              {container.module_id}
+            </span>
           </div>
         </div>
+        <div className="text-right">
+          <span className="px-3 py-1 text-sm bg-indigo-500 text-white rounded-full">
+            {items.length} items
+          </span>
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        {/* Basic Info */}
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <p className="text-gray-300">Dimensions</p>
+            <p className="font-medium text-white">
+              {container.width_cm}w × {container.depth_cm}d × {container.height_cm}h
+            </p>
+          </div>
+          <div>
+            <p className="text-gray-300">Weight</p>
+            <p className="font-medium text-white">
+              {container.currentWeight.toFixed(1)}/{container.maxWeight.toFixed(1)} kg
+            </p>
+          </div>
+        </div>
+
+        {/* Items List */}
+        {items.length > 0 ? (
+          <div>
+            <p className="text-gray-300 mb-2">Items:</p>
+            <div className="space-y-2">
+              {items.map(item => (
+                <div key={item.id} className="bg-gray-800 p-3 rounded">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-medium text-white">{item.name}</h3>
+                      <div className="flex gap-2 mt-1">
+                        <span className="px-2 py-1 text-xs bg-blue-500 text-white rounded">
+                          {item.category}
+                        </span>
+                        <span className="px-2 py-1 text-xs bg-gray-600 text-gray-200 rounded">
+                          {item.subcategory}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-right text-sm">
+                      <p className="text-white">{item.mass_kg} kg</p>
+                      <p className="text-gray-300">P{item.priority}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="text-center py-4 text-gray-400">
+            <p>No items in this container</p>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -9,9 +9,10 @@ interface Container {
     name: string;
     type: string;
     zoneId: string;
-    width: number;
-    depth: number;
-    height: number;
+    module_id: string;
+    width_cm: number;
+    depth_cm: number;
+    height_cm: number;
     capacity: number;
     start_width: number;
     start_depth: number;
@@ -69,7 +70,7 @@ function ContainerMesh({ container, onHover, isHovered }: ContainerMeshProps) {
         onClick={() => router.push(`/container/${container.id}`)}
       >
         <boxGeometry 
-          args={[container.width, container.height, container.depth]} 
+          args={[container.width_cm, container.height_cm, container.depth_cm]} 
         />
         <meshPhysicalMaterial 
           color={baseColor}
@@ -85,9 +86,9 @@ function ContainerMesh({ container, onHover, isHovered }: ContainerMeshProps) {
       {isHovered && (
         <mesh position={position}>
           <boxGeometry args={[
-            container.width + 0.4,
-            container.height + 0.4,
-            container.depth + 0.4
+            container.width_cm + 0.4,
+            container.height_cm + 0.4,
+            container.depth_cm + 0.4
           ]} />
           <meshStandardMaterial
             color={baseColor}
@@ -133,12 +134,15 @@ export default function ContainerViewer3D({ containers }: { containers: Containe
 
       {/* Container Info Tooltip */}
       {hoveredContainer && (
-        <div className="absolute top-4 left-4 z-10 p-4 rounded-lg backdrop-blur-md bg-white/10 text-white">
+        <div className="absolute top-4 left-4 z-10 p-4 rounded-lg backdrop-blur-md bg-white/10 text-white max-w-xs">
           <h3 className="font-bold text-lg">{hoveredContainer.name}</h3>
           <p className="text-sm opacity-80">{hoveredContainer.type}</p>
-          <div className="mt-2 text-sm">
-            <p>Dimensions: {hoveredContainer.width}w × {hoveredContainer.height}h × {hoveredContainer.depth}d</p>
-            <p>Position: ({hoveredContainer.start_width}, {hoveredContainer.start_height}, {hoveredContainer.start_depth})</p>
+          <div className="mt-2 text-sm space-y-1">
+            <p>Module: {hoveredContainer.module_id}</p>
+            <p>Zone: {hoveredContainer.zoneId.replace('_', ' ')}</p>
+            <p>Dimensions: {hoveredContainer.width_cm}w × {hoveredContainer.height_cm}h × {hoveredContainer.depth_cm}d cm</p>
+            <p>Weight: {hoveredContainer.currentWeight.toFixed(1)}/{hoveredContainer.maxWeight.toFixed(1)} kg</p>
+            <p>Position: ({hoveredContainer.start_width.toFixed(1)}, {hoveredContainer.start_height.toFixed(1)}, {hoveredContainer.start_depth.toFixed(1)})</p>
           </div>
           <p className="mt-2 text-xs opacity-70">Click to view contents</p>
         </div>

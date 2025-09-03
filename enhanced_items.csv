@@ -1,0 +1,833 @@
+item_id,name,category,subcategory,width_cm,depth_cm,height_cm,mass_kg,temp_requirement,lot_number,current_location,orientation_allowed,hazardous_class,tags_id,priority,expiry_date,maximum_uses,current_uses,usage_remaining,usage_frequency,preferred_zone,status
+000001,Antibiotic_Supply_001,Medical,Antibiotic_Supply,22.1,23.0,11.9,3.28,AMBIENT,LOT2024-911,,False,BIOHAZARD,"[""BAR553014"", ""RFID89129"", ""QR2496""]",78,2027-02-26,4424.0,84,4340.0,0.26,Medical_Bay,ACTIVE
+000002,Antibiotic_Supply_002,Medical,Antibiotic_Supply,29.5,16.6,5.0,6.07,WARM,LOT2026-447,,True,NONE,"[""BAR765620""]",85,2027-03-17,3623.0,657,2966.0,0.43,Medical_Bay,ACTIVE
+000003,Antibiotic_Supply_003,Medical,Antibiotic_Supply,35.4,18.6,22.0,2.38,COLD,LOT2025-332,,True,BIOHAZARD,"[""BAR221552""]",100,2026-11-16,4507.0,2222,2285.0,0.46,Medical_Bay,BROKEN
+000004,Antibiotic_Supply_004,Medical,Antibiotic_Supply,9.7,24.6,20.2,4.04,COLD,LOT2025-449,,True,NONE,"[""BAR832168"", ""RFID13783""]",84,2027-11-19,423.0,40,383.0,0.53,Medical_Bay,ACTIVE
+000005,Antibiotic_Supply_005,Medical,Antibiotic_Supply,8.4,21.1,9.8,6.75,AMBIENT,LOT2026-299,,True,NONE,"[""BAR633590"", ""RFID64459""]",73,2027-01-17,963.0,282,681.0,0.79,Medical_Bay,ACTIVE
+000006,Emergency_Oxygen_Mask_001,Medical,Emergency_Oxygen_Mask,37.5,24.3,26.9,6.93,AMBIENT,LOT2025-841,,True,NONE,"[""BAR102689"", ""RFID49132""]",78,2027-12-02,3400.0,304,3096.0,0.51,Medical_Bay,ACTIVE
+000007,Emergency_Oxygen_Mask_002,Medical,Emergency_Oxygen_Mask,23.5,18.6,23.8,3.08,N/A,LOT2025-240,,True,NONE,"[""BAR997594"", ""RFID15720""]",99,2026-08-27,1546.0,390,1156.0,0.43,Medical_Bay,WASTE_DEPLETED
+000008,Emergency_Oxygen_Mask_003,Medical,Emergency_Oxygen_Mask,29.2,34.3,29.5,4.01,N/A,LOT2024-896,,True,NONE,"[""BAR986088"", ""RFID78937""]",71,2026-02-08,4115.0,632,3483.0,0.11,Medical_Bay,ACTIVE
+000009,Emergency_Oxygen_Mask_004,Medical,Emergency_Oxygen_Mask,33.0,16.5,20.2,3.24,AMBIENT,LOT2026-909,,False,NONE,"[""BAR896290"", ""RFID80912"", ""QR2121""]",72,2026-09-03,4372.0,1177,3195.0,0.26,Medical_Bay,ACTIVE
+000010,First_Aid_Kit_001,Medical,First_Aid_Kit,10.9,39.3,23.8,5.66,AMBIENT,LOT2024-333,,True,NONE,"[""BAR934816"", ""RFID56984""]",73,2026-12-30,1363.0,579,784.0,0.2,Medical_Bay,ACTIVE
+000011,First_Aid_Kit_002,Medical,First_Aid_Kit,13.8,13.6,19.8,3.12,WARM,LOT2025-654,,True,BIOHAZARD,"[""BAR366314"", ""RFID97404"", ""QR8622""]",91,2026-06-05,4077.0,323,3754.0,0.73,Medical_Bay,ACTIVE
+000012,First_Aid_Kit_003,Medical,First_Aid_Kit,38.2,39.6,11.8,7.7,WARM,LOT2025-874,,True,NONE,"[""BAR606680"", ""RFID59986""]",92,2026-06-15,3743.0,604,3139.0,0.5,Medical_Bay,BROKEN
+000013,First_Aid_Kit_004,Medical,First_Aid_Kit,34.6,20.7,4.2,6.93,WARM,LOT2025-795,,True,NONE,"[""BAR937665"", ""RFID56179"", ""QR4115""]",94,2027-11-03,402.0,184,218.0,0.53,Medical_Bay,ACTIVE
+000014,First_Aid_Kit_005,Medical,First_Aid_Kit,29.8,12.4,6.5,5.06,COLD,LOT2024-093,,True,NONE,"[""BAR409445"", ""RFID64460"", ""QR3165""]",71,2026-08-14,3612.0,749,2863.0,0.65,Medical_Bay,SCHEDULED
+000015,First_Aid_Kit_006,Medical,First_Aid_Kit,37.2,34.6,10.7,6.62,AMBIENT,LOT2024-480,,True,NONE,"[""BAR178957"", ""RFID39571""]",85,2028-01-05,2418.0,1141,1277.0,0.61,Medical_Bay,BROKEN
+000016,First_Aid_Kit_007,Medical,First_Aid_Kit,33.3,8.4,18.0,3.69,AMBIENT,LOT2025-111,,True,NONE,"[""BAR807617"", ""RFID13280""]",91,2027-11-07,2148.0,453,1695.0,0.76,Medical_Bay,ACTIVE
+000017,First_Aid_Kit_008,Medical,First_Aid_Kit,28.3,22.9,22.2,5.23,WARM,LOT2025-119,,False,NONE,"[""BAR201913"", ""RFID80457"", ""QR8432""]",73,2026-02-22,372.0,178,194.0,0.36,Medical_Bay,DISPOSED
+000018,First_Aid_Kit_009,Medical,First_Aid_Kit,21.4,31.8,8.0,3.38,AMBIENT,LOT2025-034,,True,NONE,"[""BAR823811"", ""RFID68115""]",73,2028-02-02,4009.0,1404,2605.0,0.27,Medical_Bay,ACTIVE
+000019,First_Aid_Kit_010,Medical,First_Aid_Kit,36.9,28.6,5.6,2.28,COLD,LOT2026-612,,True,NONE,"[""BAR122394"", ""RFID53713"", ""QR3063""]",100,2026-02-04,3726.0,1699,2027.0,0.65,Medical_Bay,ACTIVE
+000020,First_Aid_Kit_011,Medical,First_Aid_Kit,14.6,14.9,26.6,2.7,COLD,LOT2024-134,,True,NONE,"[""BAR666456"", ""RFID32871"", ""QR1422""]",74,2027-12-18,4883.0,974,3909.0,0.19,Medical_Bay,ACTIVE
+000021,First_Aid_Kit_012,Medical,First_Aid_Kit,8.5,16.5,7.3,3.43,AMBIENT,LOT2026-608,,True,NONE,"[""BAR214351"", ""RFID39038""]",73,2027-11-04,521.0,154,367.0,0.13,Medical_Bay,IN_USE
+000022,Medical_Scanner_001,Medical,Medical_Scanner,9.9,23.3,14.4,5.52,COLD,LOT2026-152,,True,BIOHAZARD,"[""BAR168872"", ""RFID91830""]",85,2027-10-01,3634.0,1223,2411.0,0.48,Medical_Bay,ACTIVE
+000023,Food_Packet_001,Food,Food_Packet,24.2,21.8,24.6,0.75,COLD,LOT2024-424,,True,NONE,"[""BAR455395""]",95,2027-10-10,1762.0,320,1442.0,2.32,Storage_Bay,ACTIVE
+000024,Food_Packet_002,Food,Food_Packet,20.0,12.9,28.0,0.52,COLD,LOT2026-382,,True,NONE,"[""BAR951201"", ""RFID17861""]",65,2026-01-05,3538.0,250,3288.0,1.9,Storage_Bay,ACTIVE
+000025,Food_Packet_003,Food,Food_Packet,36.0,38.1,15.0,4.6,COLD,LOT2024-592,,True,NONE,"[""BAR632060"", ""RFID96079""]",63,2026-07-23,4919.0,2278,2641.0,2.62,Storage_Bay,ACTIVE
+000026,Food_Packet_004,Food,Food_Packet,32.4,26.4,25.0,4.26,AMBIENT,LOT2026-274,,True,NONE,"[""BAR130359"", ""RFID50499""]",95,2025-10-28,4989.0,586,4403.0,1.38,Storage_Bay,ACTIVE
+000027,Food_Packet_005,Food,Food_Packet,20.8,12.5,20.5,0.35,COLD,LOT2025-162,,True,NONE,"[""BAR488028"", ""RFID52517""]",93,2026-05-10,3082.0,107,2975.0,1.92,Storage_Bay,ACTIVE
+000028,Food_Packet_006,Food,Food_Packet,32.1,9.6,6.1,2.33,COLD,LOT2025-221,,True,NONE,"[""BAR891615"", ""RFID55242""]",87,2027-02-11,4974.0,1993,2981.0,1.21,Storage_Bay,ACTIVE
+000029,Food_Packet_007,Food,Food_Packet,17.9,15.1,29.6,0.46,AMBIENT,LOT2025-297,,True,NONE,"[""BAR444061"", ""RFID75193""]",73,2026-08-06,1731.0,720,1011.0,0.94,Storage_Bay,ACTIVE
+000030,Food_Packet_008,Food,Food_Packet,25.9,29.4,13.2,2.11,COLD,LOT2024-883,,True,NONE,"[""BAR428267"", ""RFID85156""]",62,2026-12-22,154.0,51,103.0,2.1,Storage_Bay,ACTIVE
+000031,Protein_Bars_001,Food,Protein_Bars,13.5,38.3,16.0,3.51,AMBIENT,LOT2024-447,,True,NONE,"[""BAR717476"", ""RFID20308""]",83,2025-12-31,3578.0,682,2896.0,1.28,Storage_Bay,ACTIVE
+000032,Protein_Bars_002,Food,Protein_Bars,10.4,28.3,17.8,1.13,COLD,LOT2024-263,,True,NONE,"[""BAR306854"", ""RFID30036""]",82,2026-09-26,1210.0,505,705.0,2.14,Storage_Bay,ACTIVE
+000033,Protein_Bars_003,Food,Protein_Bars,26.0,26.5,21.7,4.43,COLD,LOT2024-481,,True,NONE,"[""BAR563688"", ""RFID46002""]",80,2027-07-06,2590.0,945,1645.0,1.38,Storage_Bay,ACTIVE
+000034,Protein_Bars_004,Food,Protein_Bars,9.8,34.6,6.0,4.35,COLD,LOT2025-595,,True,NONE,"[""BAR681242""]",65,2027-06-23,4867.0,2341,2526.0,0.6,Storage_Bay,WASTE_DEPLETED
+000035,Protein_Bars_005,Food,Protein_Bars,18.3,23.2,7.9,0.5,N/A,LOT2024-517,,True,NONE,"[""BAR777513"", ""RFID42472""]",66,2028-01-10,2814.0,1248,1566.0,2.98,Storage_Bay,ACTIVE
+000036,Protein_Bars_006,Food,Protein_Bars,19.9,17.1,14.6,1.82,COLD,LOT2024-572,,True,NONE,"[""BAR811332"", ""RFID43029""]",63,2027-12-19,2742.0,307,2435.0,2.14,Storage_Bay,WASTE_DEPLETED
+000037,Water_Bottle_001,Food,Water_Bottle,29.2,37.3,12.1,3.35,AMBIENT,LOT2024-318,,True,NONE,"[""BAR686072"", ""RFID53054""]",85,2026-02-11,4875.0,2156,2719.0,2.18,Storage_Bay,PLANNED
+000038,Water_Bottle_002,Food,Water_Bottle,29.5,24.3,4.5,1.68,COLD,LOT2024-159,,True,NONE,"[""BAR180913"", ""RFID23256""]",73,2026-09-16,3984.0,1078,2906.0,1.85,Storage_Bay,IN_USE
+000039,Water_Bottle_003,Food,Water_Bottle,18.8,32.5,7.4,2.01,AMBIENT,LOT2024-421,,True,NONE,"[""BAR481995"", ""RFID41133""]",70,2026-04-05,1357.0,459,898.0,2.03,Storage_Bay,IN_USE
+000040,Water_Bottle_004,Food,Water_Bottle,15.7,38.9,24.4,4.54,N/A,LOT2025-788,,False,NONE,"[""BAR395459"", ""RFID75916""]",72,2026-10-13,4673.0,566,4107.0,2.92,Storage_Bay,PLANNED
+000041,Water_Bottle_005,Food,Water_Bottle,9.7,23.4,13.7,4.68,COLD,LOT2024-280,,False,NONE,"[""BAR571145"", ""QR8167""]",93,2026-02-06,2336.0,923,1413.0,0.73,Storage_Bay,WASTE_DEPLETED
+000042,Water_Bottle_006,Food,Water_Bottle,37.8,21.3,14.3,2.0,COLD,LOT2025-954,,False,NONE,"[""BAR203896""]",84,2025-12-24,3072.0,587,2485.0,2.48,Storage_Bay,ACTIVE
+000043,Water_Bottle_007,Food,Water_Bottle,23.1,34.6,23.7,2.45,COLD,LOT2024-562,,True,NONE,"[""BAR862560"", ""RFID65476"", ""QR5720""]",60,2025-12-22,156.0,30,126.0,1.09,Storage_Bay,ACTIVE
+000044,Water_Bottle_008,Food,Water_Bottle,33.4,22.6,6.9,4.54,COLD,LOT2026-148,,True,NONE,"[""BAR405420"", ""RFID90584""]",94,2025-10-18,4222.0,350,3872.0,1.93,Storage_Bay,ACTIVE
+000045,Water_Bottle_009,Food,Water_Bottle,19.5,38.5,18.1,3.97,COLD,LOT2025-045,,True,NONE,"[""BAR766549"", ""RFID58929"", ""QR1266""]",92,2027-04-22,167.0,30,137.0,1.39,Storage_Bay,ACTIVE
+000046,Water_Bottle_010,Food,Water_Bottle,28.1,32.7,23.1,1.8,COLD,LOT2026-180,,True,NONE,"[""BAR970720"", ""RFID70899""]",62,2026-09-27,4473.0,552,3921.0,1.7,Storage_Bay,ACTIVE
+000047,Water_Purification_Unit_001,Food,Water_Purification_Unit,38.2,9.2,9.2,4.0,COLD,LOT2026-485,,True,NONE,"[""BAR365618"", ""RFID94790"", ""QR6848""]",62,2026-08-21,2541.0,679,1862.0,2.66,Storage_Bay,ACTIVE
+000048,Water_Purification_Unit_002,Food,Water_Purification_Unit,33.6,22.0,14.4,2.31,COLD,LOT2025-377,,True,NONE,"[""BAR936020"", ""RFID20828""]",84,2026-09-14,1531.0,184,1347.0,0.7,Storage_Bay,ACTIVE
+000049,Water_Purification_Unit_003,Food,Water_Purification_Unit,18.3,10.6,21.2,1.67,COLD,LOT2024-745,,True,NONE,"[""BAR469685"", ""RFID67008"", ""QR1939""]",87,2026-03-21,3637.0,744,2893.0,0.69,Storage_Bay,ACTIVE
+000050,Water_Purification_Unit_004,Food,Water_Purification_Unit,32.0,13.1,4.8,4.27,COLD,LOT2026-376,,True,NONE,"[""BAR479742"", ""RFID84349"", ""QR3513""]",88,2025-11-06,1035.0,380,655.0,2.2,Storage_Bay,DISPOSED
+000051,Water_Purification_Unit_005,Food,Water_Purification_Unit,10.5,12.4,13.5,1.71,COLD,LOT2024-512,,True,NONE,"[""BAR642895"", ""RFID83619"", ""QR5264""]",77,2026-06-14,930.0,313,617.0,2.26,Storage_Bay,ACTIVE
+000052,Water_Purification_Unit_006,Food,Water_Purification_Unit,37.3,23.7,7.2,4.29,N/A,LOT2026-991,,False,NONE,"[""BAR986593""]",88,2026-03-27,3647.0,594,3053.0,2.27,Storage_Bay,ACTIVE
+000053,Water_Purification_Unit_007,Food,Water_Purification_Unit,35.2,30.8,28.1,3.26,COLD,LOT2024-812,,True,NONE,"[""BAR245622"", ""RFID74752"", ""QR7044""]",83,2027-03-06,1837.0,132,1705.0,1.67,Storage_Bay,BROKEN
+000054,Water_Purification_Unit_008,Food,Water_Purification_Unit,10.8,17.9,30.0,3.65,AMBIENT,LOT2024-129,,True,NONE,"[""BAR432427"", ""RFID68979""]",93,2026-11-26,3355.0,1597,1758.0,1.79,Storage_Bay,ACTIVE
+000055,Water_Purification_Unit_009,Food,Water_Purification_Unit,26.8,32.6,7.4,2.61,COLD,LOT2025-169,,True,NONE,"[""BAR269834"", ""RFID39552""]",63,2028-01-31,1018.0,433,585.0,2.85,Storage_Bay,WASTE_EXPIRED
+000056,Water_Purification_Unit_010,Food,Water_Purification_Unit,14.3,38.6,11.1,3.2,AMBIENT,LOT2026-965,,True,NONE,"[""BAR708851"", ""RFID96341""]",94,2026-01-05,4118.0,168,3950.0,2.76,Storage_Bay,ACTIVE
+000057,Water_Purification_Unit_011,Food,Water_Purification_Unit,8.9,9.5,20.7,2.97,COLD,LOT2026-032,,True,NONE,"[""BAR622230""]",73,2027-11-26,4687.0,1003,3684.0,2.1,Storage_Bay,ACTIVE
+000058,Water_Purification_Unit_012,Food,Water_Purification_Unit,29.9,17.5,5.9,0.49,COLD,LOT2025-622,,True,NONE,"[""BAR250647"", ""RFID51853""]",88,2026-12-01,3967.0,267,3700.0,2.65,Storage_Bay,BROKEN
+000059,Water_Purification_Unit_013,Food,Water_Purification_Unit,24.5,11.4,10.3,0.79,COLD,LOT2025-969,,False,NONE,"[""BAR502810""]",88,2026-06-12,1155.0,335,820.0,2.91,Storage_Bay,WASTE_DEPLETED
+000060,3D_Printer_001,Equipment,3D_Printer,44.7,40.7,119.6,28.54,COLD,LOT2025-518,,True,NONE,"[""BAR579441"", ""QR6781""]",69,N/A,8248.0,3855,4393.0,0.12,Engineering_Bay,ACTIVE
+000061,3D_Printer_002,Equipment,3D_Printer,21.1,34.0,24.7,16.6,AMBIENT,LOT2025-053,,True,NONE,"[""BAR697983"", ""RFID57516""]",73,N/A,6706.0,3130,3576.0,0.16,Engineering_Bay,ACTIVE
+000062,3D_Printer_003,Equipment,3D_Printer,127.3,101.0,77.2,8.59,AMBIENT,LOT2025-572,,True,NONE,"[""BAR483366"", ""RFID36090""]",56,N/A,6553.0,159,6394.0,0.63,Engineering_Bay,ACTIVE
+000063,Battery_Pack_001,Equipment,Battery_Pack,124.5,87.5,26.4,53.69,WARM,LOT2025-632,,True,FLAMMABLE,"[""BAR875232""]",58,N/A,5473.0,2006,3467.0,0.79,Engineering_Bay,ACTIVE
+000064,Battery_Pack_002,Equipment,Battery_Pack,59.0,126.0,50.5,40.75,AMBIENT,LOT2026-645,,True,PRESSURIZED,"[""BAR127941"", ""RFID44803""]",76,N/A,9663.0,4731,4932.0,1.19,Engineering_Bay,IN_USE
+000065,Battery_Pack_003,Equipment,Battery_Pack,26.7,82.5,67.7,43.55,AMBIENT,LOT2026-971,,True,FLAMMABLE,"[""BAR834549"", ""RFID12482""]",74,N/A,2521.0,417,2104.0,0.66,Engineering_Bay,ACTIVE
+000066,Circuit_Board_001,Equipment,Circuit_Board,133.5,115.7,16.9,9.15,AMBIENT,LOT2026-490,,True,NONE,"[""BAR651002"", ""RFID32699""]",63,N/A,9289.0,2165,7124.0,0.82,Engineering_Bay,ACTIVE
+000067,Circuit_Board_002,Equipment,Circuit_Board,45.0,52.0,71.4,14.27,AMBIENT,LOT2026-722,,True,NONE,"[""BAR612756"", ""RFID55718""]",69,N/A,4835.0,1178,3657.0,1.41,Engineering_Bay,IN_USE
+000068,Circuit_Board_003,Equipment,Circuit_Board,108.0,69.4,117.8,49.28,COLD,LOT2026-081,,True,NONE,"[""BAR463188""]",59,N/A,4858.0,2206,2652.0,1.13,Engineering_Bay,ACTIVE
+000069,Circuit_Board_004,Equipment,Circuit_Board,93.1,55.3,22.0,44.71,AMBIENT,LOT2026-232,,True,NONE,"[""BAR768933"", ""RFID23133""]",65,N/A,4072.0,1578,2494.0,1.09,Engineering_Bay,ACTIVE
+000070,Space_Suit_001,Equipment,Space_Suit,72.9,141.6,106.6,29.17,AMBIENT,LOT2026-061,,False,NONE,"[""BAR906066"", ""RFID85252"", ""QR1611""]",62,N/A,4806.0,720,4086.0,1.37,Airlock,ACTIVE
+000071,Space_Suit_002,Equipment,Space_Suit,24.7,128.7,96.7,11.99,COLD,LOT2026-618,,True,NONE,"[""BAR212512""]",68,N/A,713.0,268,445.0,0.71,Airlock,ACTIVE
+000072,EV_Suit_Battery_001,Equipment,EV_Suit_Battery,130.6,80.8,31.2,7.65,AMBIENT,LOT2026-191,,True,NONE,"[""BAR114768"", ""RFID48669""]",60,N/A,7618.0,3506,4112.0,1.15,Airlock,ACTIVE
+000073,EV_Suit_Battery_002,Equipment,EV_Suit_Battery,72.7,75.6,46.1,24.65,N/A,LOT2025-332,,True,NONE,"[""BAR360096"", ""RFID60275"", ""QR5374""]",56,N/A,3127.0,1480,1647.0,1.43,Airlock,ACTIVE
+000074,Gyroscope_Module_001,Equipment,Gyroscope_Module,105.0,110.1,16.8,7.98,AMBIENT,LOT2026-946,,True,NONE,"[""BAR837733"", ""RFID25389""]",69,N/A,2716.0,452,2264.0,1.41,Engineering_Bay,ACTIVE
+000075,Gyroscope_Module_002,Equipment,Gyroscope_Module,37.4,39.9,92.3,36.74,WARM,LOT2026-822,,True,NONE,"[""BAR796353""]",76,N/A,9098.0,670,8428.0,1.04,Engineering_Bay,ACTIVE
+000076,Gyroscope_Module_003,Equipment,Gyroscope_Module,88.7,67.0,110.9,7.62,AMBIENT,LOT2026-154,,True,NONE,"[""BAR272529"", ""RFID78202""]",85,N/A,8381.0,4004,4377.0,1.04,Engineering_Bay,IN_USE
+000077,Tether_Reel_001,Equipment,Tether_Reel,125.1,78.9,66.5,27.95,AMBIENT,LOT2025-741,,True,NONE,"[""BAR122827"", ""RFID10395""]",53,N/A,9255.0,2822,6433.0,0.89,Engineering_Bay,ACTIVE
+000078,Tether_Reel_002,Equipment,Tether_Reel,90.4,27.8,108.4,59.18,AMBIENT,LOT2024-788,,False,NONE,"[""BAR242007"", ""RFID94656""]",80,N/A,619.0,229,390.0,0.59,Engineering_Bay,WASTE_EXPIRED
+000079,Tether_Reel_003,Equipment,Tether_Reel,137.9,68.8,85.1,40.05,AMBIENT,LOT2025-122,,True,NONE,"[""BAR287143""]",84,N/A,2278.0,7,2271.0,0.23,Engineering_Bay,BROKEN
+000080,Tether_Reel_004,Equipment,Tether_Reel,147.2,80.2,89.1,26.02,AMBIENT,LOT2025-159,,True,NONE,"[""BAR389039"", ""RFID24790"", ""QR7868""]",74,N/A,3862.0,1820,2042.0,0.94,Engineering_Bay,WASTE
+000081,Helmet_Visor_001,Equipment,Helmet_Visor,28.7,97.2,59.1,40.65,AMBIENT,LOT2025-450,,True,NONE,"[""BAR345722"", ""RFID17398"", ""QR5739""]",53,N/A,4109.0,1306,2803.0,0.39,Engineering_Bay,WASTE_DEPLETED
+000082,Helmet_Visor_002,Equipment,Helmet_Visor,120.4,126.4,36.1,52.7,AMBIENT,LOT2025-063,,True,NONE,"[""BAR683761""]",83,N/A,3721.0,874,2847.0,1.37,Engineering_Bay,ACTIVE
+000083,Lab_Microscope_001,Equipment,Lab_Microscope,146.4,142.4,83.8,47.36,AMBIENT,LOT2025-386,,True,NONE,"[""BAR292811"", ""RFID72065"", ""QR4692""]",70,N/A,6921.0,3300,3621.0,0.49,Engineering_Bay,IN_USE
+000084,Laptop_001,Equipment,Laptop,93.1,145.8,71.3,8.91,AMBIENT,LOT2026-081,,False,NONE,"[""BAR571635"", ""QR4120""]",65,N/A,4277.0,161,4116.0,0.12,Engineering_Bay,ACTIVE
+000085,LED_Work_Light_001,Equipment,LED_Work_Light,124.6,96.4,83.9,13.8,AMBIENT,LOT2024-217,,True,NONE,"[""BAR299254"", ""QR8846""]",63,N/A,5555.0,837,4718.0,1.38,Engineering_Bay,ACTIVE
+000086,LED_Work_Light_002,Equipment,LED_Work_Light,51.1,61.8,41.1,28.51,AMBIENT,LOT2026-904,,True,NONE,"[""BAR621433"", ""RFID71537""]",72,N/A,5153.0,1281,3872.0,0.51,Engineering_Bay,ACTIVE
+000087,Navigation_Module_001,Equipment,Navigation_Module,116.4,22.1,70.9,35.46,AMBIENT,LOT2025-236,,True,NONE,"[""BAR498290"", ""RFID42208""]",76,N/A,4936.0,1054,3882.0,1.0,Engineering_Bay,ACTIVE
+000088,Navigation_Module_002,Equipment,Navigation_Module,83.5,114.1,91.4,28.19,AMBIENT,LOT2026-501,,True,NONE,"[""BAR292988""]",72,N/A,2873.0,69,2804.0,0.98,Engineering_Bay,ACTIVE
+000089,Scientific_Sensor_001,Equipment,Scientific_Sensor,142.9,106.9,94.1,25.33,AMBIENT,LOT2024-010,,True,NONE,"[""BAR329344"", ""RFID58916"", ""QR8916""]",90,N/A,3891.0,1089,2802.0,1.01,Engineering_Bay,ACTIVE
+000090,Solar_Panel_001,Equipment,Solar_Panel,22.2,113.9,68.9,17.91,AMBIENT,LOT2024-110,,True,NONE,"[""BAR200992"", ""RFID41584"", ""QR9625""]",82,N/A,7154.0,3256,3898.0,0.42,Engineering_Bay,ACTIVE
+000091,Tool_Kit_001,Equipment,Tool_Kit,144.7,79.7,36.8,42.14,AMBIENT,LOT2026-778,,True,NONE,"[""BAR133223"", ""RFID59710""]",69,N/A,1420.0,175,1245.0,0.74,Engineering_Bay,ACTIVE
+000092,Tool_Kit_002,Equipment,Tool_Kit,129.9,103.8,46.4,58.66,WARM,LOT2024-217,,False,NONE,"[""BAR825916""]",56,N/A,8753.0,2296,6457.0,0.12,Engineering_Bay,ACTIVE
+000093,Tool_Kit_003,Equipment,Tool_Kit,93.3,24.3,112.2,19.55,AMBIENT,LOT2026-841,,True,NONE,"[""BAR517643"", ""QR4939""]",63,N/A,9717.0,4428,5289.0,0.87,Engineering_Bay,PLANNED
+000094,Vacuum_Sealed_Tools_001,Equipment,Vacuum_Sealed_Tools,122.8,109.6,18.6,44.98,AMBIENT,LOT2024-859,,True,NONE,"[""BAR179710"", ""RFID90460""]",72,N/A,979.0,15,964.0,0.63,Engineering_Bay,IN_USE
+000095,Vacuum_Sealed_Tools_002,Equipment,Vacuum_Sealed_Tools,121.9,78.6,35.1,33.63,AMBIENT,LOT2026-677,,True,NONE,"[""BAR498535"", ""RFID91083"", ""QR5037""]",74,N/A,7175.0,631,6544.0,1.08,Engineering_Bay,ACTIVE
+000096,Asteroid_Sample_Container_001,Experiment_Sample,Asteroid_Sample_Container,34.0,37.2,17.9,1.09,AMBIENT,LOT2025-105,,True,NONE,"[""BAR238943"", ""RFID66489""]",55,N/A,2575.0,53,2522.0,0.29,Lab,ACTIVE
+000097,Asteroid_Sample_Container_002,Experiment_Sample,Asteroid_Sample_Container,31.6,32.9,29.6,5.25,AMBIENT,LOT2024-743,,True,NONE,"[""BAR686716""]",55,N/A,2440.0,779,1661.0,0.29,Lab,ACTIVE
+000098,Asteroid_Sample_Container_003,Experiment_Sample,Asteroid_Sample_Container,23.1,23.1,13.6,1.42,AMBIENT,LOT2024-370,,True,NONE,"[""BAR363926""]",72,N/A,3499.0,937,2562.0,0.26,Lab,ACTIVE
+000099,Asteroid_Sample_Container_004,Experiment_Sample,Asteroid_Sample_Container,24.1,43.5,18.3,3.91,AMBIENT,LOT2026-998,,False,NONE,"[""BAR723266"", ""RFID52030""]",76,N/A,3656.0,363,3293.0,0.35,Lab,ACTIVE
+000100,Asteroid_Sample_Container_005,Experiment_Sample,Asteroid_Sample_Container,44.1,23.7,27.4,3.2,AMBIENT,LOT2025-374,,False,NONE,"[""BAR219420"", ""QR9939""]",70,N/A,2719.0,55,2664.0,0.11,Lab,IN_USE
+000101,Asteroid_Sample_Container_006,Experiment_Sample,Asteroid_Sample_Container,28.8,36.3,21.0,2.1,AMBIENT,LOT2024-649,,True,NONE,"[""BAR417543"", ""RFID96332"", ""QR7932""]",59,N/A,3401.0,1224,2177.0,0.4,Lab,ACTIVE
+000102,Asteroid_Sample_Container_007,Experiment_Sample,Asteroid_Sample_Container,27.0,30.2,33.0,4.3,AMBIENT,LOT2025-719,,True,NONE,"[""BAR951755"", ""RFID93647""]",89,N/A,351.0,170,181.0,0.07,Lab,ACTIVE
+000103,Asteroid_Sample_Container_008,Experiment_Sample,Asteroid_Sample_Container,34.4,16.3,34.6,4.23,N/A,LOT2025-109,,True,NONE,"[""BAR111060"", ""RFID39098""]",80,N/A,2766.0,1178,1588.0,0.27,Lab,ACTIVE
+000104,Asteroid_Sample_Container_009,Experiment_Sample,Asteroid_Sample_Container,26.2,28.9,27.0,4.3,N/A,LOT2025-108,,True,NONE,"[""BAR409783"", ""RFID21253"", ""QR3321""]",64,N/A,2875.0,423,2452.0,0.19,Lab,ACTIVE
+000105,Asteroid_Sample_Container_010,Experiment_Sample,Asteroid_Sample_Container,25.4,17.9,28.0,2.99,COLD,LOT2026-118,,True,NONE,"[""BAR123682""]",59,N/A,2509.0,499,2010.0,0.35,Lab,ACTIVE
+000106,Asteroid_Sample_Container_011,Experiment_Sample,Asteroid_Sample_Container,31.6,24.9,20.7,3.04,AMBIENT,LOT2026-443,,True,NONE,"[""BAR514798"", ""RFID90492""]",80,N/A,1561.0,4,1557.0,0.24,Lab,ACTIVE
+000107,Asteroid_Sample_Container_012,Experiment_Sample,Asteroid_Sample_Container,21.2,37.6,30.2,0.84,AMBIENT,LOT2025-202,,True,NONE,"[""BAR579776"", ""RFID97910""]",61,N/A,4448.0,1591,2857.0,0.27,Lab,ACTIVE
+000108,Asteroid_Sample_Container_013,Experiment_Sample,Asteroid_Sample_Container,32.6,25.4,31.1,3.9,AMBIENT,LOT2024-321,,True,NONE,"[""BAR223586"", ""RFID25328"", ""QR3316""]",74,N/A,4884.0,564,4320.0,0.27,Lab,ACTIVE
+000109,Microgravity_Lab_Kit_001,Experiment_Sample,Microgravity_Lab_Kit,20.6,34.1,27.3,4.05,AMBIENT,LOT2025-144,,True,NONE,"[""BAR296187"", ""RFID69113""]",66,N/A,4595.0,1984,2611.0,0.44,Lab,LOST
+000110,Microgravity_Lab_Kit_002,Experiment_Sample,Microgravity_Lab_Kit,39.5,43.9,22.6,3.22,AMBIENT,LOT2025-501,,True,NONE,"[""BAR275377"", ""RFID14044""]",86,N/A,3454.0,460,2994.0,0.13,Lab,ACTIVE
+000111,Microgravity_Lab_Kit_003,Experiment_Sample,Microgravity_Lab_Kit,20.0,28.7,28.6,4.71,AMBIENT,LOT2024-275,,True,NONE,"[""BAR912764"", ""RFID58085""]",90,N/A,4234.0,1807,2427.0,0.38,Lab,IN_USE
+000112,Microgravity_Lab_Kit_004,Experiment_Sample,Microgravity_Lab_Kit,44.7,18.1,30.8,4.63,AMBIENT,LOT2025-883,,True,NONE,"[""BAR956401"", ""RFID25386""]",74,N/A,314.0,150,164.0,0.13,Lab,PLANNED
+000113,Microgravity_Lab_Kit_005,Experiment_Sample,Microgravity_Lab_Kit,40.8,33.3,20.7,3.89,AMBIENT,LOT2026-360,,False,NONE,"[""BAR658136"", ""RFID80617"", ""QR5794""]",68,N/A,1745.0,526,1219.0,0.16,Lab,ACTIVE
+000114,Microgravity_Lab_Kit_006,Experiment_Sample,Microgravity_Lab_Kit,35.4,17.9,34.1,4.82,AMBIENT,LOT2024-719,,True,NONE,"[""BAR239136"", ""RFID52217""]",58,N/A,2321.0,1002,1319.0,0.39,Lab,ACTIVE
+000115,Microgravity_Lab_Kit_007,Experiment_Sample,Microgravity_Lab_Kit,34.0,33.8,19.4,0.92,AMBIENT,LOT2025-712,,True,NONE,"[""BAR486999"", ""RFID73968""]",60,N/A,3350.0,1500,1850.0,0.02,Lab,IN_USE
+000116,Research_Samples_001,Experiment_Sample,Research_Samples,34.0,35.9,31.3,4.88,N/A,LOT2024-507,,True,NONE,"[""BAR381581"", ""RFID47171""]",80,N/A,1834.0,496,1338.0,0.3,Lab,ACTIVE
+000117,Research_Samples_002,Experiment_Sample,Research_Samples,41.8,37.9,11.1,3.94,AMBIENT,LOT2024-452,,True,NONE,"[""BAR578693"", ""RFID66072"", ""QR3161""]",84,N/A,183.0,35,148.0,0.44,Lab,ACTIVE
+000118,Research_Samples_003,Experiment_Sample,Research_Samples,25.8,17.5,26.6,4.07,AMBIENT,LOT2026-717,,True,NONE,"[""BAR891918"", ""RFID95915"", ""QR2559""]",58,N/A,3296.0,271,3025.0,0.02,Lab,ACTIVE
+000119,Research_Samples_004,Experiment_Sample,Research_Samples,30.6,28.4,10.2,2.39,AMBIENT,LOT2025-073,,True,NONE,"[""BAR340068"", ""RFID23425"", ""QR7022""]",62,N/A,3509.0,1584,1925.0,0.44,Lab,ACTIVE
+000120,Research_Samples_005,Experiment_Sample,Research_Samples,41.2,34.2,26.9,0.88,AMBIENT,LOT2026-219,,True,NONE,"[""BAR758589"", ""RFID63963""]",55,N/A,1394.0,102,1292.0,0.23,Lab,ACTIVE
+000121,Research_Samples_006,Experiment_Sample,Research_Samples,18.7,36.9,18.8,2.86,AMBIENT,LOT2024-255,,True,NONE,"[""BAR680278"", ""RFID89638"", ""QR1439""]",63,N/A,2079.0,617,1462.0,0.43,Lab,ACTIVE
+000122,Research_Samples_007,Experiment_Sample,Research_Samples,33.2,20.7,19.8,4.05,AMBIENT,LOT2024-512,,True,NONE,"[""BAR769077"", ""RFID79243""]",70,N/A,4104.0,1296,2808.0,0.03,Lab,ACTIVE
+000123,Research_Samples_008,Experiment_Sample,Research_Samples,40.8,32.1,19.1,4.26,COLD,LOT2024-015,,True,NONE,"[""BAR374921"", ""RFID17925""]",85,N/A,647.0,256,391.0,0.21,Lab,ACTIVE
+000124,Seed_Packets_001,Experiment_Sample,Seed_Packets,36.1,17.5,23.4,3.89,AMBIENT,LOT2026-944,,True,NONE,"[""BAR313068"", ""QR6353""]",72,N/A,734.0,332,402.0,0.21,Lab,ACTIVE
+000125,Seed_Packets_002,Experiment_Sample,Seed_Packets,17.0,36.0,28.2,5.16,AMBIENT,LOT2025-119,,True,NONE,"[""BAR575394"", ""RFID17212""]",58,N/A,2052.0,244,1808.0,0.38,Lab,IN_USE
+000126,Seed_Packets_003,Experiment_Sample,Seed_Packets,19.1,15.3,22.4,2.41,AMBIENT,LOT2024-768,,True,NONE,"[""BAR919067""]",88,N/A,2173.0,686,1487.0,0.08,Lab,WASTE_EXPIRED
+000127,Seed_Packets_004,Experiment_Sample,Seed_Packets,23.2,16.9,27.8,3.67,AMBIENT,LOT2025-057,,True,NONE,"[""BAR623879"", ""QR3577""]",59,N/A,4114.0,472,3642.0,0.14,Lab,ACTIVE
+000128,Seed_Packets_005,Experiment_Sample,Seed_Packets,30.3,16.3,31.6,1.85,AMBIENT,LOT2024-184,,True,NONE,"[""BAR999138"", ""RFID95944""]",85,N/A,3031.0,1475,1556.0,0.17,Lab,ACTIVE
+000129,Seed_Packets_006,Experiment_Sample,Seed_Packets,39.8,32.1,13.0,4.2,AMBIENT,LOT2026-048,,True,NONE,"[""BAR520400"", ""RFID70960""]",58,N/A,1519.0,88,1431.0,0.39,Lab,ACTIVE
+000130,Seed_Packets_007,Experiment_Sample,Seed_Packets,15.2,21.0,24.1,2.17,AMBIENT,LOT2025-792,,True,NONE,"[""BAR913575"", ""RFID81638""]",70,N/A,3850.0,839,3011.0,0.14,Lab,ACTIVE
+000131,Fire_Extinguisher_001,Life_Support_System,Fire_Extinguisher,138.1,111.7,21.9,41.53,AMBIENT,LOT2026-244,,True,PRESSURIZED,"[""BAR540208"", ""RFID17850""]",92,N/A,,0,,0.05,Life_Support,ACTIVE
+000132,Fire_Extinguisher_002,Life_Support_System,Fire_Extinguisher,69.4,130.7,102.6,107.68,AMBIENT,LOT2024-653,,True,PRESSURIZED,"[""BAR959793"", ""RFID87580""]",94,N/A,,0,,0.14,Life_Support,LOST
+000133,Radiation_Shield_001,Life_Support_System,Radiation_Shield,174.7,140.8,98.6,100.16,AMBIENT,LOT2024-799,,True,TOXIC,"[""BAR907557"", ""RFID30369"", ""QR8365""]",90,N/A,,0,,0.15,Life_Support,ACTIVE
+000134,Radiation_Shield_002,Life_Support_System,Radiation_Shield,194.0,51.0,81.7,33.27,AMBIENT,LOT2026-042,,True,NONE,"[""BAR325465""]",83,2030-01-04,,0,,0.04,Life_Support,ACTIVE
+000135,CO2_Scrubber_001,Life_Support_System,CO2_Scrubber,145.1,57.5,218.1,5.67,AMBIENT,LOT2024-474,,True,PRESSURIZED,"[""BAR206857"", ""QR1195""]",92,N/A,,0,,0.03,Life_Support,IN_USE
+000136,Cooling_System_001,Life_Support_System,Cooling_System,170.0,71.5,146.1,78.07,WARM,LOT2024-925,,True,TOXIC,"[""BAR777366"", ""RFID26880"", ""QR6432""]",98,N/A,,0,,0.05,Life_Support,DISPOSED
+000137,Emergency_Beacon_001,Life_Support_System,Emergency_Beacon,169.7,74.4,25.9,82.62,WARM,LOT2025-905,,False,NONE,"[""BAR255851"", ""RFID91156""]",85,N/A,,0,,0.2,Life_Support,ACTIVE
+000138,Emergency_Beacon_002,Life_Support_System,Emergency_Beacon,111.4,36.0,96.6,51.47,AMBIENT,LOT2026-814,,True,NONE,"[""BAR120478""]",100,N/A,,0,,0.11,Life_Support,ACTIVE
+000139,Oxygen_Cylinder_001,Life_Support_System,Oxygen_Cylinder,96.0,47.5,83.8,27.84,AMBIENT,LOT2024-998,,True,NONE,"[""BAR267378"", ""RFID96096"", ""QR9743""]",88,2028-10-22,,0,,0.25,Life_Support,WASTE_DEPLETED
+000140,Oxygen_Cylinder_002,Life_Support_System,Oxygen_Cylinder,199.4,52.4,189.3,96.09,N/A,LOT2024-607,,True,NONE,"[""BAR433451""]",91,N/A,,0,,0.28,Life_Support,ACTIVE
+000141,Pressure_Regulator_001,Life_Support_System,Pressure_Regulator,125.7,48.5,217.6,106.03,AMBIENT,LOT2024-617,,True,TOXIC,"[""BAR329437"", ""RFID72650"", ""QR4300""]",95,N/A,,0,,0.24,Life_Support,ACTIVE
+000142,Waste_Management_Kit_001,Life_Support_System,Waste_Management_Kit,40.1,43.5,160.9,18.72,AMBIENT,LOT2025-722,,True,NONE,"[""BAR794303"", ""RFID23242""]",83,N/A,,0,,0.1,Life_Support,BROKEN
+000143,Waste_Management_Kit_002,Life_Support_System,Waste_Management_Kit,104.3,104.9,117.4,39.44,WARM,LOT2024-682,,True,NONE,"[""BAR717558""]",97,N/A,,0,,0.22,Life_Support,ACTIVE
+000144,Communication_Device_001,Life_Support_System,Communication_Device,191.3,143.6,98.3,119.33,AMBIENT,LOT2026-227,,True,NONE,"[""BAR770718"", ""RFID75035"", ""QR2274""]",98,2029-07-16,,0,,0.08,Life_Support,BROKEN
+000145,Handheld_Spectrometer_001,Life_Support_System,Handheld_Spectrometer,169.7,108.8,165.9,41.62,AMBIENT,LOT2024-738,,True,CORROSIVE,"[""BAR101343"", ""RFID67438""]",80,N/A,,0,,0.29,Life_Support,WASTE_EXPIRED
+000146,Thruster_Fuel_001,Life_Support_System,Thruster_Fuel,89.7,71.9,185.8,95.07,AMBIENT,LOT2024-819,,True,FLAMMABLE,"[""BAR986846"", ""RFID12631""]",98,N/A,,0,,0.29,Life_Support,ACTIVE
+000147,Thruster_Fuel_002,Life_Support_System,Thruster_Fuel,93.8,116.5,129.4,107.98,N/A,LOT2026-032,,True,PRESSURIZED,"[""BAR552275"", ""QR8113""]",82,N/A,,0,,0.06,Life_Support,ACTIVE
+000148,Personal_Hygiene_Products_001,Crew_Supplies,Personal_Hygiene_Products,38.6,48.8,55.9,10.94,AMBIENT,LOT2024-051,,True,NONE,"[""BAR511987"", ""RFID74349"", ""QR6911""]",58,N/A,,0,,0.02,Crew_Quarters,ACTIVE
+000149,Personal_Hygiene_Products_002,Crew_Supplies,Personal_Hygiene_Products,53.8,43.6,10.3,4.38,AMBIENT,LOT2024-485,,True,NONE,"[""BAR984756"", ""RFID62096""]",80,N/A,,0,,0.45,Crew_Quarters,ACTIVE
+000150,Personal_Hygiene_Products_003,Crew_Supplies,Personal_Hygiene_Products,37.1,36.0,26.0,3.98,AMBIENT,LOT2025-270,,True,NONE,"[""BAR337232""]",42,N/A,,0,,0.09,Crew_Quarters,ACTIVE
+000151,Personal_Hygiene_Products_004,Crew_Supplies,Personal_Hygiene_Products,56.8,66.6,27.8,15.2,AMBIENT,LOT2025-839,,True,NONE,"[""BAR647967"", ""RFID80190""]",54,N/A,,0,,0.47,Crew_Quarters,ACTIVE
+000152,Clothing_001,Crew_Supplies,Clothing,15.5,73.2,44.3,10.19,AMBIENT,LOT2026-636,,True,NONE,"[""BAR254610"", ""RFID68856"", ""QR3738""]",73,N/A,,0,,0.49,Crew_Quarters,PLANNED
+000153,Clothing_002,Crew_Supplies,Clothing,39.6,79.2,28.9,19.95,AMBIENT,LOT2026-265,,True,NONE,"[""BAR435281""]",80,N/A,,0,,0.05,Crew_Quarters,ACTIVE
+000154,Clothing_003,Crew_Supplies,Clothing,32.8,29.3,30.2,17.51,AMBIENT,LOT2025-116,,False,NONE,"[""BAR534574"", ""RFID84264""]",79,N/A,,0,,0.38,Crew_Quarters,WASTE
+000155,Clothing_004,Crew_Supplies,Clothing,49.4,17.1,20.7,10.85,AMBIENT,LOT2025-393,,True,NONE,"[""BAR786594"", ""RFID89817""]",62,N/A,,0,,0.1,Crew_Quarters,ACTIVE
+000156,Clothing_005,Crew_Supplies,Clothing,57.7,38.1,26.8,17.62,COLD,LOT2025-943,,False,NONE,"[""BAR381631"", ""QR5965""]",55,N/A,,0,,0.17,Crew_Quarters,PLANNED
+000157,Medical_Supplies_001,Crew_Supplies,Medical_Supplies,78.1,26.0,21.5,14.95,AMBIENT,LOT2025-620,,False,NONE,"[""BAR776913"", ""RFID67896"", ""QR7671""]",60,N/A,,0,,0.38,Crew_Quarters,IN_USE
+000158,Medical_Supplies_002,Crew_Supplies,Medical_Supplies,67.5,46.1,13.7,6.43,AMBIENT,LOT2026-901,,True,NONE,"[""BAR696296"", ""RFID35265""]",72,N/A,,0,,0.12,Crew_Quarters,ACTIVE
+000159,Screwdrivers_001,Maintenance_Tools,Screwdrivers,74.3,59.3,20.1,16.52,AMBIENT,LOT2024-698,,True,NONE,"[""BAR132047"", ""RFID74066""]",77,N/A,6603.0,2403,4200.0,0.31,Maintenance_Bay,SCHEDULED
+000160,Screwdrivers_002,Maintenance_Tools,Screwdrivers,34.1,68.6,19.2,16.67,COLD,LOT2024-167,,True,NONE,"[""BAR995296"", ""RFID38091""]",50,N/A,4770.0,1102,3668.0,0.99,Maintenance_Bay,ACTIVE
+000161,Drills_001,Maintenance_Tools,Drills,11.4,64.6,47.2,0.48,AMBIENT,LOT2024-230,,False,NONE,"[""BAR364650"", ""RFID50037""]",53,N/A,2937.0,771,2166.0,1.08,Maintenance_Bay,ACTIVE
+000162,Drills_002,Maintenance_Tools,Drills,42.1,25.3,21.6,10.56,AMBIENT,LOT2024-524,,True,NONE,"[""BAR794530""]",84,N/A,6606.0,1157,5449.0,0.86,Maintenance_Bay,ACTIVE
+000163,Drills_003,Maintenance_Tools,Drills,17.6,14.5,59.4,12.92,AMBIENT,LOT2026-306,,True,NONE,"[""BAR297509"", ""RFID41496""]",62,N/A,4378.0,1655,2723.0,1.22,Maintenance_Bay,PLANNED
+000164,Drills_004,Maintenance_Tools,Drills,57.7,60.5,41.0,19.95,AMBIENT,LOT2026-037,,True,NONE,"[""BAR711344"", ""RFID84978""]",61,N/A,6957.0,2811,4146.0,0.55,Maintenance_Bay,IN_USE
+000165,Drills_005,Maintenance_Tools,Drills,64.9,73.5,42.0,10.29,AMBIENT,LOT2024-483,,True,NONE,"[""BAR234159"", ""RFID83273""]",55,N/A,9246.0,2749,6497.0,0.32,Maintenance_Bay,ACTIVE
+000166,Drills_006,Maintenance_Tools,Drills,25.6,25.6,52.9,8.58,AMBIENT,LOT2025-475,,True,NONE,"[""BAR992562"", ""RFID17035""]",66,N/A,6189.0,291,5898.0,0.9,Maintenance_Bay,DISPOSED
+000167,Drills_007,Maintenance_Tools,Drills,23.6,18.4,42.4,10.74,AMBIENT,LOT2024-141,,True,NONE,"[""BAR310026"", ""RFID84632""]",71,N/A,985.0,441,544.0,1.48,Maintenance_Bay,ACTIVE
+000168,Drills_008,Maintenance_Tools,Drills,64.5,44.1,39.7,3.78,COLD,LOT2025-215,,True,NONE,"[""BAR898169"", ""RFID85534""]",85,N/A,1050.0,90,960.0,0.76,Maintenance_Bay,IN_USE
+000169,Drills_009,Maintenance_Tools,Drills,40.4,40.1,28.6,9.7,AMBIENT,LOT2026-383,,True,NONE,"[""BAR114760""]",45,N/A,718.0,2,716.0,0.82,Maintenance_Bay,ACTIVE
+000170,Drills_010,Maintenance_Tools,Drills,27.4,58.5,23.9,2.84,AMBIENT,LOT2024-067,,False,NONE,"[""BAR963862"", ""RFID48119""]",69,N/A,8346.0,3552,4794.0,0.8,Maintenance_Bay,ACTIVE
+000171,Drills_011,Maintenance_Tools,Drills,79.7,34.0,54.6,7.38,WARM,LOT2025-020,,True,NONE,"[""BAR339513"", ""RFID27197"", ""QR1359""]",57,N/A,2801.0,750,2051.0,0.91,Maintenance_Bay,ACTIVE
+000172,Drills_012,Maintenance_Tools,Drills,65.4,36.3,40.2,15.49,AMBIENT,LOT2024-678,,True,NONE,"[""BAR213365"", ""RFID12587"", ""QR2897""]",84,N/A,896.0,280,616.0,0.65,Maintenance_Bay,ACTIVE
+000173,Drills_013,Maintenance_Tools,Drills,59.1,24.4,42.7,0.48,AMBIENT,LOT2025-638,,True,NONE,"[""BAR735053"", ""RFID64896""]",71,N/A,1754.0,120,1634.0,0.2,Maintenance_Bay,IN_USE
+000174,Drills_014,Maintenance_Tools,Drills,64.9,44.8,38.5,15.63,AMBIENT,LOT2025-303,,True,NONE,"[""BAR268163"", ""RFID75058""]",78,N/A,3404.0,480,2924.0,1.05,Maintenance_Bay,ACTIVE
+000175,Drills_015,Maintenance_Tools,Drills,57.0,73.5,50.9,13.48,AMBIENT,LOT2024-741,,True,NONE,"[""BAR858724"", ""RFID43540""]",54,N/A,1575.0,270,1305.0,0.71,Maintenance_Bay,BROKEN
+000176,Drills_016,Maintenance_Tools,Drills,17.0,22.2,7.2,6.02,AMBIENT,LOT2024-872,,False,NONE,"[""BAR895034"", ""QR3267""]",65,N/A,7079.0,1464,5615.0,1.01,Maintenance_Bay,ACTIVE
+000177,Drills_017,Maintenance_Tools,Drills,76.9,28.8,45.3,7.64,AMBIENT,LOT2025-986,,True,NONE,"[""BAR578715"", ""RFID60556""]",66,N/A,3096.0,341,2755.0,0.74,Maintenance_Bay,ACTIVE
+000178,Spacewalk_Tools_001,Maintenance_Tools,Spacewalk_Tools,78.7,69.1,10.7,18.25,AMBIENT,LOT2024-626,,True,NONE,"[""BAR498197"", ""RFID90131"", ""QR3140""]",75,N/A,9421.0,3369,6052.0,0.75,Maintenance_Bay,ACTIVE
+000179,Spacewalk_Tools_002,Maintenance_Tools,Spacewalk_Tools,14.4,55.8,5.7,17.41,AMBIENT,LOT2024-979,,True,NONE,"[""BAR802382""]",78,N/A,9547.0,3545,6002.0,1.05,Maintenance_Bay,ACTIVE
+000180,Scientific_Instruments_001,Scientific_Research_Supplies,Scientific_Instruments,43.7,56.5,40.3,3.23,AMBIENT,LOT2026-056,,True,NONE,"[""BAR112210"", ""RFID30568""]",90,N/A,,0,,0.25,Lab,ACTIVE
+000181,Scientific_Instruments_002,Scientific_Research_Supplies,Scientific_Instruments,62.6,32.4,23.2,5.78,AMBIENT,LOT2026-388,,False,NONE,"[""BAR522866"", ""QR8277""]",87,N/A,,0,,0.4,Lab,ACTIVE
+000182,Scientific_Instruments_003,Scientific_Research_Supplies,Scientific_Instruments,41.3,18.3,32.4,13.17,AMBIENT,LOT2024-571,,False,NONE,"[""BAR675771"", ""RFID21913""]",61,N/A,,0,,0.48,Lab,ACTIVE
+000183,Scientific_Instruments_004,Scientific_Research_Supplies,Scientific_Instruments,49.4,55.8,30.1,7.01,AMBIENT,LOT2025-340,,True,NONE,"[""BAR687360"", ""RFID88636""]",58,N/A,,0,,0.34,Lab,IN_USE
+000184,Scientific_Instruments_005,Scientific_Research_Supplies,Scientific_Instruments,63.2,25.5,23.8,16.65,AMBIENT,LOT2025-719,,True,NONE,"[""BAR211486"", ""RFID31516""]",73,N/A,,0,,0.41,Lab,IN_USE
+000185,Scientific_Instruments_006,Scientific_Research_Supplies,Scientific_Instruments,27.8,23.7,11.6,17.09,AMBIENT,LOT2024-734,,True,NONE,"[""BAR454349"", ""RFID64325"", ""QR3018""]",68,N/A,,0,,0.39,Lab,ACTIVE
+000186,Scientific_Instruments_007,Scientific_Research_Supplies,Scientific_Instruments,76.9,19.4,32.4,10.75,AMBIENT,LOT2025-859,,True,NONE,"[""BAR713543"", ""RFID76628""]",58,N/A,,0,,0.46,Lab,ACTIVE
+000187,Scientific_Instruments_008,Scientific_Research_Supplies,Scientific_Instruments,67.1,17.2,41.2,12.24,AMBIENT,LOT2025-429,,False,NONE,"[""BAR738576""]",75,N/A,,0,,0.15,Lab,LOST
+000188,Scientific_Instruments_009,Scientific_Research_Supplies,Scientific_Instruments,41.7,19.3,27.7,14.09,AMBIENT,LOT2026-561,,True,NONE,"[""BAR429159"", ""RFID82559""]",87,N/A,,0,,0.12,Lab,ACTIVE
+000189,Scientific_Instruments_010,Scientific_Research_Supplies,Scientific_Instruments,34.2,57.1,59.0,13.11,AMBIENT,LOT2026-653,,True,NONE,"[""BAR438041"", ""RFID56168""]",66,N/A,,0,,0.3,Lab,DISPOSED
+000190,Scientific_Instruments_011,Scientific_Research_Supplies,Scientific_Instruments,57.2,72.6,34.4,17.59,AMBIENT,LOT2026-110,,True,NONE,"[""BAR126499"", ""RFID16955""]",82,N/A,,0,,0.12,Lab,IN_USE
+000191,Scientific_Instruments_012,Scientific_Research_Supplies,Scientific_Instruments,30.1,27.5,51.2,13.9,AMBIENT,LOT2026-034,,True,NONE,"[""BAR476105"", ""QR4675""]",73,N/A,,0,,0.38,Lab,ACTIVE
+000192,Scientific_Instruments_013,Scientific_Research_Supplies,Scientific_Instruments,64.9,65.9,20.8,13.39,AMBIENT,LOT2026-321,,True,NONE,"[""BAR678944"", ""RFID42943"", ""QR8259""]",79,N/A,,0,,0.42,Lab,WASTE_DEPLETED
+000193,Scientific_Instruments_014,Scientific_Research_Supplies,Scientific_Instruments,55.3,62.9,35.1,12.19,AMBIENT,LOT2024-700,,True,NONE,"[""BAR178086"", ""RFID32779""]",67,N/A,,0,,0.08,Lab,ACTIVE
+000194,Scientific_Instruments_015,Scientific_Research_Supplies,Scientific_Instruments,28.5,21.3,51.5,0.41,AMBIENT,LOT2024-041,,True,NONE,"[""BAR261169""]",84,N/A,,0,,0.39,Lab,ACTIVE
+000195,Scientific_Instruments_016,Scientific_Research_Supplies,Scientific_Instruments,31.1,65.3,35.3,1.74,AMBIENT,LOT2024-534,,True,NONE,"[""BAR171488"", ""RFID30889""]",75,N/A,,0,,0.28,Lab,ACTIVE
+000196,Sensors_001,Scientific_Research_Supplies,Sensors,56.4,33.2,21.1,19.02,AMBIENT,LOT2026-844,,True,NONE,"[""BAR888669"", ""QR6668""]",88,N/A,,0,,0.23,Lab,WASTE_DEPLETED
+000197,Sensors_002,Scientific_Research_Supplies,Sensors,53.5,77.1,42.5,6.62,AMBIENT,LOT2026-742,,True,NONE,"[""BAR396567"", ""RFID77746""]",62,N/A,,0,,0.2,Lab,PLANNED
+000198,Sensors_003,Scientific_Research_Supplies,Sensors,13.1,72.9,15.6,10.42,AMBIENT,LOT2026-547,,True,NONE,"[""BAR107686"", ""RFID37627""]",61,N/A,,0,,0.39,Lab,SCHEDULED
+000199,Sensors_004,Scientific_Research_Supplies,Sensors,17.3,47.6,43.7,19.53,AMBIENT,LOT2024-765,,True,NONE,"[""BAR819368"", ""RFID70191""]",82,N/A,,0,,0.04,Lab,ACTIVE
+000200,Sensors_005,Scientific_Research_Supplies,Sensors,27.6,14.9,50.2,18.25,AMBIENT,LOT2026-415,,True,NONE,"[""BAR554059"", ""RFID61052""]",81,N/A,,0,,0.28,Lab,ACTIVE
+000201,Sensors_006,Scientific_Research_Supplies,Sensors,62.9,51.0,43.5,1.73,AMBIENT,LOT2026-309,,True,NONE,"[""BAR736030"", ""RFID67367""]",87,N/A,,0,,0.41,Lab,ACTIVE
+000202,Sensors_007,Scientific_Research_Supplies,Sensors,25.4,62.3,48.8,17.03,N/A,LOT2024-306,,False,NONE,"[""BAR810189""]",73,N/A,,0,,0.44,Lab,ACTIVE
+000203,Sensors_008,Scientific_Research_Supplies,Sensors,10.8,71.2,12.8,1.12,AMBIENT,LOT2024-313,,True,NONE,"[""BAR320256"", ""RFID55069"", ""QR9397""]",80,N/A,,0,,0.09,Lab,ACTIVE
+000204,Sensors_009,Scientific_Research_Supplies,Sensors,27.7,18.0,41.9,11.48,AMBIENT,LOT2026-473,,True,NONE,"[""BAR775990"", ""RFID48096""]",58,N/A,,0,,0.14,Lab,ACTIVE
+000205,Sensors_010,Scientific_Research_Supplies,Sensors,76.6,35.0,41.9,4.92,AMBIENT,LOT2024-326,,True,NONE,"[""BAR609462"", ""RFID90785""]",73,N/A,,0,,0.35,Lab,ACTIVE
+000206,Sensors_011,Scientific_Research_Supplies,Sensors,66.5,77.1,14.3,6.47,AMBIENT,LOT2026-447,,True,NONE,"[""BAR390119"", ""QR6432""]",69,N/A,,0,,0.44,Lab,ACTIVE
+000207,Sensors_012,Scientific_Research_Supplies,Sensors,31.4,48.6,14.7,12.25,AMBIENT,LOT2024-913,,True,NONE,"[""BAR664781"", ""RFID92132"", ""QR2235""]",72,N/A,,0,,0.45,Lab,PLANNED
+000208,Sensors_013,Scientific_Research_Supplies,Sensors,66.9,50.5,47.3,4.49,AMBIENT,LOT2026-916,,True,NONE,"[""BAR665892"", ""RFID29481""]",57,N/A,,0,,0.13,Lab,IN_USE
+000209,Sensors_014,Scientific_Research_Supplies,Sensors,30.4,42.5,33.1,8.12,COLD,LOT2024-869,,True,NONE,"[""BAR945718""]",87,N/A,,0,,0.38,Lab,ACTIVE
+000210,Sample_Storage_Containers_001,Scientific_Research_Supplies,Sample_Storage_Containers,76.4,56.2,58.2,14.8,WARM,LOT2024-225,,False,NONE,"[""BAR898461"", ""RFID18239"", ""QR4834""]",85,N/A,,0,,0.04,Lab,ACTIVE
+000211,Sample_Storage_Containers_002,Scientific_Research_Supplies,Sample_Storage_Containers,35.3,42.9,30.0,1.21,AMBIENT,LOT2026-649,,True,NONE,"[""BAR969948"", ""RFID44513""]",75,N/A,,0,,0.29,Lab,ACTIVE
+000212,Sample_Storage_Containers_003,Scientific_Research_Supplies,Sample_Storage_Containers,51.1,72.9,9.3,5.26,AMBIENT,LOT2025-837,,True,NONE,"[""BAR461792"", ""RFID73191""]",69,N/A,,0,,0.02,Lab,WASTE_EXPIRED
+000213,Sample_Storage_Containers_004,Scientific_Research_Supplies,Sample_Storage_Containers,26.1,46.0,20.4,3.26,AMBIENT,LOT2026-837,,True,NONE,"[""BAR224078"", ""RFID64344""]",65,N/A,,0,,0.37,Lab,ACTIVE
+000214,Sample_Storage_Containers_005,Scientific_Research_Supplies,Sample_Storage_Containers,24.7,21.3,50.8,0.74,AMBIENT,LOT2026-165,,False,NONE,"[""BAR241268"", ""RFID15136""]",57,N/A,,0,,0.09,Lab,ACTIVE
+000215,Sample_Storage_Containers_006,Scientific_Research_Supplies,Sample_Storage_Containers,46.2,38.4,58.3,12.86,WARM,LOT2024-460,,True,NONE,"[""BAR735988""]",73,N/A,,0,,0.1,Lab,PLANNED
+000216,Sample_Storage_Containers_007,Scientific_Research_Supplies,Sample_Storage_Containers,65.6,67.4,15.0,13.3,AMBIENT,LOT2026-351,,True,NONE,"[""BAR575497"", ""RFID19023"", ""QR7315""]",71,N/A,,0,,0.08,Lab,ACTIVE
+000217,Sample_Storage_Containers_008,Scientific_Research_Supplies,Sample_Storage_Containers,73.7,57.9,50.5,12.23,AMBIENT,LOT2026-615,,True,NONE,"[""BAR140932""]",66,N/A,,0,,0.38,Lab,ACTIVE
+000218,Sample_Storage_Containers_009,Scientific_Research_Supplies,Sample_Storage_Containers,73.1,47.8,5.1,18.77,AMBIENT,LOT2025-896,,True,NONE,"[""BAR145548"", ""RFID66224"", ""QR8899""]",82,N/A,,0,,0.4,Lab,ACTIVE
+000219,Sample_Storage_Containers_010,Scientific_Research_Supplies,Sample_Storage_Containers,61.9,63.3,43.3,2.23,AMBIENT,LOT2024-932,,True,NONE,"[""BAR187889"", ""RFID81267""]",63,N/A,,0,,0.11,Lab,IN_USE
+000220,Sample_Storage_Containers_011,Scientific_Research_Supplies,Sample_Storage_Containers,50.5,18.2,5.4,13.19,AMBIENT,LOT2024-159,,True,NONE,"[""BAR546768"", ""RFID43244"", ""QR9783""]",75,N/A,,0,,0.22,Lab,ACTIVE
+000221,Sample_Storage_Containers_012,Scientific_Research_Supplies,Sample_Storage_Containers,57.6,62.8,27.7,15.74,AMBIENT,LOT2026-569,,True,NONE,"[""BAR607259"", ""RFID50193""]",85,N/A,,0,,0.39,Lab,ACTIVE
+000222,Sample_Storage_Containers_013,Scientific_Research_Supplies,Sample_Storage_Containers,70.5,18.3,17.6,15.73,AMBIENT,LOT2026-411,,True,NONE,"[""BAR924265"", ""RFID82165""]",65,N/A,,0,,0.35,Lab,ACTIVE
+000223,Sample_Storage_Containers_014,Scientific_Research_Supplies,Sample_Storage_Containers,54.5,66.3,50.3,9.59,AMBIENT,LOT2025-228,,True,NONE,"[""BAR488848"", ""RFID14948""]",82,N/A,,0,,0.47,Lab,ACTIVE
+000224,Sample_Storage_Containers_015,Scientific_Research_Supplies,Sample_Storage_Containers,30.1,77.4,8.2,15.54,AMBIENT,LOT2025-011,,True,NONE,"[""BAR311505""]",66,N/A,,0,,0.27,Lab,ACTIVE
+000225,Sample_Storage_Containers_016,Scientific_Research_Supplies,Sample_Storage_Containers,45.7,58.9,38.8,13.58,AMBIENT,LOT2024-162,,True,NONE,"[""BAR191061""]",78,N/A,,0,,0.19,Lab,ACTIVE
+000226,Sample_Storage_Containers_017,Scientific_Research_Supplies,Sample_Storage_Containers,46.2,61.6,8.8,2.08,AMBIENT,LOT2026-937,,True,NONE,"[""BAR711248"", ""RFID46242"", ""QR4187""]",73,N/A,,0,,0.24,Lab,ACTIVE
+000227,Sample_Storage_Containers_018,Scientific_Research_Supplies,Sample_Storage_Containers,22.3,45.4,35.7,10.21,WARM,LOT2026-980,,False,NONE,"[""BAR370211""]",76,N/A,,0,,0.3,Lab,ACTIVE
+000228,Sample_Storage_Containers_019,Scientific_Research_Supplies,Sample_Storage_Containers,49.4,63.9,46.7,19.24,AMBIENT,LOT2026-883,,True,NONE,"[""BAR128679"", ""RFID43792"", ""QR4610""]",84,N/A,,0,,0.34,Lab,ACTIVE
+000229,Sample_Storage_Containers_020,Scientific_Research_Supplies,Sample_Storage_Containers,76.9,46.2,5.5,16.69,AMBIENT,LOT2025-690,,False,NONE,"[""BAR885161"", ""QR3924""]",70,N/A,,0,,0.25,Lab,ACTIVE
+000230,Sample_Storage_Containers_021,Scientific_Research_Supplies,Sample_Storage_Containers,28.8,76.3,42.6,18.23,AMBIENT,LOT2024-754,,True,NONE,"[""BAR353814"", ""QR4322""]",86,N/A,,0,,0.42,Lab,PLANNED
+000231,Sample_Storage_Containers_022,Scientific_Research_Supplies,Sample_Storage_Containers,64.5,18.4,9.3,19.13,AMBIENT,LOT2026-981,,False,NONE,"[""BAR144316""]",86,N/A,,0,,0.17,Lab,WASTE_EXPIRED
+000232,Sample_Storage_Containers_023,Scientific_Research_Supplies,Sample_Storage_Containers,50.2,29.2,15.1,15.36,AMBIENT,LOT2024-769,,True,NONE,"[""BAR704677"", ""RFID78909""]",87,N/A,,0,,0.25,Lab,ACTIVE
+000233,Sample_Storage_Containers_024,Scientific_Research_Supplies,Sample_Storage_Containers,37.6,58.0,14.6,19.54,AMBIENT,LOT2026-009,,True,NONE,"[""BAR112394"", ""RFID59732""]",88,N/A,,0,,0.18,Lab,ACTIVE
+000234,Sample_Storage_Containers_025,Scientific_Research_Supplies,Sample_Storage_Containers,48.4,26.6,30.9,12.38,AMBIENT,LOT2025-216,,True,NONE,"[""BAR539450"", ""RFID58799""]",78,N/A,,0,,0.21,Lab,ACTIVE
+000235,Sample_Storage_Containers_026,Scientific_Research_Supplies,Sample_Storage_Containers,78.5,58.0,49.8,14.5,AMBIENT,LOT2025-201,,True,NONE,"[""BAR252928""]",70,N/A,,0,,0.25,Lab,ACTIVE
+000236,Sample_Storage_Containers_027,Scientific_Research_Supplies,Sample_Storage_Containers,19.4,72.5,39.7,10.82,AMBIENT,LOT2025-257,,True,NONE,"[""BAR689444"", ""QR2621""]",75,N/A,,0,,0.35,Lab,ACTIVE
+000237,Sample_Storage_Containers_028,Scientific_Research_Supplies,Sample_Storage_Containers,43.4,54.1,29.7,6.89,AMBIENT,LOT2026-955,,True,NONE,"[""BAR949363"", ""RFID12599""]",78,N/A,,0,,0.19,Lab,ACTIVE
+000238,Sample_Storage_Containers_029,Scientific_Research_Supplies,Sample_Storage_Containers,50.4,55.5,34.6,19.59,AMBIENT,LOT2026-523,,True,NONE,"[""BAR611174"", ""RFID68580""]",73,N/A,,0,,0.2,Lab,ACTIVE
+000239,Sample_Storage_Containers_030,Scientific_Research_Supplies,Sample_Storage_Containers,20.1,21.7,49.4,6.95,AMBIENT,LOT2024-082,,True,NONE,"[""BAR269868"", ""RFID51088""]",80,N/A,,0,,0.16,Lab,ACTIVE
+000240,Sample_Storage_Containers_031,Scientific_Research_Supplies,Sample_Storage_Containers,29.0,41.1,52.5,7.45,N/A,LOT2025-172,,True,NONE,"[""BAR292818"", ""QR4844""]",88,N/A,,0,,0.34,Lab,DISPOSED
+000241,Sample_Storage_Containers_032,Scientific_Research_Supplies,Sample_Storage_Containers,15.6,21.7,10.7,1.56,AMBIENT,LOT2024-790,,True,NONE,"[""BAR516297"", ""RFID20911"", ""QR3544""]",85,N/A,,0,,0.06,Lab,WASTE
+000242,Sample_Storage_Containers_033,Scientific_Research_Supplies,Sample_Storage_Containers,26.1,61.6,29.4,2.79,AMBIENT,LOT2024-036,,False,NONE,"[""BAR795781"", ""RFID52624""]",88,N/A,,0,,0.24,Lab,SCHEDULED
+000243,Sample_Storage_Containers_034,Scientific_Research_Supplies,Sample_Storage_Containers,48.4,19.5,57.2,10.92,AMBIENT,LOT2026-899,,True,NONE,"[""BAR691380"", ""RFID93858""]",84,N/A,,0,,0.17,Lab,ACTIVE
+000244,Sample_Storage_Containers_035,Scientific_Research_Supplies,Sample_Storage_Containers,66.3,40.9,25.1,5.42,COLD,LOT2026-835,,False,NONE,"[""BAR895128""]",74,N/A,,0,,0.25,Lab,ACTIVE
+000245,Sample_Storage_Containers_036,Scientific_Research_Supplies,Sample_Storage_Containers,76.3,43.4,5.5,8.78,AMBIENT,LOT2024-562,,True,NONE,"[""BAR491794"", ""RFID83472""]",73,N/A,,0,,0.14,Lab,IN_USE
+000246,Sample_Storage_Containers_037,Scientific_Research_Supplies,Sample_Storage_Containers,68.0,25.4,9.4,12.62,AMBIENT,LOT2026-827,,True,NONE,"[""BAR827632"", ""RFID47313""]",88,N/A,,0,,0.28,Lab,ACTIVE
+000247,Data_Storage_Devices_001,Scientific_Research_Supplies,Data_Storage_Devices,22.8,30.3,40.0,12.47,AMBIENT,LOT2025-193,,True,NONE,"[""BAR436219"", ""RFID16505""]",72,N/A,,0,,0.03,Lab,BROKEN
+000248,Data_Storage_Devices_002,Scientific_Research_Supplies,Data_Storage_Devices,18.8,40.7,5.5,2.08,AMBIENT,LOT2025-431,,True,NONE,"[""BAR426711"", ""RFID75325""]",55,N/A,,0,,0.24,Lab,IN_USE
+000249,Data_Storage_Devices_003,Scientific_Research_Supplies,Data_Storage_Devices,69.0,76.6,8.1,15.58,AMBIENT,LOT2024-197,,True,NONE,"[""BAR982417"", ""RFID60014""]",59,N/A,,0,,0.08,Lab,IN_USE
+000250,Data_Storage_Devices_004,Scientific_Research_Supplies,Data_Storage_Devices,64.0,41.0,45.6,0.96,AMBIENT,LOT2024-534,,True,NONE,"[""BAR798359""]",84,N/A,,0,,0.35,Lab,ACTIVE
+000251,Data_Storage_Devices_005,Scientific_Research_Supplies,Data_Storage_Devices,54.0,13.0,56.6,10.56,AMBIENT,LOT2025-204,,True,NONE,"[""BAR477934""]",71,N/A,,0,,0.12,Lab,ACTIVE
+000252,Oxygen_Tanks_001,Essential_Supplies,Oxygen_Tanks,32.6,124.3,136.9,48.71,COLD,LOT2025-705,,False,PRESSURIZED,"[""BAR725173"", ""RFID21728"", ""QR9190""]",80,N/A,,0,,0.06,Life_Support,ACTIVE
+000253,Oxygen_Tanks_002,Essential_Supplies,Oxygen_Tanks,199.5,103.1,32.0,78.06,AMBIENT,LOT2024-325,,True,NONE,"[""BAR685472"", ""RFID55523""]",99,N/A,,0,,0.23,Life_Support,ACTIVE
+000254,Oxygen_Tanks_003,Essential_Supplies,Oxygen_Tanks,90.9,41.8,199.7,59.27,AMBIENT,LOT2025-195,,True,NONE,"[""BAR694229"", ""RFID55569""]",93,N/A,,0,,0.24,Life_Support,SCHEDULED
+000255,Oxygen_Tanks_004,Essential_Supplies,Oxygen_Tanks,176.3,45.0,126.2,55.03,AMBIENT,LOT2026-519,,True,NONE,"[""BAR497455"", ""RFID12453""]",81,N/A,,0,,0.19,Life_Support,ACTIVE
+000256,Oxygen_Tanks_005,Essential_Supplies,Oxygen_Tanks,40.8,145.9,183.8,24.4,AMBIENT,LOT2025-331,,True,NONE,"[""BAR529711"", ""RFID24478"", ""QR2092""]",96,N/A,,0,,0.04,Life_Support,WASTE
+000257,Oxygen_Tanks_006,Essential_Supplies,Oxygen_Tanks,35.3,38.4,58.3,5.75,AMBIENT,LOT2026-605,,True,NONE,"[""BAR368371"", ""RFID38930""]",89,N/A,,0,,0.05,Life_Support,WASTE
+000258,Oxygen_Tanks_007,Essential_Supplies,Oxygen_Tanks,113.5,136.2,36.0,96.52,AMBIENT,LOT2025-842,,True,NONE,"[""BAR486996"", ""RFID17641""]",68,N/A,,0,,0.15,Life_Support,ACTIVE
+000259,Oxygen_Tanks_008,Essential_Supplies,Oxygen_Tanks,81.7,143.1,212.1,13.46,AMBIENT,LOT2026-673,,True,NONE,"[""BAR360846"", ""RFID33448""]",79,N/A,,0,,0.29,Life_Support,IN_USE
+000260,Oxygen_Tanks_009,Essential_Supplies,Oxygen_Tanks,128.0,109.3,160.5,52.39,AMBIENT,LOT2025-517,,True,NONE,"[""BAR453907"", ""RFID79979""]",71,N/A,,0,,0.23,Life_Support,ACTIVE
+000261,Oxygen_Tanks_010,Essential_Supplies,Oxygen_Tanks,198.5,65.6,94.3,92.17,AMBIENT,LOT2024-577,,True,NONE,"[""BAR672130"", ""RFID82120""]",92,N/A,,0,,0.14,Life_Support,LOST
+000262,Oxygen_Tanks_011,Essential_Supplies,Oxygen_Tanks,97.5,115.8,216.6,72.3,AMBIENT,LOT2024-308,,True,NONE,"[""BAR332665"", ""RFID51275"", ""QR5521""]",98,N/A,,0,,0.46,Life_Support,ACTIVE
+000263,Oxygen_Tanks_012,Essential_Supplies,Oxygen_Tanks,127.2,36.8,112.1,20.42,AMBIENT,LOT2024-263,,True,NONE,"[""BAR950472"", ""RFID84774""]",81,N/A,,0,,0.46,Life_Support,IN_USE
+000264,Oxygen_Tanks_013,Essential_Supplies,Oxygen_Tanks,164.8,46.6,185.1,83.37,AMBIENT,LOT2026-828,,True,NONE,"[""BAR704277"", ""RFID17329""]",71,N/A,,0,,0.18,Life_Support,SCHEDULED
+000265,Oxygen_Tanks_014,Essential_Supplies,Oxygen_Tanks,188.1,40.1,174.1,90.23,AMBIENT,LOT2024-313,,True,NONE,"[""BAR649855"", ""RFID80769""]",65,N/A,,0,,0.18,Life_Support,ACTIVE
+000266,Oxygen_Tanks_015,Essential_Supplies,Oxygen_Tanks,144.5,149.7,214.2,90.84,AMBIENT,LOT2025-152,,True,NONE,"[""BAR238610"", ""RFID72371""]",97,N/A,,0,,0.04,Life_Support,ACTIVE
+000267,Oxygen_Tanks_016,Essential_Supplies,Oxygen_Tanks,115.3,121.7,46.1,17.91,AMBIENT,LOT2026-201,,True,NONE,"[""BAR688426"", ""RFID78714"", ""QR2173""]",100,N/A,,0,,0.15,Life_Support,ACTIVE
+000268,Oxygen_Tanks_017,Essential_Supplies,Oxygen_Tanks,127.9,39.1,102.7,45.1,AMBIENT,LOT2024-789,,True,NONE,"[""BAR419625"", ""RFID55838""]",77,N/A,,0,,0.5,Life_Support,ACTIVE
+000269,Oxygen_Tanks_018,Essential_Supplies,Oxygen_Tanks,37.6,127.3,59.9,46.11,AMBIENT,LOT2024-890,,True,PRESSURIZED,"[""BAR972881"", ""QR2823""]",70,N/A,,0,,0.17,Life_Support,ACTIVE
+000270,Oxygen_Tanks_019,Essential_Supplies,Oxygen_Tanks,155.8,51.5,129.3,90.54,AMBIENT,LOT2024-712,,True,NONE,"[""BAR832697"", ""RFID59362""]",100,N/A,,0,,0.34,Life_Support,ACTIVE
+000271,Oxygen_Tanks_020,Essential_Supplies,Oxygen_Tanks,78.3,123.6,143.6,8.26,AMBIENT,LOT2026-873,,False,NONE,"[""BAR792165"", ""RFID24141"", ""QR7332""]",65,N/A,,0,,0.13,Life_Support,ACTIVE
+000272,Oxygen_Tanks_021,Essential_Supplies,Oxygen_Tanks,46.9,64.4,193.4,64.72,AMBIENT,LOT2026-949,,True,NONE,"[""BAR847078"", ""RFID42426""]",76,N/A,,0,,0.17,Life_Support,ACTIVE
+000273,Oxygen_Tanks_022,Essential_Supplies,Oxygen_Tanks,33.1,110.5,91.1,37.67,AMBIENT,LOT2025-912,,True,CORROSIVE,"[""BAR954441""]",97,N/A,,0,,0.48,Life_Support,ACTIVE
+000274,Oxygen_Tanks_023,Essential_Supplies,Oxygen_Tanks,96.8,42.2,166.0,63.44,AMBIENT,LOT2025-994,,True,NONE,"[""BAR427557""]",79,N/A,,0,,0.28,Life_Support,ACTIVE
+000275,Oxygen_Tanks_024,Essential_Supplies,Oxygen_Tanks,122.0,125.0,192.5,38.46,WARM,LOT2024-672,,True,NONE,"[""BAR692282""]",98,N/A,,0,,0.29,Life_Support,DISPOSED
+000276,Oxygen_Tanks_025,Essential_Supplies,Oxygen_Tanks,84.0,135.0,165.4,92.32,N/A,LOT2026-957,,True,NONE,"[""BAR961613""]",91,N/A,,0,,0.15,Life_Support,IN_USE
+000277,Oxygen_Tanks_026,Essential_Supplies,Oxygen_Tanks,61.4,120.3,142.4,33.49,AMBIENT,LOT2024-368,,False,NONE,"[""BAR183336"", ""RFID72469"", ""QR8680""]",79,N/A,,0,,0.36,Life_Support,ACTIVE
+000278,Oxygen_Tanks_027,Essential_Supplies,Oxygen_Tanks,113.5,42.2,58.7,5.8,WARM,LOT2024-761,,False,NONE,"[""BAR803950""]",65,N/A,,0,,0.05,Life_Support,WASTE
+000279,Oxygen_Tanks_028,Essential_Supplies,Oxygen_Tanks,177.4,86.2,85.0,55.99,AMBIENT,LOT2026-753,,True,NONE,"[""BAR964371"", ""RFID51012""]",80,N/A,,0,,0.47,Life_Support,ACTIVE
+000280,Oxygen_Tanks_029,Essential_Supplies,Oxygen_Tanks,139.0,113.0,27.7,14.9,AMBIENT,LOT2026-551,,True,TOXIC,"[""BAR514828"", ""QR7347""]",94,N/A,,0,,0.27,Life_Support,ACTIVE
+000281,Oxygen_Tanks_030,Essential_Supplies,Oxygen_Tanks,79.5,74.8,80.9,99.66,AMBIENT,LOT2024-707,,True,NONE,"[""BAR642081""]",94,N/A,,0,,0.33,Life_Support,ACTIVE
+000282,Oxygen_Tanks_031,Essential_Supplies,Oxygen_Tanks,60.6,98.2,198.9,66.48,AMBIENT,LOT2024-465,,True,NONE,"[""BAR718990""]",90,N/A,,0,,0.44,Life_Support,ACTIVE
+000283,Oxygen_Tanks_032,Essential_Supplies,Oxygen_Tanks,140.3,113.9,52.8,88.52,AMBIENT,LOT2025-088,,True,NONE,"[""BAR649262"", ""RFID77065""]",70,N/A,,0,,0.1,Life_Support,ACTIVE
+000284,Oxygen_Tanks_033,Essential_Supplies,Oxygen_Tanks,59.1,66.9,194.3,103.8,AMBIENT,LOT2026-053,,True,NONE,"[""BAR539963"", ""RFID68491"", ""QR3960""]",75,N/A,,0,,0.08,Life_Support,ACTIVE
+000285,Oxygen_Tanks_034,Essential_Supplies,Oxygen_Tanks,135.8,56.6,111.7,102.94,AMBIENT,LOT2025-244,,True,NONE,"[""BAR327408"", ""RFID72352""]",99,N/A,,0,,0.23,Life_Support,ACTIVE
+000286,Oxygen_Tanks_035,Essential_Supplies,Oxygen_Tanks,180.0,59.8,145.7,98.77,COLD,LOT2026-358,,False,NONE,"[""BAR138504"", ""RFID14250""]",78,N/A,,0,,0.42,Life_Support,ACTIVE
+000287,Oxygen_Tanks_036,Essential_Supplies,Oxygen_Tanks,38.3,77.1,55.6,81.31,AMBIENT,LOT2026-369,,True,NONE,"[""BAR137581"", ""RFID49229""]",100,N/A,,0,,0.45,Life_Support,PLANNED
+000288,Oxygen_Tanks_037,Essential_Supplies,Oxygen_Tanks,173.4,33.1,114.2,16.4,AMBIENT,LOT2024-713,,True,NONE,"[""BAR319205"", ""RFID24326""]",82,N/A,,0,,0.49,Life_Support,ACTIVE
+000289,Oxygen_Tanks_038,Essential_Supplies,Oxygen_Tanks,153.1,100.6,177.6,85.4,AMBIENT,LOT2026-589,,True,NONE,"[""BAR753518"", ""RFID27001""]",92,N/A,,0,,0.26,Life_Support,IN_USE
+000290,Oxygen_Tanks_039,Essential_Supplies,Oxygen_Tanks,167.4,135.5,66.5,36.28,COLD,LOT2024-756,,True,PRESSURIZED,"[""BAR989265"", ""RFID90649""]",77,N/A,,0,,0.22,Life_Support,ACTIVE
+000291,Oxygen_Tanks_040,Essential_Supplies,Oxygen_Tanks,138.4,26.4,60.2,35.23,AMBIENT,LOT2025-786,,True,NONE,"[""BAR106429"", ""RFID53684""]",69,N/A,,0,,0.37,Life_Support,ACTIVE
+000292,Oxygen_Tanks_041,Essential_Supplies,Oxygen_Tanks,59.9,66.3,87.6,81.35,AMBIENT,LOT2025-160,,False,NONE,"[""BAR757667"", ""RFID80381""]",95,N/A,,0,,0.24,Life_Support,PLANNED
+000293,Oxygen_Tanks_042,Essential_Supplies,Oxygen_Tanks,39.5,90.1,133.0,82.03,AMBIENT,LOT2026-340,,True,NONE,"[""BAR938373""]",100,N/A,,0,,0.05,Life_Support,ACTIVE
+000294,Carbon_Dioxide_Scrubbers_001,Essential_Supplies,Carbon_Dioxide_Scrubbers,197.2,103.3,188.5,69.38,AMBIENT,LOT2025-723,,True,NONE,"[""BAR999488"", ""RFID14145"", ""QR2422""]",89,N/A,,0,,0.26,Life_Support,ACTIVE
+000295,Carbon_Dioxide_Scrubbers_002,Essential_Supplies,Carbon_Dioxide_Scrubbers,191.6,52.0,80.5,15.24,AMBIENT,LOT2025-519,,True,NONE,"[""BAR126146"", ""RFID75543"", ""QR6572""]",67,N/A,,0,,0.46,Life_Support,IN_USE
+000296,Carbon_Dioxide_Scrubbers_003,Essential_Supplies,Carbon_Dioxide_Scrubbers,161.8,42.9,194.4,99.01,AMBIENT,LOT2026-038,,True,NONE,"[""BAR581682"", ""RFID78464"", ""QR6095""]",98,N/A,,0,,0.47,Life_Support,ACTIVE
+000297,Carbon_Dioxide_Scrubbers_004,Essential_Supplies,Carbon_Dioxide_Scrubbers,44.8,83.4,29.2,63.43,COLD,LOT2026-914,,True,NONE,"[""BAR320039"", ""RFID35237"", ""QR9720""]",84,N/A,,0,,0.17,Life_Support,ACTIVE
+000298,Carbon_Dioxide_Scrubbers_005,Essential_Supplies,Carbon_Dioxide_Scrubbers,55.4,59.2,23.1,75.51,AMBIENT,LOT2026-327,,False,NONE,"[""BAR384218"", ""RFID47128""]",97,N/A,,0,,0.1,Life_Support,ACTIVE
+000299,Carbon_Dioxide_Scrubbers_006,Essential_Supplies,Carbon_Dioxide_Scrubbers,121.9,31.3,25.8,108.59,AMBIENT,LOT2025-184,,True,CORROSIVE,"[""BAR838908"", ""RFID87693""]",68,N/A,,0,,0.35,Life_Support,ACTIVE
+000300,Carbon_Dioxide_Scrubbers_007,Essential_Supplies,Carbon_Dioxide_Scrubbers,86.5,49.8,171.7,97.5,N/A,LOT2025-582,,True,NONE,"[""BAR238197"", ""RFID71377"", ""QR6085""]",70,N/A,,0,,0.35,Life_Support,IN_USE
+000301,Carbon_Dioxide_Scrubbers_008,Essential_Supplies,Carbon_Dioxide_Scrubbers,69.4,53.0,192.2,74.8,AMBIENT,LOT2026-339,,True,NONE,"[""BAR927094""]",88,N/A,,0,,0.25,Life_Support,ACTIVE
+000302,Carbon_Dioxide_Scrubbers_009,Essential_Supplies,Carbon_Dioxide_Scrubbers,111.4,130.7,76.5,43.14,AMBIENT,LOT2026-816,,True,NONE,"[""BAR212178"", ""RFID95124"", ""QR5949""]",73,N/A,,0,,0.28,Life_Support,ACTIVE
+000303,Carbon_Dioxide_Scrubbers_010,Essential_Supplies,Carbon_Dioxide_Scrubbers,135.5,93.5,214.8,47.29,AMBIENT,LOT2025-804,,True,NONE,"[""BAR556501"", ""RFID54852""]",86,N/A,,0,,0.13,Life_Support,ACTIVE
+000304,Carbon_Dioxide_Scrubbers_011,Essential_Supplies,Carbon_Dioxide_Scrubbers,188.2,96.8,117.3,71.88,AMBIENT,LOT2024-316,,True,CORROSIVE,"[""BAR525505"", ""RFID24253""]",94,N/A,,0,,0.31,Life_Support,PLANNED
+000305,Carbon_Dioxide_Scrubbers_012,Essential_Supplies,Carbon_Dioxide_Scrubbers,139.6,32.7,63.5,18.39,AMBIENT,LOT2025-545,,True,NONE,"[""BAR405663"", ""RFID85750""]",65,N/A,,0,,0.12,Life_Support,SCHEDULED
+000306,Carbon_Dioxide_Scrubbers_013,Essential_Supplies,Carbon_Dioxide_Scrubbers,165.0,109.9,203.7,112.53,N/A,LOT2026-523,,False,NONE,"[""BAR523831""]",87,N/A,,0,,0.05,Life_Support,WASTE_DEPLETED
+000307,Carbon_Dioxide_Scrubbers_014,Essential_Supplies,Carbon_Dioxide_Scrubbers,30.1,95.0,215.7,14.94,AMBIENT,LOT2026-605,,True,NONE,"[""BAR513420"", ""RFID60173""]",83,N/A,,0,,0.23,Life_Support,ACTIVE
+000308,Carbon_Dioxide_Scrubbers_015,Essential_Supplies,Carbon_Dioxide_Scrubbers,53.6,94.4,188.7,44.51,AMBIENT,LOT2026-129,,True,NONE,"[""BAR240800"", ""RFID94985"", ""QR8974""]",91,N/A,,0,,0.34,Life_Support,BROKEN
+000309,Carbon_Dioxide_Scrubbers_016,Essential_Supplies,Carbon_Dioxide_Scrubbers,53.3,125.7,192.0,107.44,AMBIENT,LOT2025-566,,True,NONE,"[""BAR959907"", ""RFID56570"", ""QR7959""]",92,N/A,,0,,0.31,Life_Support,ACTIVE
+000310,Carbon_Dioxide_Scrubbers_017,Essential_Supplies,Carbon_Dioxide_Scrubbers,70.2,87.7,102.2,66.45,COLD,LOT2026-378,,True,CORROSIVE,"[""BAR218661"", ""RFID20494"", ""QR9624""]",88,N/A,,0,,0.49,Life_Support,BROKEN
+000311,Carbon_Dioxide_Scrubbers_018,Essential_Supplies,Carbon_Dioxide_Scrubbers,109.0,34.8,198.0,12.44,AMBIENT,LOT2026-080,,True,NONE,"[""BAR817303"", ""RFID85973""]",95,N/A,,0,,0.05,Life_Support,ACTIVE
+000312,Carbon_Dioxide_Scrubbers_019,Essential_Supplies,Carbon_Dioxide_Scrubbers,109.7,89.1,113.8,88.59,AMBIENT,LOT2025-297,,True,NONE,"[""BAR275645"", ""RFID88333""]",91,N/A,,0,,0.37,Life_Support,ACTIVE
+000313,Carbon_Dioxide_Scrubbers_020,Essential_Supplies,Carbon_Dioxide_Scrubbers,110.4,46.1,30.3,118.86,AMBIENT,LOT2024-872,,True,PRESSURIZED,"[""BAR921834"", ""RFID27372""]",66,N/A,,0,,0.15,Life_Support,ACTIVE
+000314,Carbon_Dioxide_Scrubbers_021,Essential_Supplies,Carbon_Dioxide_Scrubbers,132.6,138.8,167.8,79.78,AMBIENT,LOT2026-242,,True,NONE,"[""BAR608473"", ""RFID79125""]",88,N/A,,0,,0.18,Life_Support,ACTIVE
+000315,Carbon_Dioxide_Scrubbers_022,Essential_Supplies,Carbon_Dioxide_Scrubbers,188.8,44.3,119.2,119.24,AMBIENT,LOT2026-172,,True,NONE,"[""BAR321099"", ""RFID55229"", ""QR5331""]",89,N/A,,0,,0.38,Life_Support,ACTIVE
+000316,Carbon_Dioxide_Scrubbers_023,Essential_Supplies,Carbon_Dioxide_Scrubbers,97.8,62.7,169.2,90.79,AMBIENT,LOT2025-486,,True,NONE,"[""BAR375382"", ""RFID66981"", ""QR8353""]",99,N/A,,0,,0.2,Life_Support,ACTIVE
+000317,Carbon_Dioxide_Scrubbers_024,Essential_Supplies,Carbon_Dioxide_Scrubbers,192.5,37.2,126.3,43.75,AMBIENT,LOT2025-344,,True,NONE,"[""BAR383457"", ""RFID22881"", ""QR7408""]",92,N/A,,0,,0.24,Life_Support,ACTIVE
+000318,Carbon_Dioxide_Scrubbers_025,Essential_Supplies,Carbon_Dioxide_Scrubbers,144.2,121.3,124.0,81.97,AMBIENT,LOT2024-013,,True,TOXIC,"[""BAR531225"", ""RFID23619""]",76,N/A,,0,,0.19,Life_Support,IN_USE
+000319,Carbon_Dioxide_Scrubbers_026,Essential_Supplies,Carbon_Dioxide_Scrubbers,35.8,102.4,31.4,72.11,N/A,LOT2026-981,,True,NONE,"[""BAR225805"", ""RFID89257"", ""QR4027""]",78,N/A,,0,,0.45,Life_Support,ACTIVE
+000320,Carbon_Dioxide_Scrubbers_027,Essential_Supplies,Carbon_Dioxide_Scrubbers,109.4,142.0,147.8,110.88,AMBIENT,LOT2026-789,,True,NONE,"[""BAR907528"", ""RFID31229""]",82,N/A,,0,,0.15,Life_Support,ACTIVE
+000321,Carbon_Dioxide_Scrubbers_028,Essential_Supplies,Carbon_Dioxide_Scrubbers,199.3,57.3,182.6,23.0,AMBIENT,LOT2026-403,,False,NONE,"[""BAR287110"", ""RFID24212"", ""QR8065""]",69,N/A,,0,,0.12,Life_Support,ACTIVE
+000322,Carbon_Dioxide_Scrubbers_029,Essential_Supplies,Carbon_Dioxide_Scrubbers,151.6,37.9,34.6,69.42,AMBIENT,LOT2024-669,,False,CORROSIVE,"[""BAR771440"", ""RFID14959""]",81,N/A,,0,,0.15,Life_Support,IN_USE
+000323,Carbon_Dioxide_Scrubbers_030,Essential_Supplies,Carbon_Dioxide_Scrubbers,127.7,89.4,208.0,59.9,AMBIENT,LOT2024-554,,True,NONE,"[""BAR336817"", ""RFID73185"", ""QR9770""]",92,N/A,,0,,0.47,Life_Support,ACTIVE
+000324,Carbon_Dioxide_Scrubbers_031,Essential_Supplies,Carbon_Dioxide_Scrubbers,98.1,104.0,211.8,12.7,AMBIENT,LOT2025-779,,True,NONE,"[""BAR903741"", ""RFID36623"", ""QR1644""]",99,N/A,,0,,0.48,Life_Support,ACTIVE
+000325,Carbon_Dioxide_Scrubbers_032,Essential_Supplies,Carbon_Dioxide_Scrubbers,96.3,38.3,157.8,59.41,AMBIENT,LOT2024-026,,True,NONE,"[""BAR854701"", ""QR7369""]",93,N/A,,0,,0.05,Life_Support,ACTIVE
+000326,Carbon_Dioxide_Scrubbers_033,Essential_Supplies,Carbon_Dioxide_Scrubbers,120.8,129.3,109.9,119.51,AMBIENT,LOT2026-044,,False,NONE,"[""BAR525205"", ""RFID95701""]",67,N/A,,0,,0.24,Life_Support,ACTIVE
+000327,Carbon_Dioxide_Scrubbers_034,Essential_Supplies,Carbon_Dioxide_Scrubbers,55.3,97.4,205.0,6.35,AMBIENT,LOT2024-249,,True,PRESSURIZED,"[""BAR835363"", ""RFID11882"", ""QR1818""]",74,N/A,,0,,0.45,Life_Support,PLANNED
+000328,Carbon_Dioxide_Scrubbers_035,Essential_Supplies,Carbon_Dioxide_Scrubbers,133.9,129.4,32.8,98.46,AMBIENT,LOT2024-065,,True,NONE,"[""BAR943530"", ""RFID54216""]",72,N/A,,0,,0.49,Life_Support,ACTIVE
+000329,Carbon_Dioxide_Scrubbers_036,Essential_Supplies,Carbon_Dioxide_Scrubbers,195.9,97.0,47.5,100.7,AMBIENT,LOT2025-065,,False,NONE,"[""BAR226610"", ""RFID64415"", ""QR7060""]",78,N/A,,0,,0.29,Life_Support,ACTIVE
+000330,Carbon_Dioxide_Scrubbers_037,Essential_Supplies,Carbon_Dioxide_Scrubbers,36.9,37.5,189.5,74.27,COLD,LOT2024-008,,True,NONE,"[""BAR288128""]",75,N/A,,0,,0.3,Life_Support,ACTIVE
+000331,Carbon_Dioxide_Scrubbers_038,Essential_Supplies,Carbon_Dioxide_Scrubbers,164.7,84.5,45.4,18.88,AMBIENT,LOT2024-626,,True,NONE,"[""BAR825272"", ""RFID33593""]",82,N/A,,0,,0.31,Life_Support,ACTIVE
+000332,Carbon_Dioxide_Scrubbers_039,Essential_Supplies,Carbon_Dioxide_Scrubbers,81.2,77.3,131.5,24.64,N/A,LOT2026-520,,True,NONE,"[""BAR329927"", ""RFID92111""]",98,N/A,,0,,0.15,Life_Support,ACTIVE
+000333,Carbon_Dioxide_Scrubbers_040,Essential_Supplies,Carbon_Dioxide_Scrubbers,146.5,146.1,114.9,22.81,AMBIENT,LOT2024-446,,True,NONE,"[""BAR363592"", ""RFID69394"", ""QR1859""]",67,N/A,,0,,0.46,Life_Support,ACTIVE
+000334,Carbon_Dioxide_Scrubbers_041,Essential_Supplies,Carbon_Dioxide_Scrubbers,112.5,39.5,199.0,87.13,AMBIENT,LOT2025-236,,True,NONE,"[""BAR916814"", ""RFID39855"", ""QR7759""]",85,N/A,,0,,0.44,Life_Support,ACTIVE
+000335,Carbon_Dioxide_Scrubbers_042,Essential_Supplies,Carbon_Dioxide_Scrubbers,110.1,85.6,198.1,19.1,AMBIENT,LOT2025-738,,True,NONE,"[""BAR303586"", ""RFID45349"", ""QR3084""]",94,N/A,,0,,0.04,Life_Support,ACTIVE
+000336,Carbon_Dioxide_Scrubbers_043,Essential_Supplies,Carbon_Dioxide_Scrubbers,48.9,83.2,103.6,91.72,AMBIENT,LOT2026-976,,True,NONE,"[""BAR741233""]",79,N/A,,0,,0.29,Life_Support,ACTIVE
+000337,Carbon_Dioxide_Scrubbers_044,Essential_Supplies,Carbon_Dioxide_Scrubbers,118.7,132.8,63.3,57.87,AMBIENT,LOT2026-894,,True,NONE,"[""BAR358635"", ""RFID66917""]",94,N/A,,0,,0.45,Life_Support,ACTIVE
+000338,Water_Filtration_System_001,Essential_Supplies,Water_Filtration_System,101.0,30.5,218.3,88.55,COLD,LOT2025-830,,True,NONE,"[""BAR936782"", ""RFID22844""]",97,N/A,,0,,0.14,Life_Support,ACTIVE
+000339,Waste_Disposal_Systems_001,Essential_Supplies,Waste_Disposal_Systems,191.5,41.6,79.2,78.42,COLD,LOT2024-721,,True,NONE,"[""BAR581592""]",70,N/A,,0,,0.03,Life_Support,ACTIVE
+000340,Waste_Disposal_Systems_002,Essential_Supplies,Waste_Disposal_Systems,178.6,75.7,178.0,45.71,AMBIENT,LOT2024-395,,True,PRESSURIZED,"[""BAR824304"", ""RFID14287"", ""QR5420""]",94,N/A,,0,,0.36,Life_Support,ACTIVE
+000341,Waste_Disposal_Systems_003,Essential_Supplies,Waste_Disposal_Systems,65.2,110.6,144.1,41.61,AMBIENT,LOT2025-910,,True,NONE,"[""BAR154067"", ""RFID57918""]",68,N/A,,0,,0.04,Life_Support,ACTIVE
+000342,Waste_Disposal_Systems_004,Essential_Supplies,Waste_Disposal_Systems,149.8,95.1,174.7,18.33,AMBIENT,LOT2025-756,,False,NONE,"[""BAR888819"", ""RFID37498""]",86,N/A,,0,,0.39,Life_Support,ACTIVE
+000343,Waste_Disposal_Systems_005,Essential_Supplies,Waste_Disposal_Systems,115.6,77.9,30.9,45.99,AMBIENT,LOT2024-482,,True,NONE,"[""BAR844305"", ""RFID79842""]",93,N/A,,0,,0.24,Life_Support,ACTIVE
+000344,Waste_Disposal_Systems_006,Essential_Supplies,Waste_Disposal_Systems,147.8,147.3,196.6,24.23,AMBIENT,LOT2024-296,,True,NONE,"[""BAR180685"", ""RFID46168"", ""QR3424""]",94,N/A,,0,,0.26,Life_Support,SCHEDULED
+000345,Waste_Disposal_Systems_007,Essential_Supplies,Waste_Disposal_Systems,136.6,61.6,213.9,65.89,AMBIENT,LOT2026-661,,True,NONE,"[""BAR122525"", ""RFID18250"", ""QR4806""]",73,N/A,,0,,0.42,Life_Support,ACTIVE
+000346,Waste_Disposal_Systems_008,Essential_Supplies,Waste_Disposal_Systems,128.4,107.0,177.4,59.37,AMBIENT,LOT2025-581,,True,NONE,"[""BAR238364""]",98,N/A,,0,,0.4,Life_Support,ACTIVE
+000347,Waste_Disposal_Systems_009,Essential_Supplies,Waste_Disposal_Systems,79.0,130.7,49.7,35.56,AMBIENT,LOT2026-293,,True,NONE,"[""BAR291134""]",75,N/A,,0,,0.35,Life_Support,ACTIVE
+000348,Waste_Disposal_Systems_010,Essential_Supplies,Waste_Disposal_Systems,70.4,30.1,83.3,16.92,AMBIENT,LOT2026-036,,True,NONE,"[""BAR797883"", ""RFID55068"", ""QR8347""]",81,N/A,,0,,0.28,Life_Support,ACTIVE
+000349,Waste_Disposal_Systems_011,Essential_Supplies,Waste_Disposal_Systems,186.5,75.6,119.9,19.16,WARM,LOT2026-560,,False,NONE,"[""BAR632056"", ""RFID48739""]",94,N/A,,0,,0.16,Life_Support,DISPOSED
+000350,Waste_Disposal_Systems_012,Essential_Supplies,Waste_Disposal_Systems,127.5,43.4,133.0,109.01,AMBIENT,LOT2025-922,,True,NONE,"[""BAR142027"", ""RFID82215"", ""QR1406""]",93,N/A,,0,,0.21,Life_Support,PLANNED
+000351,Waste_Disposal_Systems_013,Essential_Supplies,Waste_Disposal_Systems,45.7,31.9,148.3,70.84,AMBIENT,LOT2024-024,,True,NONE,"[""BAR187649"", ""RFID68387""]",79,N/A,,0,,0.48,Life_Support,BROKEN
+000352,Waste_Disposal_Systems_014,Essential_Supplies,Waste_Disposal_Systems,113.4,100.4,122.3,8.61,AMBIENT,LOT2025-379,,True,NONE,"[""BAR504868"", ""RFID47309""]",88,N/A,,0,,0.17,Life_Support,ACTIVE
+000353,Waste_Disposal_Systems_015,Essential_Supplies,Waste_Disposal_Systems,66.7,136.0,168.3,51.04,AMBIENT,LOT2025-747,,False,NONE,"[""BAR534313"", ""RFID86962""]",93,N/A,,0,,0.09,Life_Support,ACTIVE
+000354,Waste_Disposal_Systems_016,Essential_Supplies,Waste_Disposal_Systems,119.3,66.9,206.6,71.7,AMBIENT,LOT2025-425,,True,NONE,"[""BAR283388"", ""RFID84437""]",89,N/A,,0,,0.09,Life_Support,ACTIVE
+000355,Waste_Disposal_Systems_017,Essential_Supplies,Waste_Disposal_Systems,124.2,30.3,185.2,100.48,AMBIENT,LOT2024-028,,True,NONE,"[""BAR929653"", ""RFID44429""]",84,N/A,,0,,0.33,Life_Support,ACTIVE
+000356,Waste_Disposal_Systems_018,Essential_Supplies,Waste_Disposal_Systems,143.2,61.0,55.9,109.0,COLD,LOT2025-994,,True,NONE,"[""BAR169966"", ""RFID57416""]",80,N/A,,0,,0.29,Life_Support,SCHEDULED
+000357,Waste_Disposal_Systems_019,Essential_Supplies,Waste_Disposal_Systems,110.9,111.8,43.9,62.48,AMBIENT,LOT2024-150,,True,NONE,"[""BAR435209"", ""RFID27759""]",66,N/A,,0,,0.05,Life_Support,ACTIVE
+000358,Waste_Disposal_Systems_020,Essential_Supplies,Waste_Disposal_Systems,192.4,31.1,78.3,77.4,AMBIENT,LOT2024-784,,True,NONE,"[""BAR199099"", ""RFID31906""]",69,N/A,,0,,0.44,Life_Support,PLANNED
+000359,Waste_Disposal_Systems_021,Essential_Supplies,Waste_Disposal_Systems,81.2,110.7,157.7,13.31,AMBIENT,LOT2025-382,,True,PRESSURIZED,"[""BAR916639"", ""RFID54605""]",87,N/A,,0,,0.1,Life_Support,ACTIVE
+000360,Waste_Disposal_Systems_022,Essential_Supplies,Waste_Disposal_Systems,171.4,124.4,131.7,83.38,AMBIENT,LOT2026-775,,True,NONE,"[""BAR941566"", ""RFID70357""]",98,N/A,,0,,0.08,Life_Support,ACTIVE
+000361,Waste_Disposal_Systems_023,Essential_Supplies,Waste_Disposal_Systems,89.2,111.4,47.8,54.15,AMBIENT,LOT2026-312,,True,NONE,"[""BAR130156"", ""RFID25544"", ""QR3332""]",98,N/A,,0,,0.35,Life_Support,ACTIVE
+000362,Waste_Disposal_Systems_024,Essential_Supplies,Waste_Disposal_Systems,196.8,78.1,172.6,15.18,AMBIENT,LOT2024-202,,True,NONE,"[""BAR213054"", ""RFID96479""]",66,N/A,,0,,0.05,Life_Support,ACTIVE
+000363,Waste_Disposal_Systems_025,Essential_Supplies,Waste_Disposal_Systems,41.3,108.4,170.9,94.32,AMBIENT,LOT2026-360,,True,NONE,"[""BAR130680"", ""RFID46356""]",78,N/A,,0,,0.19,Life_Support,ACTIVE
+000364,Waste_Disposal_Systems_026,Essential_Supplies,Waste_Disposal_Systems,153.9,55.2,134.0,13.69,AMBIENT,LOT2025-176,,True,NONE,"[""BAR890645"", ""RFID22934""]",65,N/A,,0,,0.46,Life_Support,SCHEDULED
+000365,Waste_Disposal_Systems_027,Essential_Supplies,Waste_Disposal_Systems,148.7,48.1,154.7,14.66,N/A,LOT2026-234,,True,NONE,"[""BAR527376"", ""RFID51193"", ""QR2807""]",87,N/A,,0,,0.27,Life_Support,ACTIVE
+000366,Waste_Disposal_Systems_028,Essential_Supplies,Waste_Disposal_Systems,79.0,115.3,36.4,60.26,AMBIENT,LOT2025-704,,False,NONE,"[""BAR981946"", ""RFID82602""]",89,N/A,,0,,0.49,Life_Support,ACTIVE
+000367,Waste_Disposal_Systems_029,Essential_Supplies,Waste_Disposal_Systems,182.1,125.3,207.8,45.36,N/A,LOT2024-406,,False,NONE,"[""BAR559337"", ""RFID98672"", ""QR3348""]",65,N/A,,0,,0.21,Life_Support,ACTIVE
+000368,Waste_Disposal_Systems_030,Essential_Supplies,Waste_Disposal_Systems,156.0,136.6,53.7,44.92,AMBIENT,LOT2025-126,,True,NONE,"[""BAR344181""]",77,N/A,,0,,0.15,Life_Support,IN_USE
+000369,Waste_Disposal_Systems_031,Essential_Supplies,Waste_Disposal_Systems,76.4,123.7,148.8,49.23,AMBIENT,LOT2025-524,,False,NONE,"[""BAR392438"", ""RFID69589"", ""QR5107""]",95,N/A,,0,,0.25,Life_Support,ACTIVE
+000370,Waste_Disposal_Systems_032,Essential_Supplies,Waste_Disposal_Systems,35.1,117.2,186.1,60.78,N/A,LOT2026-335,,True,NONE,"[""BAR260155"", ""RFID91688"", ""QR2253""]",66,N/A,,0,,0.34,Life_Support,ACTIVE
+000371,Waste_Disposal_Systems_033,Essential_Supplies,Waste_Disposal_Systems,109.2,61.7,119.6,61.57,AMBIENT,LOT2026-019,,False,NONE,"[""BAR901075"", ""RFID66414""]",99,N/A,,0,,0.08,Life_Support,ACTIVE
+000372,Waste_Disposal_Systems_034,Essential_Supplies,Waste_Disposal_Systems,105.2,29.5,55.4,79.81,AMBIENT,LOT2025-138,,True,NONE,"[""BAR427637"", ""RFID73891""]",84,N/A,,0,,0.29,Life_Support,ACTIVE
+000373,Waste_Disposal_Systems_035,Essential_Supplies,Waste_Disposal_Systems,121.7,83.7,132.5,20.44,AMBIENT,LOT2025-632,,True,NONE,"[""BAR809348"", ""RFID47281""]",68,N/A,,0,,0.03,Life_Support,ACTIVE
+000374,Waste_Disposal_Systems_036,Essential_Supplies,Waste_Disposal_Systems,89.3,117.8,25.4,107.18,AMBIENT,LOT2025-422,,True,NONE,"[""BAR468332"", ""RFID42011"", ""QR6113""]",86,N/A,,0,,0.3,Life_Support,WASTE_DEPLETED
+000375,Waste_Disposal_Systems_037,Essential_Supplies,Waste_Disposal_Systems,81.8,67.2,23.9,40.48,AMBIENT,LOT2026-924,,True,NONE,"[""BAR541631"", ""RFID71564""]",94,N/A,,0,,0.49,Life_Support,ACTIVE
+000376,Waste_Disposal_Systems_038,Essential_Supplies,Waste_Disposal_Systems,127.3,126.0,40.0,81.66,AMBIENT,LOT2026-348,,False,NONE,"[""BAR274721"", ""RFID57622""]",86,N/A,,0,,0.12,Life_Support,ACTIVE
+000377,Waste_Disposal_Systems_039,Essential_Supplies,Waste_Disposal_Systems,42.8,131.3,62.8,33.29,N/A,LOT2024-640,,True,NONE,"[""BAR878974""]",84,N/A,,0,,0.3,Life_Support,ACTIVE
+000378,Waste_Disposal_Systems_040,Essential_Supplies,Waste_Disposal_Systems,126.3,91.4,105.4,42.98,AMBIENT,LOT2025-444,,True,NONE,"[""BAR795684"", ""RFID36224""]",69,N/A,,0,,0.14,Life_Support,ACTIVE
+000379,Waste_Disposal_Systems_041,Essential_Supplies,Waste_Disposal_Systems,123.1,135.1,145.6,62.91,AMBIENT,LOT2026-961,,True,NONE,"[""BAR589994"", ""RFID93614""]",76,N/A,,0,,0.31,Life_Support,IN_USE
+000380,Waste_Disposal_Systems_042,Essential_Supplies,Waste_Disposal_Systems,126.2,103.3,124.5,44.98,AMBIENT,LOT2025-865,,True,NONE,"[""BAR556538"", ""RFID18444""]",74,N/A,,0,,0.43,Life_Support,ACTIVE
+000381,Waste_Disposal_Systems_043,Essential_Supplies,Waste_Disposal_Systems,57.3,110.9,67.2,30.14,AMBIENT,LOT2025-476,,True,NONE,"[""BAR608960"", ""RFID67164""]",74,N/A,,0,,0.45,Life_Support,ACTIVE
+000382,Waste_Disposal_Systems_044,Essential_Supplies,Waste_Disposal_Systems,35.0,123.7,75.6,66.98,N/A,LOT2024-057,,True,NONE,"[""BAR188006"", ""RFID49056""]",67,N/A,,0,,0.45,Life_Support,ACTIVE
+000383,Waste_Disposal_Systems_045,Essential_Supplies,Waste_Disposal_Systems,141.8,36.3,208.6,87.46,AMBIENT,LOT2026-956,,False,NONE,"[""BAR226502"", ""RFID86076""]",73,N/A,,0,,0.47,Life_Support,ACTIVE
+000384,Waste_Disposal_Systems_046,Essential_Supplies,Waste_Disposal_Systems,70.5,40.3,181.3,40.86,AMBIENT,LOT2025-224,,True,NONE,"[""BAR251286"", ""RFID38063""]",89,N/A,,0,,0.23,Life_Support,ACTIVE
+000385,Waste_Disposal_Systems_047,Essential_Supplies,Waste_Disposal_Systems,113.4,71.8,209.7,39.35,AMBIENT,LOT2025-901,,True,NONE,"[""BAR922370""]",92,N/A,,0,,0.36,Life_Support,PLANNED
+000386,Waste_Disposal_Systems_048,Essential_Supplies,Waste_Disposal_Systems,194.4,100.7,188.3,80.14,AMBIENT,LOT2024-260,,True,NONE,"[""BAR679577"", ""RFID93748""]",68,N/A,,0,,0.19,Life_Support,PLANNED
+000387,Waste_Disposal_Systems_049,Essential_Supplies,Waste_Disposal_Systems,177.4,132.2,97.7,109.36,WARM,LOT2025-093,,False,NONE,"[""BAR962671"", ""RFID48983"", ""QR3625""]",90,N/A,,0,,0.46,Life_Support,ACTIVE
+000388,Waste_Disposal_Systems_050,Essential_Supplies,Waste_Disposal_Systems,160.3,75.8,26.8,104.24,AMBIENT,LOT2025-735,,True,NONE,"[""BAR542882""]",96,N/A,,0,,0.42,Life_Support,ACTIVE
+000389,Waste_Disposal_Systems_051,Essential_Supplies,Waste_Disposal_Systems,89.8,100.3,182.7,89.06,AMBIENT,LOT2026-657,,True,NONE,"[""BAR292664"", ""RFID94030"", ""QR7564""]",94,N/A,,0,,0.12,Life_Support,ACTIVE
+000390,Waste_Disposal_Systems_052,Essential_Supplies,Waste_Disposal_Systems,48.8,56.2,162.7,92.58,AMBIENT,LOT2025-463,,True,NONE,"[""BAR601602"", ""QR3842""]",73,N/A,,0,,0.35,Life_Support,PLANNED
+000391,Waste_Disposal_Systems_053,Essential_Supplies,Waste_Disposal_Systems,63.8,76.8,56.4,105.41,COLD,LOT2026-627,,True,PRESSURIZED,"[""BAR757066"", ""RFID21662""]",79,N/A,,0,,0.12,Life_Support,IN_USE
+000392,Gym_Equipment_001,Essential_Supplies,Gym_Equipment,135.1,100.0,49.9,115.05,WARM,LOT2026-539,,True,NONE,"[""BAR556297"", ""RFID69468""]",75,N/A,,0,,0.26,Life_Support,ACTIVE
+000393,Gym_Equipment_002,Essential_Supplies,Gym_Equipment,190.8,126.7,73.2,90.08,AMBIENT,LOT2026-221,,True,NONE,"[""BAR964119"", ""RFID98760"", ""QR3955""]",89,N/A,,0,,0.22,Life_Support,ACTIVE
+000394,Gym_Equipment_003,Essential_Supplies,Gym_Equipment,74.5,102.2,201.5,45.62,AMBIENT,LOT2025-998,,True,NONE,"[""BAR826687"", ""RFID37815""]",94,N/A,,0,,0.36,Life_Support,IN_USE
+000395,Gym_Equipment_004,Essential_Supplies,Gym_Equipment,46.2,32.3,86.6,29.71,N/A,LOT2026-727,,True,NONE,"[""BAR884588"", ""QR9266""]",87,N/A,,0,,0.32,Life_Support,ACTIVE
+000396,Gym_Equipment_005,Essential_Supplies,Gym_Equipment,93.1,146.0,131.9,70.5,AMBIENT,LOT2025-899,,True,NONE,"[""BAR590822"", ""RFID51591""]",81,N/A,,0,,0.23,Life_Support,ACTIVE
+000397,Gym_Equipment_006,Essential_Supplies,Gym_Equipment,196.3,87.4,214.7,35.16,WARM,LOT2025-628,,True,NONE,"[""BAR969887"", ""RFID44571""]",88,N/A,,0,,0.23,Life_Support,ACTIVE
+000398,Gym_Equipment_007,Essential_Supplies,Gym_Equipment,113.5,143.8,131.1,110.9,AMBIENT,LOT2024-188,,False,NONE,"[""BAR137604"", ""RFID31437""]",93,N/A,,0,,0.23,Life_Support,BROKEN
+000399,Gym_Equipment_008,Essential_Supplies,Gym_Equipment,36.9,69.6,161.8,59.25,AMBIENT,LOT2024-127,,True,NONE,"[""BAR466586"", ""RFID47239"", ""QR3757""]",96,N/A,,0,,0.38,Life_Support,PLANNED
+000400,Gym_Equipment_009,Essential_Supplies,Gym_Equipment,142.7,51.5,219.6,2.49,AMBIENT,LOT2026-097,,False,CORROSIVE,"[""BAR444622"", ""RFID99300""]",76,N/A,,0,,0.08,Life_Support,ACTIVE
+000401,Gym_Equipment_010,Essential_Supplies,Gym_Equipment,48.0,65.4,25.8,56.31,AMBIENT,LOT2026-674,,True,NONE,"[""BAR106087"", ""RFID15747""]",95,N/A,,0,,0.48,Life_Support,ACTIVE
+000402,Gym_Equipment_011,Essential_Supplies,Gym_Equipment,154.8,144.7,133.8,26.94,AMBIENT,LOT2024-762,,False,NONE,"[""BAR174159"", ""RFID88943""]",68,N/A,,0,,0.21,Life_Support,ACTIVE
+000403,Gym_Equipment_012,Essential_Supplies,Gym_Equipment,177.1,36.1,190.5,21.23,AMBIENT,LOT2026-158,,True,NONE,"[""BAR226460"", ""RFID66670""]",90,N/A,,0,,0.46,Life_Support,WASTE_DEPLETED
+000404,Gym_Equipment_013,Essential_Supplies,Gym_Equipment,91.0,37.0,93.5,25.58,AMBIENT,LOT2026-615,,True,NONE,"[""BAR543621"", ""RFID65382""]",93,N/A,,0,,0.31,Life_Support,ACTIVE
+000405,Gym_Equipment_014,Essential_Supplies,Gym_Equipment,36.9,67.7,112.7,28.46,WARM,LOT2026-538,,True,NONE,"[""BAR188049"", ""RFID67325"", ""QR8825""]",74,N/A,,0,,0.16,Life_Support,BROKEN
+000406,Gym_Equipment_015,Essential_Supplies,Gym_Equipment,81.1,56.1,105.5,69.09,AMBIENT,LOT2026-436,,True,TOXIC,"[""BAR533082"", ""RFID96619""]",100,N/A,,0,,0.41,Life_Support,ACTIVE
+000407,Gym_Equipment_016,Essential_Supplies,Gym_Equipment,160.7,27.0,168.1,56.62,AMBIENT,LOT2026-305,,True,CORROSIVE,"[""BAR429196"", ""RFID69637""]",76,N/A,,0,,0.24,Life_Support,PLANNED
+000408,Gym_Equipment_017,Essential_Supplies,Gym_Equipment,186.1,126.3,62.2,11.23,AMBIENT,LOT2026-019,,True,NONE,"[""BAR106131"", ""RFID11743"", ""QR8817""]",81,N/A,,0,,0.24,Life_Support,ACTIVE
+000409,Gym_Equipment_018,Essential_Supplies,Gym_Equipment,156.5,115.7,80.6,97.95,AMBIENT,LOT2026-405,,False,NONE,"[""BAR943726"", ""RFID26395"", ""QR4126""]",88,N/A,,0,,0.07,Life_Support,ACTIVE
+000410,Gym_Equipment_019,Essential_Supplies,Gym_Equipment,176.0,51.2,149.7,78.67,AMBIENT,LOT2026-196,,True,NONE,"[""BAR190275"", ""RFID70742"", ""QR7912""]",92,N/A,,0,,0.03,Life_Support,ACTIVE
+000411,Gym_Equipment_020,Essential_Supplies,Gym_Equipment,149.4,145.5,114.3,103.46,AMBIENT,LOT2025-053,,True,NONE,"[""BAR450067"", ""RFID92629""]",80,N/A,,0,,0.23,Life_Support,ACTIVE
+000412,Gym_Equipment_021,Essential_Supplies,Gym_Equipment,128.4,116.4,219.8,6.37,AMBIENT,LOT2026-958,,True,NONE,"[""BAR811634""]",90,N/A,,0,,0.13,Life_Support,ACTIVE
+000413,Gym_Equipment_022,Essential_Supplies,Gym_Equipment,128.0,94.2,73.6,78.5,AMBIENT,LOT2026-356,,True,NONE,"[""BAR570103"", ""RFID12727"", ""QR4149""]",95,N/A,,0,,0.25,Life_Support,ACTIVE
+000414,Gym_Equipment_023,Essential_Supplies,Gym_Equipment,129.9,110.6,204.3,102.71,AMBIENT,LOT2026-400,,True,NONE,"[""BAR537110""]",94,N/A,,0,,0.37,Life_Support,IN_USE
+000415,Gym_Equipment_024,Essential_Supplies,Gym_Equipment,173.6,102.7,76.5,90.41,AMBIENT,LOT2026-504,,True,NONE,"[""BAR205805"", ""RFID74713""]",95,N/A,,0,,0.12,Life_Support,ACTIVE
+000416,Gym_Equipment_025,Essential_Supplies,Gym_Equipment,179.8,69.6,51.7,99.7,COLD,LOT2024-633,,True,CORROSIVE,"[""BAR337701"", ""RFID39372""]",97,N/A,,0,,0.5,Life_Support,IN_USE
+000417,Gym_Equipment_026,Essential_Supplies,Gym_Equipment,160.9,94.6,199.3,102.7,AMBIENT,LOT2024-949,,False,NONE,"[""BAR559094"", ""RFID24539""]",97,N/A,,0,,0.4,Life_Support,ACTIVE
+000418,Gym_Equipment_027,Essential_Supplies,Gym_Equipment,47.3,95.3,121.5,21.71,AMBIENT,LOT2024-746,,True,NONE,"[""BAR406313"", ""RFID76308""]",72,N/A,,0,,0.44,Life_Support,ACTIVE
+000419,Gym_Equipment_028,Essential_Supplies,Gym_Equipment,169.3,40.4,60.4,116.42,AMBIENT,LOT2025-294,,True,NONE,"[""BAR629554"", ""RFID44867""]",65,N/A,,0,,0.38,Life_Support,ACTIVE
+000420,Gym_Equipment_029,Essential_Supplies,Gym_Equipment,55.8,119.2,104.3,28.93,AMBIENT,LOT2025-975,,True,NONE,"[""BAR993796"", ""RFID99417""]",92,N/A,,0,,0.03,Life_Support,ACTIVE
+000421,Gym_Equipment_030,Essential_Supplies,Gym_Equipment,167.1,143.0,37.0,39.15,AMBIENT,LOT2024-677,,False,NONE,"[""BAR772625"", ""RFID85308"", ""QR9516""]",75,N/A,,0,,0.49,Life_Support,ACTIVE
+000422,Gym_Equipment_031,Essential_Supplies,Gym_Equipment,149.1,134.2,164.3,39.02,COLD,LOT2026-626,,True,NONE,"[""BAR253995"", ""RFID68482""]",87,N/A,,0,,0.45,Life_Support,ACTIVE
+000423,Gym_Equipment_032,Essential_Supplies,Gym_Equipment,105.2,68.2,182.4,78.55,AMBIENT,LOT2025-400,,True,PRESSURIZED,"[""BAR860321"", ""RFID26515""]",77,N/A,,0,,0.28,Life_Support,ACTIVE
+000424,Gym_Equipment_033,Essential_Supplies,Gym_Equipment,83.1,67.6,147.1,4.76,AMBIENT,LOT2025-744,,True,NONE,"[""BAR543281"", ""QR1982""]",99,N/A,,0,,0.42,Life_Support,ACTIVE
+000425,Gym_Equipment_034,Essential_Supplies,Gym_Equipment,51.0,119.6,208.3,54.95,AMBIENT,LOT2026-596,,True,NONE,"[""BAR693071"", ""RFID92279""]",65,N/A,,0,,0.43,Life_Support,ACTIVE
+000426,Gym_Equipment_035,Essential_Supplies,Gym_Equipment,143.4,126.9,134.6,18.52,AMBIENT,LOT2025-529,,True,NONE,"[""BAR710658"", ""RFID57352""]",89,N/A,,0,,0.09,Life_Support,ACTIVE
+000427,Gym_Equipment_036,Essential_Supplies,Gym_Equipment,45.7,78.1,46.0,27.34,AMBIENT,LOT2026-573,,True,NONE,"[""BAR644153"", ""RFID44562""]",69,N/A,,0,,0.33,Life_Support,BROKEN
+000428,Gym_Equipment_037,Essential_Supplies,Gym_Equipment,191.1,116.5,103.4,21.22,AMBIENT,LOT2024-992,,True,NONE,"[""BAR838747"", ""RFID79355"", ""QR4483""]",97,N/A,,0,,0.24,Life_Support,ACTIVE
+000429,Gym_Equipment_038,Essential_Supplies,Gym_Equipment,125.0,140.2,43.8,102.57,AMBIENT,LOT2024-536,,True,NONE,"[""BAR260751"", ""RFID49967""]",72,N/A,,0,,0.17,Life_Support,ACTIVE
+000430,Gym_Equipment_039,Essential_Supplies,Gym_Equipment,54.2,98.7,29.7,107.52,AMBIENT,LOT2025-003,,True,NONE,"[""BAR228270"", ""RFID18855""]",83,N/A,,0,,0.22,Life_Support,ACTIVE
+000431,Gym_Equipment_040,Essential_Supplies,Gym_Equipment,183.0,122.7,115.0,86.96,AMBIENT,LOT2025-780,,True,NONE,"[""BAR571785"", ""RFID29527""]",73,N/A,,0,,0.18,Life_Support,IN_USE
+000432,Gym_Equipment_041,Essential_Supplies,Gym_Equipment,99.6,54.1,99.1,65.84,AMBIENT,LOT2024-725,,True,NONE,"[""BAR126008"", ""RFID50481""]",93,N/A,,0,,0.08,Life_Support,ACTIVE
+000433,Gym_Equipment_042,Essential_Supplies,Gym_Equipment,135.2,97.1,30.6,69.29,AMBIENT,LOT2024-124,,True,NONE,"[""BAR790229"", ""QR1310""]",77,N/A,,0,,0.15,Life_Support,ACTIVE
+000434,Gym_Equipment_043,Essential_Supplies,Gym_Equipment,172.6,97.4,36.9,64.96,AMBIENT,LOT2025-448,,True,TOXIC,"[""BAR289276"", ""RFID79193""]",85,N/A,,0,,0.14,Life_Support,ACTIVE
+000435,Gym_Equipment_044,Essential_Supplies,Gym_Equipment,58.6,43.0,71.1,12.58,N/A,LOT2024-630,,True,NONE,"[""BAR441092"", ""RFID17667"", ""QR2617""]",84,N/A,,0,,0.17,Life_Support,ACTIVE
+000436,Gym_Equipment_045,Essential_Supplies,Gym_Equipment,93.8,128.5,44.2,25.9,AMBIENT,LOT2025-973,,True,NONE,"[""BAR220671"", ""RFID51724""]",80,N/A,,0,,0.22,Life_Support,ACTIVE
+000437,Gym_Equipment_046,Essential_Supplies,Gym_Equipment,69.7,135.8,73.8,115.69,AMBIENT,LOT2024-312,,True,NONE,"[""BAR695848"", ""RFID20998""]",71,N/A,,0,,0.26,Life_Support,IN_USE
+000438,Gym_Equipment_047,Essential_Supplies,Gym_Equipment,121.9,46.0,69.0,114.41,AMBIENT,LOT2026-297,,True,CORROSIVE,"[""BAR784781"", ""QR8900""]",100,N/A,,0,,0.15,Life_Support,ACTIVE
+000439,Gym_Equipment_048,Essential_Supplies,Gym_Equipment,199.9,130.3,62.6,101.2,COLD,LOT2026-072,,False,NONE,"[""BAR415242"", ""RFID26118""]",83,N/A,,0,,0.37,Life_Support,BROKEN
+000440,Gym_Equipment_049,Essential_Supplies,Gym_Equipment,65.8,88.1,180.4,106.3,AMBIENT,LOT2026-464,,True,NONE,"[""BAR386275"", ""RFID52157""]",86,N/A,,0,,0.24,Life_Support,ACTIVE
+000441,Gym_Equipment_050,Essential_Supplies,Gym_Equipment,147.6,105.8,20.4,58.23,AMBIENT,LOT2026-721,,True,NONE,"[""BAR612729"", ""RFID80533"", ""QR2270""]",65,N/A,,0,,0.28,Life_Support,WASTE_EXPIRED
+000442,Gym_Equipment_051,Essential_Supplies,Gym_Equipment,105.7,40.4,214.4,46.41,AMBIENT,LOT2026-009,,True,NONE,"[""BAR230824"", ""RFID35295""]",87,N/A,,0,,0.13,Life_Support,ACTIVE
+000443,Gym_Equipment_052,Essential_Supplies,Gym_Equipment,186.6,69.7,38.0,74.39,AMBIENT,LOT2025-991,,True,NONE,"[""BAR480632"", ""RFID74597""]",84,N/A,,0,,0.36,Life_Support,ACTIVE
+000444,Spare_Parts_001,Structural_and_Spacecraft_Components,Spare_Parts,103.0,34.4,40.5,76.05,AMBIENT,LOT2026-757,,True,NONE,"[""BAR693186"", ""RFID89032""]",60,N/A,,0,,0.05,Engineering_Bay,ACTIVE
+000445,Spare_Parts_002,Structural_and_Spacecraft_Components,Spare_Parts,53.8,94.1,35.1,79.42,AMBIENT,LOT2026-024,,True,NONE,"[""BAR826648"", ""RFID90538"", ""QR8437""]",67,N/A,,0,,0.02,Engineering_Bay,ACTIVE
+000446,Spare_Parts_003,Structural_and_Spacecraft_Components,Spare_Parts,104.5,131.0,45.5,126.96,AMBIENT,LOT2026-531,,True,NONE,"[""BAR589251"", ""RFID77797""]",76,N/A,,0,,0.44,Engineering_Bay,ACTIVE
+000447,Spare_Parts_004,Structural_and_Spacecraft_Components,Spare_Parts,74.6,78.4,10.6,30.8,AMBIENT,LOT2024-756,,True,NONE,"[""BAR336588""]",55,N/A,,0,,0.06,Engineering_Bay,ACTIVE
+000448,Spare_Parts_005,Structural_and_Spacecraft_Components,Spare_Parts,60.4,101.4,20.6,73.04,AMBIENT,LOT2026-958,,True,NONE,"[""BAR450541"", ""QR8759""]",51,N/A,,0,,0.13,Engineering_Bay,ACTIVE
+000449,Spare_Parts_006,Structural_and_Spacecraft_Components,Spare_Parts,63.4,123.2,113.8,116.81,AMBIENT,LOT2024-641,,False,NONE,"[""BAR568143"", ""RFID21211""]",89,N/A,,0,,0.46,Engineering_Bay,ACTIVE
+000450,Spare_Parts_007,Structural_and_Spacecraft_Components,Spare_Parts,110.1,121.7,16.8,120.75,AMBIENT,LOT2026-443,,True,NONE,"[""BAR168986"", ""RFID17312""]",53,N/A,,0,,0.16,Engineering_Bay,ACTIVE
+000451,Spare_Parts_008,Structural_and_Spacecraft_Components,Spare_Parts,117.8,50.3,76.0,99.64,AMBIENT,LOT2025-815,,True,NONE,"[""BAR548901""]",50,N/A,,0,,0.18,Engineering_Bay,WASTE
+000452,Spare_Parts_009,Structural_and_Spacecraft_Components,Spare_Parts,79.0,62.7,31.2,17.2,AMBIENT,LOT2026-809,,True,NONE,"[""BAR981621"", ""RFID85132"", ""QR9337""]",88,N/A,,0,,0.14,Engineering_Bay,ACTIVE
+000453,Spare_Parts_010,Structural_and_Spacecraft_Components,Spare_Parts,77.8,51.6,97.7,10.95,AMBIENT,LOT2026-983,,True,NONE,"[""BAR783362"", ""RFID50788""]",69,N/A,,0,,0.28,Engineering_Bay,ACTIVE
+000454,Spare_Parts_011,Structural_and_Spacecraft_Components,Spare_Parts,98.4,57.8,116.7,78.62,AMBIENT,LOT2026-839,,False,NONE,"[""BAR975744"", ""RFID17157""]",59,N/A,,0,,0.11,Engineering_Bay,ACTIVE
+000455,Spare_Parts_012,Structural_and_Spacecraft_Components,Spare_Parts,122.1,64.4,83.5,104.83,AMBIENT,LOT2025-873,,True,NONE,"[""BAR706507"", ""RFID53995""]",79,N/A,,0,,0.22,Engineering_Bay,ACTIVE
+000456,Spare_Parts_013,Structural_and_Spacecraft_Components,Spare_Parts,122.6,25.5,34.1,2.55,AMBIENT,LOT2025-639,,True,NONE,"[""BAR323491"", ""RFID53452""]",64,N/A,,0,,0.2,Engineering_Bay,ACTIVE
+000457,Spare_Parts_014,Structural_and_Spacecraft_Components,Spare_Parts,20.9,21.3,49.4,84.09,AMBIENT,LOT2024-647,,True,NONE,"[""BAR714136""]",59,N/A,,0,,0.49,Engineering_Bay,ACTIVE
+000458,Spare_Parts_015,Structural_and_Spacecraft_Components,Spare_Parts,48.5,54.1,29.2,127.44,AMBIENT,LOT2024-181,,True,NONE,"[""BAR983825"", ""RFID23263"", ""QR3248""]",65,N/A,,0,,0.2,Engineering_Bay,IN_USE
+000459,Spare_Parts_016,Structural_and_Spacecraft_Components,Spare_Parts,141.7,59.7,36.4,121.8,WARM,LOT2026-903,,True,NONE,"[""BAR554786"", ""QR3366""]",60,N/A,,0,,0.44,Engineering_Bay,ACTIVE
+000460,Spare_Parts_017,Structural_and_Spacecraft_Components,Spare_Parts,89.2,110.3,45.0,65.57,AMBIENT,LOT2024-782,,True,NONE,"[""BAR745952"", ""RFID80184"", ""QR3434""]",90,N/A,,0,,0.18,Engineering_Bay,ACTIVE
+000461,Spare_Parts_018,Structural_and_Spacecraft_Components,Spare_Parts,133.5,130.7,116.5,133.1,AMBIENT,LOT2025-810,,True,NONE,"[""BAR795732"", ""RFID31945""]",63,N/A,,0,,0.38,Engineering_Bay,ACTIVE
+000462,Spare_Parts_019,Structural_and_Spacecraft_Components,Spare_Parts,84.8,80.4,45.4,57.33,AMBIENT,LOT2025-486,,True,NONE,"[""BAR381370"", ""RFID93637""]",80,N/A,,0,,0.3,Engineering_Bay,ACTIVE
+000463,Spare_Parts_020,Structural_and_Spacecraft_Components,Spare_Parts,46.4,132.2,53.5,47.29,AMBIENT,LOT2025-261,,True,NONE,"[""BAR677295"", ""RFID21013"", ""QR9500""]",74,N/A,,0,,0.19,Engineering_Bay,ACTIVE
+000464,Spare_Parts_021,Structural_and_Spacecraft_Components,Spare_Parts,100.7,75.4,61.4,62.53,AMBIENT,LOT2025-026,,True,NONE,"[""BAR288288"", ""RFID44815""]",81,N/A,,0,,0.19,Engineering_Bay,ACTIVE
+000465,Spare_Parts_022,Structural_and_Spacecraft_Components,Spare_Parts,86.7,103.7,96.4,139.14,AMBIENT,LOT2025-040,,True,NONE,"[""BAR672549"", ""RFID35774""]",56,N/A,,0,,0.14,Engineering_Bay,IN_USE
+000466,Spare_Parts_023,Structural_and_Spacecraft_Components,Spare_Parts,129.9,44.8,76.4,22.4,WARM,LOT2024-789,,True,NONE,"[""BAR414021"", ""RFID55433""]",84,N/A,,0,,0.21,Engineering_Bay,ACTIVE
+000467,Spare_Parts_024,Structural_and_Spacecraft_Components,Spare_Parts,105.2,81.4,66.4,114.65,AMBIENT,LOT2024-233,,True,NONE,"[""BAR858472"", ""RFID72185"", ""QR8679""]",59,N/A,,0,,0.37,Engineering_Bay,ACTIVE
+000468,Spare_Parts_025,Structural_and_Spacecraft_Components,Spare_Parts,60.7,44.4,94.7,105.3,AMBIENT,LOT2026-031,,True,NONE,"[""BAR492901"", ""RFID26822""]",63,N/A,,0,,0.37,Engineering_Bay,ACTIVE
+000469,Spare_Parts_026,Structural_and_Spacecraft_Components,Spare_Parts,66.1,49.3,56.8,113.39,AMBIENT,LOT2026-024,,False,NONE,"[""BAR695148"", ""RFID28236"", ""QR6410""]",84,N/A,,0,,0.29,Engineering_Bay,IN_USE
+000470,Spare_Parts_027,Structural_and_Spacecraft_Components,Spare_Parts,94.6,70.8,51.9,142.41,AMBIENT,LOT2024-487,,True,NONE,"[""BAR213915"", ""RFID69183""]",54,N/A,,0,,0.17,Engineering_Bay,ACTIVE
+000471,Spare_Parts_028,Structural_and_Spacecraft_Components,Spare_Parts,43.1,127.4,76.4,5.97,AMBIENT,LOT2025-291,,True,NONE,"[""BAR315893"", ""RFID96451""]",62,N/A,,0,,0.24,Engineering_Bay,ACTIVE
+000472,Spare_Parts_029,Structural_and_Spacecraft_Components,Spare_Parts,62.5,138.3,53.0,148.46,AMBIENT,LOT2025-761,,True,NONE,"[""BAR172103"", ""RFID37063"", ""QR4369""]",58,N/A,,0,,0.17,Engineering_Bay,PLANNED
+000473,Spare_Parts_030,Structural_and_Spacecraft_Components,Spare_Parts,40.6,94.8,44.1,32.04,AMBIENT,LOT2024-147,,True,NONE,"[""BAR567383"", ""RFID62328""]",79,N/A,,0,,0.14,Engineering_Bay,ACTIVE
+000474,Spare_Parts_031,Structural_and_Spacecraft_Components,Spare_Parts,83.8,80.2,14.3,15.48,AMBIENT,LOT2026-812,,True,NONE,"[""BAR411897"", ""RFID32954""]",79,N/A,,0,,0.11,Engineering_Bay,ACTIVE
+000475,Spare_Parts_032,Structural_and_Spacecraft_Components,Spare_Parts,70.0,105.7,86.8,16.14,AMBIENT,LOT2024-281,,True,NONE,"[""BAR758592"", ""RFID97380""]",52,N/A,,0,,0.36,Engineering_Bay,IN_USE
+000476,Spare_Parts_033,Structural_and_Spacecraft_Components,Spare_Parts,84.2,149.0,70.8,149.31,AMBIENT,LOT2026-785,,True,NONE,"[""BAR917376"", ""RFID69105"", ""QR4397""]",54,N/A,,0,,0.26,Engineering_Bay,ACTIVE
+000477,Spare_Parts_034,Structural_and_Spacecraft_Components,Spare_Parts,110.3,117.5,51.9,112.4,AMBIENT,LOT2024-257,,True,NONE,"[""BAR220253"", ""RFID27888""]",62,N/A,,0,,0.38,Engineering_Bay,ACTIVE
+000478,Spare_Parts_035,Structural_and_Spacecraft_Components,Spare_Parts,91.3,51.5,114.5,22.76,AMBIENT,LOT2024-859,,True,NONE,"[""BAR118943"", ""RFID33230"", ""QR9759""]",67,N/A,,0,,0.38,Engineering_Bay,ACTIVE
+000479,Spare_Parts_036,Structural_and_Spacecraft_Components,Spare_Parts,21.5,55.5,58.5,28.34,AMBIENT,LOT2026-222,,False,NONE,"[""BAR563531"", ""RFID93203""]",52,N/A,,0,,0.33,Engineering_Bay,IN_USE
+000480,Spare_Parts_037,Structural_and_Spacecraft_Components,Spare_Parts,70.8,60.1,15.8,2.69,AMBIENT,LOT2024-384,,True,NONE,"[""BAR350127"", ""RFID12102""]",74,N/A,,0,,0.49,Engineering_Bay,ACTIVE
+000481,Spare_Parts_038,Structural_and_Spacecraft_Components,Spare_Parts,107.0,48.7,107.1,119.94,AMBIENT,LOT2024-426,,False,NONE,"[""BAR637395"", ""RFID52879""]",60,N/A,,0,,0.32,Engineering_Bay,ACTIVE
+000482,Spare_Parts_039,Structural_and_Spacecraft_Components,Spare_Parts,71.4,75.6,35.6,17.67,AMBIENT,LOT2025-670,,True,NONE,"[""BAR431601"", ""RFID37887""]",70,N/A,,0,,0.05,Engineering_Bay,PLANNED
+000483,Spare_Parts_040,Structural_and_Spacecraft_Components,Spare_Parts,68.0,28.8,34.0,46.63,AMBIENT,LOT2024-730,,True,NONE,"[""BAR662227"", ""RFID84606"", ""QR2552""]",88,N/A,,0,,0.31,Engineering_Bay,BROKEN
+000484,Spare_Parts_041,Structural_and_Spacecraft_Components,Spare_Parts,108.1,146.4,86.3,51.14,AMBIENT,LOT2026-326,,True,NONE,"[""BAR992919"", ""RFID18849""]",90,N/A,,0,,0.31,Engineering_Bay,ACTIVE
+000485,Spare_Parts_042,Structural_and_Spacecraft_Components,Spare_Parts,103.3,50.2,74.6,148.28,COLD,LOT2024-317,,True,NONE,"[""BAR347879"", ""RFID41922""]",64,N/A,,0,,0.05,Engineering_Bay,ACTIVE
+000486,Spare_Parts_043,Structural_and_Spacecraft_Components,Spare_Parts,39.7,46.6,14.2,138.66,N/A,LOT2025-757,,False,NONE,"[""BAR444656"", ""RFID51620""]",88,N/A,,0,,0.39,Engineering_Bay,ACTIVE
+000487,Spare_Parts_044,Structural_and_Spacecraft_Components,Spare_Parts,104.2,57.5,12.6,127.35,AMBIENT,LOT2024-553,,True,NONE,"[""BAR156700""]",71,N/A,,0,,0.14,Engineering_Bay,ACTIVE
+000488,Spare_Parts_045,Structural_and_Spacecraft_Components,Spare_Parts,99.0,69.6,45.4,67.47,AMBIENT,LOT2025-072,,True,NONE,"[""BAR301814"", ""RFID28550""]",50,N/A,,0,,0.08,Engineering_Bay,ACTIVE
+000489,Spare_Parts_046,Structural_and_Spacecraft_Components,Spare_Parts,123.4,46.6,65.8,65.08,AMBIENT,LOT2026-203,,True,NONE,"[""BAR356822"", ""RFID89410"", ""QR5675""]",79,N/A,,0,,0.3,Engineering_Bay,LOST
+000490,Spare_Parts_047,Structural_and_Spacecraft_Components,Spare_Parts,132.1,82.6,114.6,55.22,AMBIENT,LOT2025-433,,True,NONE,"[""BAR629837"", ""RFID66810""]",74,N/A,,0,,0.41,Engineering_Bay,IN_USE
+000491,Spare_Parts_048,Structural_and_Spacecraft_Components,Spare_Parts,69.6,131.0,93.5,138.39,AMBIENT,LOT2026-745,,True,NONE,"[""BAR284234"", ""RFID70771""]",88,N/A,,0,,0.16,Engineering_Bay,ACTIVE
+000492,Spare_Parts_049,Structural_and_Spacecraft_Components,Spare_Parts,63.3,112.9,31.5,137.59,COLD,LOT2026-748,,True,NONE,"[""BAR860579"", ""RFID63025""]",50,N/A,,0,,0.47,Engineering_Bay,BROKEN
+000493,Spare_Parts_050,Structural_and_Spacecraft_Components,Spare_Parts,83.6,103.3,74.7,62.5,N/A,LOT2024-395,,True,NONE,"[""BAR693083"", ""RFID67186""]",52,N/A,,0,,0.39,Engineering_Bay,IN_USE
+000494,Spare_Parts_051,Structural_and_Spacecraft_Components,Spare_Parts,112.2,102.5,50.5,10.54,WARM,LOT2026-253,,True,NONE,"[""BAR354125"", ""RFID57371""]",74,N/A,,0,,0.34,Engineering_Bay,ACTIVE
+000495,Spare_Parts_052,Structural_and_Spacecraft_Components,Spare_Parts,54.0,79.2,84.9,39.63,AMBIENT,LOT2026-862,,True,NONE,"[""BAR269268"", ""RFID22098""]",88,N/A,,0,,0.46,Engineering_Bay,ACTIVE
+000496,Spare_Parts_053,Structural_and_Spacecraft_Components,Spare_Parts,137.1,87.4,30.8,64.6,AMBIENT,LOT2025-513,,False,NONE,"[""BAR659102"", ""RFID60172""]",77,N/A,,0,,0.37,Engineering_Bay,IN_USE
+000497,Panels_001,Structural_and_Spacecraft_Components,Panels,31.6,102.7,95.4,52.97,AMBIENT,LOT2024-953,,True,NONE,"[""BAR884639"", ""RFID50383"", ""QR3759""]",59,N/A,,0,,0.41,Engineering_Bay,ACTIVE
+000498,Panels_002,Structural_and_Spacecraft_Components,Panels,110.5,88.2,82.0,110.49,AMBIENT,LOT2024-721,,True,NONE,"[""BAR240857"", ""RFID33853""]",60,N/A,,0,,0.07,Engineering_Bay,ACTIVE
+000499,Panels_003,Structural_and_Spacecraft_Components,Panels,46.1,117.5,99.0,30.4,AMBIENT,LOT2026-112,,True,NONE,"[""BAR767349"", ""RFID48420"", ""QR3042""]",76,N/A,,0,,0.15,Engineering_Bay,ACTIVE
+000500,Panels_004,Structural_and_Spacecraft_Components,Panels,82.1,107.5,21.1,11.04,AMBIENT,LOT2024-100,,True,NONE,"[""BAR321321"", ""RFID10951""]",50,N/A,,0,,0.27,Engineering_Bay,LOST
+000501,Panels_005,Structural_and_Spacecraft_Components,Panels,83.2,118.4,76.5,51.81,N/A,LOT2024-964,,True,NONE,"[""BAR478756"", ""RFID59602""]",71,N/A,,0,,0.49,Engineering_Bay,SCHEDULED
+000502,Panels_006,Structural_and_Spacecraft_Components,Panels,20.4,133.2,54.2,125.64,COLD,LOT2024-890,,True,NONE,"[""BAR656405"", ""RFID42576""]",58,N/A,,0,,0.32,Engineering_Bay,ACTIVE
+000503,Panels_007,Structural_and_Spacecraft_Components,Panels,73.7,44.4,118.5,143.72,COLD,LOT2025-895,,True,NONE,"[""BAR147976""]",70,N/A,,0,,0.35,Engineering_Bay,ACTIVE
+000504,Panels_008,Structural_and_Spacecraft_Components,Panels,116.1,123.2,48.3,140.98,N/A,LOT2026-927,,False,NONE,"[""BAR205335"", ""RFID48517""]",80,N/A,,0,,0.36,Engineering_Bay,SCHEDULED
+000505,Panels_009,Structural_and_Spacecraft_Components,Panels,122.0,113.2,13.5,75.69,AMBIENT,LOT2026-562,,True,NONE,"[""BAR589478"", ""RFID68495""]",55,N/A,,0,,0.25,Engineering_Bay,ACTIVE
+000506,Panels_010,Structural_and_Spacecraft_Components,Panels,42.2,142.7,87.0,17.61,AMBIENT,LOT2025-925,,True,NONE,"[""BAR502118"", ""RFID38885""]",51,N/A,,0,,0.34,Engineering_Bay,LOST
+000507,Panels_011,Structural_and_Spacecraft_Components,Panels,106.5,140.0,79.7,74.81,AMBIENT,LOT2026-785,,True,NONE,"[""BAR729858"", ""RFID54987""]",71,N/A,,0,,0.36,Engineering_Bay,IN_USE
+000508,Panels_012,Structural_and_Spacecraft_Components,Panels,103.5,93.0,104.2,121.65,AMBIENT,LOT2025-090,,True,NONE,"[""BAR216793"", ""RFID87620""]",64,N/A,,0,,0.38,Engineering_Bay,ACTIVE
+000509,Panels_013,Structural_and_Spacecraft_Components,Panels,130.9,144.0,73.5,2.25,AMBIENT,LOT2024-868,,True,NONE,"[""BAR507000""]",53,N/A,,0,,0.2,Engineering_Bay,ACTIVE
+000510,Panels_014,Structural_and_Spacecraft_Components,Panels,87.6,98.2,34.4,60.51,AMBIENT,LOT2025-149,,True,NONE,"[""BAR955793""]",84,N/A,,0,,0.26,Engineering_Bay,ACTIVE
+000511,Panels_015,Structural_and_Spacecraft_Components,Panels,39.0,106.5,98.1,106.04,AMBIENT,LOT2026-706,,True,NONE,"[""BAR229461"", ""RFID85231""]",88,N/A,,0,,0.42,Engineering_Bay,ACTIVE
+000512,Panels_016,Structural_and_Spacecraft_Components,Panels,69.0,147.5,46.6,124.53,AMBIENT,LOT2024-718,,True,NONE,"[""BAR871464"", ""RFID33464""]",63,N/A,,0,,0.37,Engineering_Bay,ACTIVE
+000513,Panels_017,Structural_and_Spacecraft_Components,Panels,138.6,40.7,12.4,60.06,AMBIENT,LOT2025-776,,True,NONE,"[""BAR510373"", ""RFID79185""]",77,N/A,,0,,0.16,Engineering_Bay,WASTE
+000514,Panels_018,Structural_and_Spacecraft_Components,Panels,91.2,32.7,45.6,119.11,AMBIENT,LOT2026-312,,True,NONE,"[""BAR579757"", ""RFID85649"", ""QR8904""]",53,N/A,,0,,0.16,Engineering_Bay,ACTIVE
+000515,Panels_019,Structural_and_Spacecraft_Components,Panels,117.3,115.6,11.0,109.44,AMBIENT,LOT2024-386,,True,NONE,"[""BAR547858"", ""RFID32049""]",86,N/A,,0,,0.07,Engineering_Bay,BROKEN
+000516,Panels_020,Structural_and_Spacecraft_Components,Panels,26.8,147.4,81.5,89.82,AMBIENT,LOT2025-251,,True,NONE,"[""BAR135644"", ""RFID61989""]",59,N/A,,0,,0.35,Engineering_Bay,LOST
+000517,Panels_021,Structural_and_Spacecraft_Components,Panels,68.8,109.9,97.5,99.46,AMBIENT,LOT2026-392,,True,NONE,"[""BAR388584"", ""RFID68342""]",79,N/A,,0,,0.08,Engineering_Bay,ACTIVE
+000518,Panels_022,Structural_and_Spacecraft_Components,Panels,106.9,86.3,12.5,86.8,AMBIENT,LOT2026-764,,True,NONE,"[""BAR199146"", ""RFID33736""]",86,N/A,,0,,0.5,Engineering_Bay,IN_USE
+000519,Panels_023,Structural_and_Spacecraft_Components,Panels,36.3,62.3,88.5,129.61,AMBIENT,LOT2026-021,,True,NONE,"[""BAR512925"", ""RFID80309""]",84,N/A,,0,,0.27,Engineering_Bay,ACTIVE
+000520,Panels_024,Structural_and_Spacecraft_Components,Panels,90.1,126.4,81.7,113.52,N/A,LOT2024-186,,True,NONE,"[""BAR728204"", ""RFID10697""]",63,N/A,,0,,0.4,Engineering_Bay,ACTIVE
+000521,Panels_025,Structural_and_Spacecraft_Components,Panels,46.8,41.0,71.9,128.01,AMBIENT,LOT2024-519,,False,NONE,"[""BAR413081"", ""RFID81359"", ""QR1001""]",52,N/A,,0,,0.14,Engineering_Bay,ACTIVE
+000522,Panels_026,Structural_and_Spacecraft_Components,Panels,137.6,58.1,68.8,22.7,AMBIENT,LOT2026-933,,True,NONE,"[""BAR469221"", ""RFID76924"", ""QR2622""]",81,N/A,,0,,0.34,Engineering_Bay,ACTIVE
+000523,Panels_027,Structural_and_Spacecraft_Components,Panels,38.4,131.3,33.7,21.86,AMBIENT,LOT2025-285,,True,NONE,"[""BAR234733"", ""RFID65314"", ""QR5177""]",85,N/A,,0,,0.15,Engineering_Bay,ACTIVE
+000524,Panels_028,Structural_and_Spacecraft_Components,Panels,79.3,142.8,84.4,141.15,AMBIENT,LOT2024-645,,True,NONE,"[""BAR868265"", ""RFID92984""]",59,N/A,,0,,0.11,Engineering_Bay,ACTIVE
+000525,Panels_029,Structural_and_Spacecraft_Components,Panels,126.7,98.6,56.2,24.72,AMBIENT,LOT2026-254,,True,NONE,"[""BAR181290"", ""RFID79660"", ""QR9984""]",77,N/A,,0,,0.22,Engineering_Bay,ACTIVE
+000526,Panels_030,Structural_and_Spacecraft_Components,Panels,138.2,121.1,26.1,120.12,COLD,LOT2025-993,,False,NONE,"[""BAR333020"", ""RFID23762""]",67,N/A,,0,,0.08,Engineering_Bay,ACTIVE
+000527,Panels_031,Structural_and_Spacecraft_Components,Panels,96.5,124.9,20.5,53.64,AMBIENT,LOT2026-278,,True,NONE,"[""BAR736975"", ""RFID16286"", ""QR7382""]",86,N/A,,0,,0.11,Engineering_Bay,PLANNED
+000528,Panels_032,Structural_and_Spacecraft_Components,Panels,122.5,91.7,107.0,61.59,AMBIENT,LOT2024-704,,False,NONE,"[""BAR638512"", ""RFID96188"", ""QR7206""]",87,N/A,,0,,0.29,Engineering_Bay,ACTIVE
+000529,Panels_033,Structural_and_Spacecraft_Components,Panels,103.1,68.1,95.5,102.38,AMBIENT,LOT2024-450,,False,NONE,"[""BAR471197"", ""RFID75828"", ""QR8008""]",76,N/A,,0,,0.27,Engineering_Bay,IN_USE
+000530,Panels_034,Structural_and_Spacecraft_Components,Panels,49.7,102.6,19.6,47.24,AMBIENT,LOT2026-082,,False,NONE,"[""BAR180418"", ""RFID22272"", ""QR1940""]",70,N/A,,0,,0.06,Engineering_Bay,ACTIVE
+000531,Panels_035,Structural_and_Spacecraft_Components,Panels,125.1,21.4,114.3,102.2,AMBIENT,LOT2026-702,,False,NONE,"[""BAR809649""]",58,N/A,,0,,0.21,Engineering_Bay,ACTIVE
+000532,Panels_036,Structural_and_Spacecraft_Components,Panels,117.0,112.8,87.3,112.95,N/A,LOT2026-974,,True,NONE,"[""BAR963359""]",65,N/A,,0,,0.35,Engineering_Bay,ACTIVE
+000533,Panels_037,Structural_and_Spacecraft_Components,Panels,41.9,140.9,94.0,135.76,AMBIENT,LOT2024-527,,True,NONE,"[""BAR470453""]",61,N/A,,0,,0.2,Engineering_Bay,ACTIVE
+000534,Panels_038,Structural_and_Spacecraft_Components,Panels,138.8,52.5,69.3,115.43,AMBIENT,LOT2025-301,,False,NONE,"[""BAR377611"", ""RFID92729""]",57,N/A,,0,,0.12,Engineering_Bay,ACTIVE
+000535,Panels_039,Structural_and_Spacecraft_Components,Panels,103.6,127.3,13.9,70.53,AMBIENT,LOT2024-365,,True,NONE,"[""BAR106177"", ""RFID53063"", ""QR2755""]",89,N/A,,0,,0.02,Engineering_Bay,WASTE_EXPIRED
+000536,Panels_040,Structural_and_Spacecraft_Components,Panels,66.1,33.2,64.1,14.54,AMBIENT,LOT2025-127,,True,NONE,"[""BAR611088"", ""RFID96066"", ""QR8711""]",82,N/A,,0,,0.21,Engineering_Bay,ACTIVE
+000537,Panels_041,Structural_and_Spacecraft_Components,Panels,43.7,125.5,22.0,66.91,AMBIENT,LOT2025-766,,True,NONE,"[""BAR555040"", ""RFID36013"", ""QR5667""]",78,N/A,,0,,0.04,Engineering_Bay,ACTIVE
+000538,Panels_042,Structural_and_Spacecraft_Components,Panels,137.1,40.8,31.9,72.94,AMBIENT,LOT2025-564,,True,NONE,"[""BAR619640"", ""RFID26703""]",67,N/A,,0,,0.39,Engineering_Bay,WASTE_EXPIRED
+000539,Panels_043,Structural_and_Spacecraft_Components,Panels,140.1,129.6,52.8,18.24,AMBIENT,LOT2024-160,,True,NONE,"[""BAR460836"", ""RFID99710"", ""QR6605""]",56,N/A,,0,,0.23,Engineering_Bay,ACTIVE
+000540,Panels_044,Structural_and_Spacecraft_Components,Panels,82.4,56.7,19.1,65.48,AMBIENT,LOT2026-192,,True,NONE,"[""BAR361584"", ""RFID25075""]",89,N/A,,0,,0.5,Engineering_Bay,ACTIVE
+000541,Panels_045,Structural_and_Spacecraft_Components,Panels,45.8,111.8,99.1,105.77,AMBIENT,LOT2024-876,,True,NONE,"[""BAR719914"", ""RFID29493"", ""QR3167""]",82,N/A,,0,,0.21,Engineering_Bay,ACTIVE
+000542,Panels_046,Structural_and_Spacecraft_Components,Panels,39.0,22.3,32.0,129.92,AMBIENT,LOT2025-717,,True,NONE,"[""BAR764073"", ""QR7980""]",74,N/A,,0,,0.25,Engineering_Bay,ACTIVE
+000543,Panels_047,Structural_and_Spacecraft_Components,Panels,59.6,55.0,40.9,53.95,AMBIENT,LOT2024-187,,False,NONE,"[""BAR142875"", ""RFID96563""]",76,N/A,,0,,0.12,Engineering_Bay,ACTIVE
+000544,Panels_048,Structural_and_Spacecraft_Components,Panels,33.1,44.0,114.3,55.81,AMBIENT,LOT2026-014,,True,NONE,"[""BAR816137"", ""RFID27079""]",69,N/A,,0,,0.38,Engineering_Bay,ACTIVE
+000545,Panels_049,Structural_and_Spacecraft_Components,Panels,88.8,68.3,81.5,33.08,AMBIENT,LOT2024-134,,True,NONE,"[""BAR760140"", ""RFID25775"", ""QR4120""]",74,N/A,,0,,0.11,Engineering_Bay,ACTIVE
+000546,Panels_050,Structural_and_Spacecraft_Components,Panels,142.4,100.5,43.2,72.18,AMBIENT,LOT2024-045,,True,NONE,"[""BAR234041"", ""RFID82154""]",62,N/A,,0,,0.45,Engineering_Bay,IN_USE
+000547,Panels_051,Structural_and_Spacecraft_Components,Panels,92.8,65.2,50.3,95.22,WARM,LOT2024-495,,False,NONE,"[""BAR539357"", ""RFID76043""]",57,N/A,,0,,0.1,Engineering_Bay,ACTIVE
+000548,Panels_052,Structural_and_Spacecraft_Components,Panels,57.7,144.3,16.7,145.93,AMBIENT,LOT2025-507,,True,NONE,"[""BAR817953"", ""RFID77303""]",62,N/A,,0,,0.1,Engineering_Bay,IN_USE
+000549,Panels_053,Structural_and_Spacecraft_Components,Panels,121.3,72.1,39.9,29.24,AMBIENT,LOT2026-714,,True,NONE,"[""BAR109291""]",60,N/A,,0,,0.24,Engineering_Bay,IN_USE
+000550,Panels_054,Structural_and_Spacecraft_Components,Panels,59.4,48.6,87.9,83.72,AMBIENT,LOT2026-244,,False,NONE,"[""BAR406019"", ""RFID29416""]",60,N/A,,0,,0.15,Engineering_Bay,ACTIVE
+000551,Panels_055,Structural_and_Spacecraft_Components,Panels,26.7,147.4,118.8,33.08,COLD,LOT2025-648,,True,NONE,"[""BAR734555""]",57,N/A,,0,,0.47,Engineering_Bay,WASTE_EXPIRED
+000552,Panels_056,Structural_and_Spacecraft_Components,Panels,37.4,136.8,42.4,147.82,AMBIENT,LOT2025-225,,True,NONE,"[""BAR865960"", ""QR1256""]",90,N/A,,0,,0.28,Engineering_Bay,BROKEN
+000553,Beams_001,Structural_and_Spacecraft_Components,Beams,95.8,113.9,85.7,141.96,AMBIENT,LOT2026-619,,False,NONE,"[""BAR677637"", ""RFID67958"", ""QR5403""]",66,N/A,,0,,0.12,Engineering_Bay,ACTIVE
+000554,Beams_002,Structural_and_Spacecraft_Components,Beams,71.4,78.0,90.3,66.22,WARM,LOT2024-508,,True,NONE,"[""BAR290330"", ""RFID33083"", ""QR9036""]",59,N/A,,0,,0.47,Engineering_Bay,ACTIVE
+000555,Beams_003,Structural_and_Spacecraft_Components,Beams,60.3,135.1,99.9,103.73,AMBIENT,LOT2024-437,,True,NONE,"[""BAR357167"", ""RFID94557""]",62,N/A,,0,,0.07,Engineering_Bay,ACTIVE
+000556,Beams_004,Structural_and_Spacecraft_Components,Beams,125.0,98.4,51.6,5.07,AMBIENT,LOT2026-958,,True,NONE,"[""BAR145864"", ""RFID20957"", ""QR1221""]",50,N/A,,0,,0.4,Engineering_Bay,ACTIVE
+000557,Beams_005,Structural_and_Spacecraft_Components,Beams,90.5,126.4,103.8,14.57,AMBIENT,LOT2026-914,,True,NONE,"[""BAR565909""]",58,N/A,,0,,0.25,Engineering_Bay,ACTIVE
+000558,Beams_006,Structural_and_Spacecraft_Components,Beams,54.8,90.7,12.3,8.59,AMBIENT,LOT2026-908,,True,NONE,"[""BAR977116"", ""RFID10158""]",84,N/A,,0,,0.03,Engineering_Bay,ACTIVE
+000559,Beams_007,Structural_and_Spacecraft_Components,Beams,105.2,49.4,106.7,58.94,AMBIENT,LOT2024-230,,False,NONE,"[""BAR206678"", ""QR2249""]",57,N/A,,0,,0.32,Engineering_Bay,ACTIVE
+000560,Beams_008,Structural_and_Spacecraft_Components,Beams,139.6,136.4,76.5,28.35,AMBIENT,LOT2024-696,,False,NONE,"[""BAR545901"", ""RFID97460""]",83,N/A,,0,,0.32,Engineering_Bay,ACTIVE
+000561,Beams_009,Structural_and_Spacecraft_Components,Beams,55.2,84.9,50.6,41.28,AMBIENT,LOT2024-797,,True,NONE,"[""BAR787712"", ""RFID29369""]",54,N/A,,0,,0.37,Engineering_Bay,IN_USE
+000562,Beams_010,Structural_and_Spacecraft_Components,Beams,28.8,95.1,115.6,43.21,AMBIENT,LOT2024-187,,True,NONE,"[""BAR904819"", ""RFID51853""]",55,N/A,,0,,0.25,Engineering_Bay,BROKEN
+000563,Beams_011,Structural_and_Spacecraft_Components,Beams,102.8,38.0,113.8,138.4,AMBIENT,LOT2025-552,,True,NONE,"[""BAR659699"", ""RFID80282""]",74,N/A,,0,,0.2,Engineering_Bay,ACTIVE
+000564,Beams_012,Structural_and_Spacecraft_Components,Beams,95.1,110.2,92.3,106.06,AMBIENT,LOT2024-872,,True,NONE,"[""BAR117987"", ""RFID72118""]",65,N/A,,0,,0.46,Engineering_Bay,ACTIVE
+000565,Beams_013,Structural_and_Spacecraft_Components,Beams,130.3,132.7,100.1,45.62,AMBIENT,LOT2026-996,,True,NONE,"[""BAR541531"", ""RFID39437"", ""QR3257""]",59,N/A,,0,,0.08,Engineering_Bay,ACTIVE
+000566,Beams_014,Structural_and_Spacecraft_Components,Beams,115.3,110.5,56.7,10.0,AMBIENT,LOT2024-489,,True,NONE,"[""BAR978116"", ""RFID30732"", ""QR6984""]",56,N/A,,0,,0.09,Engineering_Bay,ACTIVE
+000567,Beams_015,Structural_and_Spacecraft_Components,Beams,128.0,74.1,94.2,71.53,AMBIENT,LOT2026-972,,True,NONE,"[""BAR414056"", ""RFID54215""]",58,N/A,,0,,0.33,Engineering_Bay,ACTIVE
+000568,Beams_016,Structural_and_Spacecraft_Components,Beams,27.8,103.5,76.5,27.69,COLD,LOT2025-697,,True,NONE,"[""BAR576364"", ""RFID43823""]",60,N/A,,0,,0.26,Engineering_Bay,IN_USE
+000569,Beams_017,Structural_and_Spacecraft_Components,Beams,40.4,146.5,67.4,146.73,AMBIENT,LOT2025-634,,True,NONE,"[""BAR158716"", ""RFID34077""]",58,N/A,,0,,0.49,Engineering_Bay,ACTIVE
+000570,Beams_018,Structural_and_Spacecraft_Components,Beams,110.0,82.1,81.8,61.95,AMBIENT,LOT2025-663,,True,NONE,"[""BAR544828"", ""RFID24208"", ""QR6942""]",74,N/A,,0,,0.31,Engineering_Bay,PLANNED
+000571,Beams_019,Structural_and_Spacecraft_Components,Beams,56.7,90.4,17.2,90.37,AMBIENT,LOT2024-654,,True,NONE,"[""BAR133939"", ""RFID21146""]",69,N/A,,0,,0.29,Engineering_Bay,ACTIVE
+000572,Beams_020,Structural_and_Spacecraft_Components,Beams,25.9,60.9,113.8,3.25,AMBIENT,LOT2025-513,,True,NONE,"[""BAR304350"", ""RFID61202""]",72,N/A,,0,,0.49,Engineering_Bay,IN_USE
+000573,Beams_021,Structural_and_Spacecraft_Components,Beams,72.9,116.4,21.1,121.51,COLD,LOT2025-489,,False,NONE,"[""BAR714841"", ""QR3641""]",59,N/A,,0,,0.09,Engineering_Bay,ACTIVE
+000574,Beams_022,Structural_and_Spacecraft_Components,Beams,32.1,113.4,107.3,121.51,AMBIENT,LOT2024-987,,True,NONE,"[""BAR625986"", ""RFID89788""]",59,N/A,,0,,0.47,Engineering_Bay,ACTIVE
+000575,Beams_023,Structural_and_Spacecraft_Components,Beams,64.1,66.8,104.2,65.77,AMBIENT,LOT2026-622,,True,NONE,"[""BAR178641""]",74,N/A,,0,,0.5,Engineering_Bay,ACTIVE
+000576,Beams_024,Structural_and_Spacecraft_Components,Beams,119.6,60.2,105.4,120.01,AMBIENT,LOT2025-322,,True,NONE,"[""BAR277961"", ""QR5589""]",55,N/A,,0,,0.3,Engineering_Bay,ACTIVE
+000577,Beams_025,Structural_and_Spacecraft_Components,Beams,112.4,79.9,118.5,146.82,AMBIENT,LOT2024-963,,True,NONE,"[""BAR229988""]",78,N/A,,0,,0.19,Engineering_Bay,ACTIVE
+000578,Beams_026,Structural_and_Spacecraft_Components,Beams,100.6,108.5,58.5,77.85,N/A,LOT2025-086,,True,NONE,"[""BAR815339"", ""RFID68994"", ""QR1699""]",89,N/A,,0,,0.32,Engineering_Bay,ACTIVE
+000579,Beams_027,Structural_and_Spacecraft_Components,Beams,51.8,126.8,10.9,128.25,AMBIENT,LOT2026-409,,True,NONE,"[""BAR995304"", ""RFID60885""]",68,N/A,,0,,0.34,Engineering_Bay,ACTIVE
+000580,Beams_028,Structural_and_Spacecraft_Components,Beams,89.6,126.4,22.0,28.68,WARM,LOT2025-787,,True,NONE,"[""BAR554153"", ""RFID53086"", ""QR6610""]",56,N/A,,0,,0.5,Engineering_Bay,ACTIVE
+000581,Beams_029,Structural_and_Spacecraft_Components,Beams,81.9,56.2,14.2,25.05,AMBIENT,LOT2024-328,,True,NONE,"[""BAR695807"", ""RFID88784""]",80,N/A,,0,,0.05,Engineering_Bay,PLANNED
+000582,Beams_030,Structural_and_Spacecraft_Components,Beams,147.2,47.7,33.3,5.4,AMBIENT,LOT2026-181,,False,NONE,"[""BAR187651"", ""RFID45901""]",77,N/A,,0,,0.16,Engineering_Bay,IN_USE
+000583,Beams_031,Structural_and_Spacecraft_Components,Beams,88.2,107.1,38.5,124.92,AMBIENT,LOT2025-351,,True,NONE,"[""BAR889762"", ""RFID36031""]",55,N/A,,0,,0.22,Engineering_Bay,ACTIVE
+000584,Beams_032,Structural_and_Spacecraft_Components,Beams,40.9,110.6,49.0,104.55,AMBIENT,LOT2026-802,,True,NONE,"[""BAR726134"", ""RFID97551""]",74,N/A,,0,,0.09,Engineering_Bay,ACTIVE
+000585,Beams_033,Structural_and_Spacecraft_Components,Beams,115.5,127.3,90.6,4.1,WARM,LOT2025-886,,True,NONE,"[""BAR431777"", ""RFID98335""]",79,N/A,,0,,0.27,Engineering_Bay,ACTIVE
+000586,Beams_034,Structural_and_Spacecraft_Components,Beams,128.2,36.3,59.4,145.48,COLD,LOT2026-193,,True,NONE,"[""BAR540586"", ""RFID31771""]",56,N/A,,0,,0.12,Engineering_Bay,ACTIVE
+000587,Beams_035,Structural_and_Spacecraft_Components,Beams,108.4,144.2,50.7,55.84,AMBIENT,LOT2026-839,,True,NONE,"[""BAR230804"", ""RFID95054""]",69,N/A,,0,,0.22,Engineering_Bay,ACTIVE
+000588,Beams_036,Structural_and_Spacecraft_Components,Beams,75.4,146.6,46.9,139.1,AMBIENT,LOT2024-567,,True,NONE,"[""BAR723789"", ""RFID67131""]",79,N/A,,0,,0.43,Engineering_Bay,ACTIVE
+000589,Beams_037,Structural_and_Spacecraft_Components,Beams,56.8,100.6,111.8,128.84,AMBIENT,LOT2024-092,,True,NONE,"[""BAR781180"", ""RFID63907"", ""QR9924""]",55,N/A,,0,,0.07,Engineering_Bay,ACTIVE
+000590,Beams_038,Structural_and_Spacecraft_Components,Beams,24.2,57.7,56.3,34.99,AMBIENT,LOT2024-201,,False,NONE,"[""BAR997940"", ""RFID26310""]",79,N/A,,0,,0.4,Engineering_Bay,ACTIVE
+000591,Beams_039,Structural_and_Spacecraft_Components,Beams,103.8,122.0,53.5,141.06,AMBIENT,LOT2025-901,,True,NONE,"[""BAR790677"", ""RFID64357""]",64,N/A,,0,,0.02,Engineering_Bay,WASTE_DEPLETED
+000592,Beams_040,Structural_and_Spacecraft_Components,Beams,23.4,122.8,102.5,78.81,AMBIENT,LOT2024-983,,True,NONE,"[""BAR699982"", ""QR7412""]",88,N/A,,0,,0.11,Engineering_Bay,ACTIVE
+000593,Beams_041,Structural_and_Spacecraft_Components,Beams,124.2,95.1,24.2,96.17,AMBIENT,LOT2025-530,,True,NONE,"[""BAR266140"", ""RFID23051""]",61,N/A,,0,,0.08,Engineering_Bay,ACTIVE
+000594,Beams_042,Structural_and_Spacecraft_Components,Beams,71.0,119.1,110.8,125.93,WARM,LOT2024-096,,True,NONE,"[""BAR197795"", ""RFID11512""]",60,N/A,,0,,0.3,Engineering_Bay,ACTIVE
+000595,Beams_043,Structural_and_Spacecraft_Components,Beams,139.7,30.2,52.1,111.87,N/A,LOT2026-647,,True,NONE,"[""BAR915361"", ""RFID41420""]",58,N/A,,0,,0.13,Engineering_Bay,ACTIVE
+000596,Beams_044,Structural_and_Spacecraft_Components,Beams,114.4,124.9,51.6,40.55,AMBIENT,LOT2024-643,,True,NONE,"[""BAR124264"", ""RFID85937""]",53,N/A,,0,,0.07,Engineering_Bay,WASTE
+000597,Beams_045,Structural_and_Spacecraft_Components,Beams,38.4,54.1,29.9,13.45,WARM,LOT2024-401,,True,NONE,"[""BAR205561"", ""RFID12877""]",73,N/A,,0,,0.25,Engineering_Bay,ACTIVE
+000598,Beams_046,Structural_and_Spacecraft_Components,Beams,74.6,135.7,79.7,68.73,AMBIENT,LOT2024-926,,False,NONE,"[""BAR287356"", ""RFID92734""]",60,N/A,,0,,0.04,Engineering_Bay,BROKEN
+000599,Beams_047,Structural_and_Spacecraft_Components,Beams,82.9,99.8,70.1,25.44,WARM,LOT2024-621,,True,NONE,"[""BAR130990"", ""RFID77894""]",66,N/A,,0,,0.09,Engineering_Bay,SCHEDULED
+000600,Beams_048,Structural_and_Spacecraft_Components,Beams,48.2,62.6,34.2,109.71,AMBIENT,LOT2025-205,,True,NONE,"[""BAR196437"", ""RFID82285""]",58,N/A,,0,,0.24,Engineering_Bay,PLANNED
+000601,Beams_049,Structural_and_Spacecraft_Components,Beams,143.0,139.9,37.5,31.29,N/A,LOT2024-598,,False,NONE,"[""BAR931681"", ""RFID50840"", ""QR4372""]",67,N/A,,0,,0.48,Engineering_Bay,ACTIVE
+000602,Beams_050,Structural_and_Spacecraft_Components,Beams,75.1,117.1,99.7,94.19,AMBIENT,LOT2024-581,,False,NONE,"[""BAR470058"", ""RFID92929""]",88,N/A,,0,,0.24,Engineering_Bay,WASTE_EXPIRED
+000603,Replacement_Hardware_for_Modules_001,Structural_and_Spacecraft_Components,Replacement_Hardware_for_Modules,96.3,58.2,100.9,97.47,AMBIENT,LOT2024-118,,True,NONE,"[""BAR288643""]",83,N/A,,0,,0.11,Engineering_Bay,ACTIVE
+000604,Replacement_Hardware_for_Modules_002,Structural_and_Spacecraft_Components,Replacement_Hardware_for_Modules,68.3,38.9,44.6,3.43,AMBIENT,LOT2024-477,,True,NONE,"[""BAR695034"", ""RFID40493""]",50,N/A,,0,,0.21,Engineering_Bay,ACTIVE
+000605,Replacement_Hardware_for_Modules_003,Structural_and_Spacecraft_Components,Replacement_Hardware_for_Modules,33.4,56.1,76.9,132.74,AMBIENT,LOT2026-432,,True,NONE,"[""BAR815267"", ""RFID51652""]",54,N/A,,0,,0.12,Engineering_Bay,ACTIVE
+000606,Replacement_Hardware_for_Modules_004,Structural_and_Spacecraft_Components,Replacement_Hardware_for_Modules,26.1,55.7,23.1,69.01,AMBIENT,LOT2025-243,,False,NONE,"[""BAR704413"", ""RFID12337""]",88,N/A,,0,,0.43,Engineering_Bay,BROKEN
+000607,Replacement_Hardware_for_Modules_005,Structural_and_Spacecraft_Components,Replacement_Hardware_for_Modules,57.0,129.4,54.3,134.58,COLD,LOT2026-017,,True,NONE,"[""BAR172827"", ""RFID64405""]",83,N/A,,0,,0.15,Engineering_Bay,IN_USE
+000608,Replacement_Hardware_for_Modules_006,Structural_and_Spacecraft_Components,Replacement_Hardware_for_Modules,92.3,60.7,77.4,60.21,AMBIENT,LOT2026-991,,True,NONE,"[""BAR227310""]",79,N/A,,0,,0.07,Engineering_Bay,ACTIVE
+000609,Replacement_Hardware_for_Modules_007,Structural_and_Spacecraft_Components,Replacement_Hardware_for_Modules,38.0,149.2,104.8,109.19,AMBIENT,LOT2024-742,,True,NONE,"[""BAR951739"", ""RFID80458""]",64,N/A,,0,,0.47,Engineering_Bay,SCHEDULED
+000610,Replacement_Hardware_for_Modules_008,Structural_and_Spacecraft_Components,Replacement_Hardware_for_Modules,122.0,34.4,114.2,13.11,AMBIENT,LOT2025-277,,True,NONE,"[""BAR832603"", ""RFID28056""]",71,N/A,,0,,0.08,Engineering_Bay,ACTIVE
+000611,Replacement_Hardware_for_Modules_009,Structural_and_Spacecraft_Components,Replacement_Hardware_for_Modules,95.9,130.5,108.5,96.26,AMBIENT,LOT2024-592,,True,NONE,"[""BAR601142"", ""RFID46771""]",57,N/A,,0,,0.37,Engineering_Bay,ACTIVE
+000612,Replacement_Hardware_for_Modules_010,Structural_and_Spacecraft_Components,Replacement_Hardware_for_Modules,58.5,30.8,71.4,131.19,AMBIENT,LOT2024-996,,True,NONE,"[""BAR618631"", ""RFID11720""]",63,N/A,,0,,0.24,Engineering_Bay,ACTIVE
+000613,Replacement_Hardware_for_Modules_011,Structural_and_Spacecraft_Components,Replacement_Hardware_for_Modules,64.3,125.8,93.8,78.06,AMBIENT,LOT2025-726,,False,NONE,"[""BAR576076"", ""RFID76127"", ""QR3130""]",70,N/A,,0,,0.13,Engineering_Bay,ACTIVE
+000614,Replacement_Hardware_for_Modules_012,Structural_and_Spacecraft_Components,Replacement_Hardware_for_Modules,132.8,86.8,95.8,29.82,AMBIENT,LOT2026-315,,True,NONE,"[""BAR705282"", ""RFID29305""]",67,N/A,,0,,0.07,Engineering_Bay,ACTIVE
+000615,Replacement_Hardware_for_Modules_013,Structural_and_Spacecraft_Components,Replacement_Hardware_for_Modules,79.9,54.7,62.4,80.57,AMBIENT,LOT2026-087,,True,NONE,"[""BAR471643"", ""RFID29742""]",72,N/A,,0,,0.23,Engineering_Bay,ACTIVE
+000616,Replacement_Hardware_for_Modules_014,Structural_and_Spacecraft_Components,Replacement_Hardware_for_Modules,68.1,26.4,52.1,139.35,AMBIENT,LOT2025-181,,True,NONE,"[""BAR722905"", ""RFID89619""]",62,N/A,,0,,0.23,Engineering_Bay,ACTIVE
+000617,Replacement_Hardware_for_Modules_015,Structural_and_Spacecraft_Components,Replacement_Hardware_for_Modules,144.7,48.5,15.8,7.28,AMBIENT,LOT2026-104,,True,NONE,"[""BAR388840"", ""RFID91293""]",67,N/A,,0,,0.21,Engineering_Bay,ACTIVE
+000618,Replacement_Hardware_for_Modules_016,Structural_and_Spacecraft_Components,Replacement_Hardware_for_Modules,127.1,109.9,64.5,27.31,AMBIENT,LOT2025-723,,True,NONE,"[""BAR725279"", ""RFID10407"", ""QR9245""]",63,N/A,,0,,0.46,Engineering_Bay,ACTIVE
+000619,Replacement_Hardware_for_Modules_017,Structural_and_Spacecraft_Components,Replacement_Hardware_for_Modules,130.8,109.4,28.7,102.85,AMBIENT,LOT2025-146,,True,NONE,"[""BAR113353"", ""RFID66088""]",60,N/A,,0,,0.11,Engineering_Bay,ACTIVE
+000620,Docking_Ports_and_Connections_001,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,118.8,21.3,48.7,72.13,AMBIENT,LOT2024-484,,True,NONE,"[""BAR214699"", ""RFID12279""]",50,N/A,,0,,0.5,Engineering_Bay,PLANNED
+000621,Docking_Ports_and_Connections_002,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,41.7,39.1,20.3,47.08,AMBIENT,LOT2026-360,,True,NONE,"[""BAR672223"", ""RFID73765"", ""QR8516""]",71,N/A,,0,,0.03,Engineering_Bay,ACTIVE
+000622,Docking_Ports_and_Connections_003,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,135.9,120.7,104.3,135.52,AMBIENT,LOT2025-703,,True,NONE,"[""BAR644534"", ""RFID12716"", ""QR7722""]",88,N/A,,0,,0.43,Engineering_Bay,ACTIVE
+000623,Docking_Ports_and_Connections_004,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,84.7,51.8,91.5,146.05,AMBIENT,LOT2024-199,,True,NONE,"[""BAR496129"", ""RFID45903""]",73,N/A,,0,,0.35,Engineering_Bay,WASTE_EXPIRED
+000624,Docking_Ports_and_Connections_005,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,144.6,88.5,39.2,102.5,AMBIENT,LOT2025-968,,True,NONE,"[""BAR389666"", ""RFID15387""]",71,N/A,,0,,0.36,Engineering_Bay,PLANNED
+000625,Docking_Ports_and_Connections_006,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,123.4,93.7,97.2,53.36,N/A,LOT2025-950,,True,NONE,"[""BAR818826"", ""RFID99249"", ""QR5747""]",57,N/A,,0,,0.32,Engineering_Bay,ACTIVE
+000626,Docking_Ports_and_Connections_007,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,57.5,124.0,11.7,8.06,AMBIENT,LOT2024-055,,True,NONE,"[""BAR612089"", ""RFID66403""]",68,N/A,,0,,0.42,Engineering_Bay,ACTIVE
+000627,Docking_Ports_and_Connections_008,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,134.2,122.1,65.2,143.86,AMBIENT,LOT2024-731,,True,NONE,"[""BAR383816"", ""RFID35785""]",85,N/A,,0,,0.46,Engineering_Bay,ACTIVE
+000628,Docking_Ports_and_Connections_009,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,141.3,52.3,84.6,59.16,N/A,LOT2024-915,,False,NONE,"[""BAR373951""]",75,N/A,,0,,0.1,Engineering_Bay,ACTIVE
+000629,Docking_Ports_and_Connections_010,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,124.6,38.1,94.4,39.0,AMBIENT,LOT2025-313,,True,NONE,"[""BAR189755"", ""RFID92355""]",76,N/A,,0,,0.11,Engineering_Bay,IN_USE
+000630,Docking_Ports_and_Connections_011,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,32.5,88.5,86.4,76.56,AMBIENT,LOT2025-478,,True,NONE,"[""BAR540932""]",72,N/A,,0,,0.46,Engineering_Bay,ACTIVE
+000631,Docking_Ports_and_Connections_012,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,31.5,38.3,109.8,118.42,AMBIENT,LOT2024-636,,True,NONE,"[""BAR669659""]",87,N/A,,0,,0.05,Engineering_Bay,PLANNED
+000632,Docking_Ports_and_Connections_013,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,107.1,80.2,93.9,78.67,AMBIENT,LOT2025-850,,False,NONE,"[""BAR781448"", ""RFID87901"", ""QR5760""]",53,N/A,,0,,0.29,Engineering_Bay,ACTIVE
+000633,Docking_Ports_and_Connections_014,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,35.8,96.0,66.2,108.11,AMBIENT,LOT2026-759,,True,NONE,"[""BAR619364"", ""RFID98562""]",63,N/A,,0,,0.09,Engineering_Bay,ACTIVE
+000634,Docking_Ports_and_Connections_015,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,141.7,124.7,78.6,31.7,COLD,LOT2026-902,,True,NONE,"[""BAR226913"", ""RFID42401"", ""QR8761""]",54,N/A,,0,,0.03,Engineering_Bay,ACTIVE
+000635,Docking_Ports_and_Connections_016,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,140.4,59.0,63.2,29.24,AMBIENT,LOT2026-267,,True,NONE,"[""BAR961600"", ""RFID67557""]",65,N/A,,0,,0.32,Engineering_Bay,ACTIVE
+000636,Docking_Ports_and_Connections_017,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,44.0,126.4,82.3,27.27,AMBIENT,LOT2025-297,,True,NONE,"[""BAR403509"", ""RFID87170""]",84,N/A,,0,,0.34,Engineering_Bay,ACTIVE
+000637,Docking_Ports_and_Connections_018,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,34.0,74.2,56.7,6.14,AMBIENT,LOT2025-012,,False,NONE,"[""BAR708738"", ""RFID94555""]",79,N/A,,0,,0.34,Engineering_Bay,ACTIVE
+000638,Docking_Ports_and_Connections_019,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,66.1,38.1,107.1,69.84,N/A,LOT2025-513,,True,NONE,"[""BAR997412"", ""QR9602""]",50,N/A,,0,,0.21,Engineering_Bay,ACTIVE
+000639,Docking_Ports_and_Connections_020,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,65.7,113.5,47.3,107.85,AMBIENT,LOT2026-311,,True,NONE,"[""BAR513064"", ""RFID94559""]",58,N/A,,0,,0.48,Engineering_Bay,ACTIVE
+000640,Docking_Ports_and_Connections_021,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,112.1,85.9,82.5,40.37,AMBIENT,LOT2026-357,,True,NONE,"[""BAR712885"", ""RFID62923"", ""QR1483""]",70,N/A,,0,,0.43,Engineering_Bay,ACTIVE
+000641,Docking_Ports_and_Connections_022,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,33.8,141.5,62.4,114.47,AMBIENT,LOT2024-746,,True,NONE,"[""BAR502740"", ""RFID65057""]",65,N/A,,0,,0.05,Engineering_Bay,ACTIVE
+000642,Docking_Ports_and_Connections_023,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,117.5,77.4,51.2,95.43,WARM,LOT2025-111,,True,NONE,"[""BAR832667"", ""RFID27460""]",51,N/A,,0,,0.3,Engineering_Bay,ACTIVE
+000643,Docking_Ports_and_Connections_024,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,76.9,57.2,32.1,25.99,AMBIENT,LOT2024-089,,True,NONE,"[""BAR710384"", ""RFID97642"", ""QR1544""]",83,N/A,,0,,0.41,Engineering_Bay,WASTE_EXPIRED
+000644,Docking_Ports_and_Connections_025,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,73.0,91.1,17.9,29.43,AMBIENT,LOT2024-585,,True,NONE,"[""BAR967776"", ""RFID56151""]",83,N/A,,0,,0.45,Engineering_Bay,SCHEDULED
+000645,Docking_Ports_and_Connections_026,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,77.1,101.3,106.1,86.23,AMBIENT,LOT2025-104,,False,NONE,"[""BAR223655"", ""RFID16747""]",58,N/A,,0,,0.18,Engineering_Bay,ACTIVE
+000646,Docking_Ports_and_Connections_027,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,139.9,52.7,87.4,12.06,N/A,LOT2024-548,,True,NONE,"[""BAR703304"", ""RFID77863""]",60,N/A,,0,,0.26,Engineering_Bay,ACTIVE
+000647,Docking_Ports_and_Connections_028,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,110.7,34.4,61.8,137.77,AMBIENT,LOT2024-347,,True,NONE,"[""BAR541875"", ""RFID53848""]",66,N/A,,0,,0.05,Engineering_Bay,ACTIVE
+000648,Docking_Ports_and_Connections_029,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,62.8,118.5,110.4,11.22,AMBIENT,LOT2026-927,,True,NONE,"[""BAR739633"", ""RFID14634""]",81,N/A,,0,,0.05,Engineering_Bay,ACTIVE
+000649,Docking_Ports_and_Connections_030,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,140.8,135.4,62.7,21.16,AMBIENT,LOT2025-520,,True,NONE,"[""BAR336186"", ""RFID66559""]",52,N/A,,0,,0.4,Engineering_Bay,SCHEDULED
+000650,Docking_Ports_and_Connections_031,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,141.1,23.4,96.0,31.03,AMBIENT,LOT2026-701,,True,NONE,"[""BAR873768"", ""RFID73199"", ""QR7180""]",88,N/A,,0,,0.35,Engineering_Bay,ACTIVE
+000651,Docking_Ports_and_Connections_032,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,37.9,76.9,108.7,147.42,AMBIENT,LOT2025-448,,False,NONE,"[""BAR160736"", ""RFID22057""]",73,N/A,,0,,0.13,Engineering_Bay,IN_USE
+000652,Docking_Ports_and_Connections_033,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,123.1,93.8,119.0,4.2,AMBIENT,LOT2024-059,,False,NONE,"[""BAR232871"", ""RFID47040"", ""QR6728""]",65,N/A,,0,,0.31,Engineering_Bay,WASTE_EXPIRED
+000653,Docking_Ports_and_Connections_034,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,36.9,71.7,82.3,99.18,AMBIENT,LOT2026-211,,True,NONE,"[""BAR618970"", ""RFID56787""]",54,N/A,,0,,0.43,Engineering_Bay,ACTIVE
+000654,Docking_Ports_and_Connections_035,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,67.7,91.7,105.6,38.14,AMBIENT,LOT2026-516,,True,NONE,"[""BAR209448"", ""RFID63848""]",67,N/A,,0,,0.32,Engineering_Bay,ACTIVE
+000655,Docking_Ports_and_Connections_036,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,37.8,146.9,35.4,111.8,AMBIENT,LOT2026-836,,True,NONE,"[""BAR926215"", ""RFID40815""]",63,N/A,,0,,0.33,Engineering_Bay,ACTIVE
+000656,Docking_Ports_and_Connections_037,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,84.9,24.4,40.6,58.86,AMBIENT,LOT2026-394,,True,NONE,"[""BAR619419"", ""RFID60146""]",55,N/A,,0,,0.04,Engineering_Bay,ACTIVE
+000657,Docking_Ports_and_Connections_038,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,76.0,26.8,43.6,82.15,WARM,LOT2026-773,,True,NONE,"[""BAR452550""]",72,N/A,,0,,0.41,Engineering_Bay,ACTIVE
+000658,Docking_Ports_and_Connections_039,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,64.3,127.8,57.7,65.28,AMBIENT,LOT2026-398,,True,NONE,"[""BAR856334"", ""QR9761""]",53,N/A,,0,,0.24,Engineering_Bay,ACTIVE
+000659,Docking_Ports_and_Connections_040,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,87.5,41.1,51.9,112.35,AMBIENT,LOT2024-288,,True,NONE,"[""BAR938429"", ""RFID45965"", ""QR5094""]",65,N/A,,0,,0.39,Engineering_Bay,ACTIVE
+000660,Docking_Ports_and_Connections_041,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,25.0,55.7,39.6,39.08,COLD,LOT2025-583,,True,NONE,"[""BAR792874"", ""RFID44670""]",88,N/A,,0,,0.23,Engineering_Bay,ACTIVE
+000661,Docking_Ports_and_Connections_042,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,24.8,66.6,80.2,84.38,AMBIENT,LOT2024-284,,True,NONE,"[""BAR739975"", ""RFID18394""]",76,N/A,,0,,0.14,Engineering_Bay,IN_USE
+000662,Docking_Ports_and_Connections_043,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,84.3,49.6,29.2,130.94,AMBIENT,LOT2026-040,,True,NONE,"[""BAR293205"", ""RFID67712""]",53,N/A,,0,,0.04,Engineering_Bay,IN_USE
+000663,Docking_Ports_and_Connections_044,Structural_and_Spacecraft_Components,Docking_Ports_and_Connections,112.9,53.7,38.3,102.4,AMBIENT,LOT2024-615,,True,NONE,"[""BAR346097"", ""RFID20155""]",72,N/A,,0,,0.07,Engineering_Bay,ACTIVE
+000664,Books_001,Entertainment_and_Leisure_Items,Books,36.0,67.6,27.9,12.95,AMBIENT,LOT2025-622,,True,NONE,"[""BAR926450"", ""RFID63495""]",38,N/A,,0,,0.2,Crew_Quarters,DISPOSED
+000665,Books_002,Entertainment_and_Leisure_Items,Books,12.2,35.8,21.0,3.26,COLD,LOT2026-217,,True,NONE,"[""BAR947285"", ""RFID76608""]",57,N/A,,0,,0.36,Crew_Quarters,WASTE
+000666,Books_003,Entertainment_and_Leisure_Items,Books,50.8,56.0,13.3,15.32,N/A,LOT2024-579,,True,NONE,"[""BAR627953""]",25,N/A,,0,,0.37,Crew_Quarters,ACTIVE
+000667,Books_004,Entertainment_and_Leisure_Items,Books,71.5,65.9,38.4,13.29,AMBIENT,LOT2025-200,,True,NONE,"[""BAR976618"", ""RFID41985""]",53,N/A,,0,,0.4,Crew_Quarters,BROKEN
+000668,Books_005,Entertainment_and_Leisure_Items,Books,32.0,78.1,43.1,9.07,AMBIENT,LOT2025-574,,True,NONE,"[""BAR630205"", ""RFID57486""]",46,N/A,,0,,0.31,Crew_Quarters,ACTIVE
+000669,Books_006,Entertainment_and_Leisure_Items,Books,49.9,67.9,11.9,10.89,AMBIENT,LOT2026-142,,True,NONE,"[""BAR734960"", ""RFID47602""]",46,N/A,,0,,0.08,Crew_Quarters,ACTIVE
+000670,Books_007,Entertainment_and_Leisure_Items,Books,20.4,44.6,53.5,4.2,AMBIENT,LOT2024-171,,False,NONE,"[""BAR226656"", ""RFID82689""]",31,N/A,,0,,0.25,Crew_Quarters,ACTIVE
+000671,Books_008,Entertainment_and_Leisure_Items,Books,68.4,11.7,14.2,1.74,AMBIENT,LOT2025-926,,True,NONE,"[""BAR542875"", ""RFID62732""]",52,N/A,,0,,0.14,Crew_Quarters,ACTIVE
+000672,Books_009,Entertainment_and_Leisure_Items,Books,67.7,33.6,38.5,2.42,AMBIENT,LOT2025-973,,True,NONE,"[""BAR570700""]",22,N/A,,0,,0.38,Crew_Quarters,ACTIVE
+000673,Books_010,Entertainment_and_Leisure_Items,Books,59.0,61.3,44.8,11.91,AMBIENT,LOT2024-608,,True,NONE,"[""BAR721856"", ""RFID95118""]",52,N/A,,0,,0.17,Crew_Quarters,ACTIVE
+000674,Books_011,Entertainment_and_Leisure_Items,Books,29.6,64.1,17.8,10.02,AMBIENT,LOT2026-594,,True,NONE,"[""BAR632915""]",23,N/A,,0,,0.17,Crew_Quarters,ACTIVE
+000675,Books_012,Entertainment_and_Leisure_Items,Books,20.0,67.0,45.4,19.79,AMBIENT,LOT2025-589,,True,NONE,"[""BAR745374"", ""RFID55527"", ""QR2942""]",33,N/A,,0,,0.16,Crew_Quarters,ACTIVE
+000676,Books_013,Entertainment_and_Leisure_Items,Books,21.9,75.7,19.3,12.24,WARM,LOT2026-286,,False,NONE,"[""BAR247852"", ""RFID82373""]",26,N/A,,0,,0.38,Crew_Quarters,ACTIVE
+000677,Books_014,Entertainment_and_Leisure_Items,Books,77.2,47.8,48.9,0.43,AMBIENT,LOT2025-965,,True,NONE,"[""BAR698910"", ""RFID68304""]",21,N/A,,0,,0.42,Crew_Quarters,ACTIVE
+000678,Books_015,Entertainment_and_Leisure_Items,Books,59.4,69.1,29.4,8.82,AMBIENT,LOT2024-286,,True,NONE,"[""BAR867173"", ""RFID56362""]",36,N/A,,0,,0.38,Crew_Quarters,ACTIVE
+000679,Books_016,Entertainment_and_Leisure_Items,Books,21.0,33.5,29.9,14.79,AMBIENT,LOT2025-914,,False,NONE,"[""BAR140220"", ""RFID78327""]",24,N/A,,0,,0.42,Crew_Quarters,ACTIVE
+000680,Books_017,Entertainment_and_Leisure_Items,Books,12.5,54.4,5.4,3.0,AMBIENT,LOT2024-690,,True,NONE,"[""BAR305183"", ""RFID29848""]",44,N/A,,0,,0.11,Crew_Quarters,ACTIVE
+000681,Books_018,Entertainment_and_Leisure_Items,Books,54.4,16.2,33.4,14.55,COLD,LOT2024-503,,True,NONE,"[""BAR684829"", ""RFID33345"", ""QR5310""]",33,N/A,,0,,0.31,Crew_Quarters,ACTIVE
+000682,Books_019,Entertainment_and_Leisure_Items,Books,34.4,47.1,57.5,17.59,AMBIENT,LOT2026-497,,True,NONE,"[""BAR614034"", ""RFID61407""]",34,N/A,,0,,0.28,Crew_Quarters,ACTIVE
+000683,Books_020,Entertainment_and_Leisure_Items,Books,77.4,72.8,47.0,8.57,AMBIENT,LOT2026-436,,True,NONE,"[""BAR221445"", ""RFID51799""]",48,N/A,,0,,0.19,Crew_Quarters,ACTIVE
+000684,Books_021,Entertainment_and_Leisure_Items,Books,71.8,68.8,52.5,12.14,COLD,LOT2025-520,,True,NONE,"[""BAR325555""]",35,N/A,,0,,0.05,Crew_Quarters,IN_USE
+000685,Books_022,Entertainment_and_Leisure_Items,Books,32.2,37.4,29.3,8.15,AMBIENT,LOT2026-225,,True,NONE,"[""BAR456349"", ""RFID15980""]",23,N/A,,0,,0.22,Crew_Quarters,ACTIVE
+000686,Books_023,Entertainment_and_Leisure_Items,Books,24.4,53.8,57.1,12.38,AMBIENT,LOT2026-021,,True,NONE,"[""BAR857311"", ""RFID59700"", ""QR6460""]",41,N/A,,0,,0.46,Crew_Quarters,IN_USE
+000687,Books_024,Entertainment_and_Leisure_Items,Books,55.8,46.3,24.9,4.21,AMBIENT,LOT2025-881,,True,NONE,"[""BAR852689"", ""RFID31155""]",30,N/A,,0,,0.18,Crew_Quarters,ACTIVE
+000688,Books_025,Entertainment_and_Leisure_Items,Books,75.8,12.5,6.1,18.82,AMBIENT,LOT2025-044,,True,NONE,"[""BAR264569"", ""RFID13177"", ""QR5051""]",26,N/A,,0,,0.04,Crew_Quarters,IN_USE
+000689,Books_026,Entertainment_and_Leisure_Items,Books,36.4,38.1,50.0,17.57,AMBIENT,LOT2026-740,,True,NONE,"[""BAR837661"", ""RFID64444"", ""QR9875""]",25,N/A,,0,,0.31,Crew_Quarters,ACTIVE
+000690,Books_027,Entertainment_and_Leisure_Items,Books,65.5,23.6,38.3,6.45,AMBIENT,LOT2026-024,,True,NONE,"[""BAR416831"", ""RFID36563"", ""QR8723""]",40,N/A,,0,,0.2,Crew_Quarters,ACTIVE
+000691,Books_028,Entertainment_and_Leisure_Items,Books,38.4,29.5,20.6,14.15,AMBIENT,LOT2024-509,,True,NONE,"[""BAR862899"", ""RFID58855""]",52,N/A,,0,,0.36,Crew_Quarters,ACTIVE
+000692,Books_029,Entertainment_and_Leisure_Items,Books,11.7,64.0,29.6,9.69,AMBIENT,LOT2025-148,,True,NONE,"[""BAR949011"", ""RFID20962"", ""QR3773""]",26,N/A,,0,,0.12,Crew_Quarters,DISPOSED
+000693,Books_030,Entertainment_and_Leisure_Items,Books,15.9,38.2,51.1,10.61,AMBIENT,LOT2024-786,,True,NONE,"[""BAR617386"", ""RFID50823""]",56,N/A,,0,,0.42,Crew_Quarters,ACTIVE
+000694,Books_031,Entertainment_and_Leisure_Items,Books,51.9,71.0,19.7,4.42,AMBIENT,LOT2026-512,,False,NONE,"[""BAR428221"", ""QR8559""]",55,N/A,,0,,0.36,Crew_Quarters,ACTIVE
+000695,Books_032,Entertainment_and_Leisure_Items,Books,79.5,15.7,10.8,14.08,AMBIENT,LOT2024-166,,True,NONE,"[""BAR645195"", ""RFID31783"", ""QR2862""]",44,N/A,,0,,0.04,Crew_Quarters,ACTIVE
+000696,Books_033,Entertainment_and_Leisure_Items,Books,66.2,44.1,46.2,11.08,COLD,LOT2024-446,,True,NONE,"[""BAR408515"", ""RFID98694"", ""QR6281""]",45,N/A,,0,,0.32,Crew_Quarters,ACTIVE
+000697,Books_034,Entertainment_and_Leisure_Items,Books,19.9,46.6,16.2,12.4,AMBIENT,LOT2025-484,,True,NONE,"[""BAR585365"", ""RFID53276""]",43,N/A,,0,,0.37,Crew_Quarters,SCHEDULED
+000698,Books_035,Entertainment_and_Leisure_Items,Books,46.7,68.1,5.5,8.5,AMBIENT,LOT2024-320,,True,NONE,"[""BAR835538"", ""RFID22300""]",29,N/A,,0,,0.18,Crew_Quarters,ACTIVE
+000699,Books_036,Entertainment_and_Leisure_Items,Books,21.0,34.5,35.8,4.75,COLD,LOT2024-282,,True,NONE,"[""BAR397992""]",60,N/A,,0,,0.3,Crew_Quarters,ACTIVE
+000700,Books_037,Entertainment_and_Leisure_Items,Books,38.2,27.8,34.8,13.29,AMBIENT,LOT2024-749,,True,NONE,"[""BAR326955"", ""RFID44463""]",24,N/A,,0,,0.08,Crew_Quarters,ACTIVE
+000701,Books_038,Entertainment_and_Leisure_Items,Books,36.8,50.3,51.9,12.21,AMBIENT,LOT2025-215,,True,NONE,"[""BAR276264"", ""RFID40386""]",59,N/A,,0,,0.06,Crew_Quarters,PLANNED
+000702,Books_039,Entertainment_and_Leisure_Items,Books,21.5,71.2,22.8,17.95,AMBIENT,LOT2025-436,,True,NONE,"[""BAR797137"", ""RFID49656""]",23,N/A,,0,,0.08,Crew_Quarters,ACTIVE
+000703,Books_040,Entertainment_and_Leisure_Items,Books,37.0,43.2,22.1,10.58,AMBIENT,LOT2026-863,,True,NONE,"[""BAR324289""]",53,N/A,,0,,0.42,Crew_Quarters,IN_USE
+000704,Books_041,Entertainment_and_Leisure_Items,Books,49.2,44.3,48.4,13.8,AMBIENT,LOT2026-357,,True,NONE,"[""BAR286659"", ""RFID57931""]",55,N/A,,0,,0.39,Crew_Quarters,ACTIVE
+000705,Books_042,Entertainment_and_Leisure_Items,Books,53.2,71.3,55.6,4.06,AMBIENT,LOT2026-011,,False,NONE,"[""BAR305349"", ""RFID78944"", ""QR6085""]",43,N/A,,0,,0.18,Crew_Quarters,WASTE_DEPLETED
+000706,Books_043,Entertainment_and_Leisure_Items,Books,45.2,10.9,20.0,13.05,AMBIENT,LOT2026-722,,False,NONE,"[""BAR365329"", ""RFID17500""]",50,N/A,,0,,0.42,Crew_Quarters,SCHEDULED
+000707,Books_044,Entertainment_and_Leisure_Items,Books,79.8,54.3,32.0,9.63,AMBIENT,LOT2024-379,,True,NONE,"[""BAR130237"", ""RFID30079""]",54,N/A,,0,,0.1,Crew_Quarters,SCHEDULED
+000708,Books_045,Entertainment_and_Leisure_Items,Books,68.4,18.4,29.4,14.3,AMBIENT,LOT2026-285,,False,NONE,"[""BAR993990"", ""RFID90478""]",40,N/A,,0,,0.18,Crew_Quarters,ACTIVE
+000709,Books_046,Entertainment_and_Leisure_Items,Books,72.8,21.8,59.2,14.53,AMBIENT,LOT2026-413,,True,NONE,"[""BAR536604""]",43,N/A,,0,,0.05,Crew_Quarters,PLANNED
+000710,Books_047,Entertainment_and_Leisure_Items,Books,61.0,15.9,29.4,5.73,AMBIENT,LOT2025-178,,True,NONE,"[""BAR766160"", ""RFID10422""]",32,N/A,,0,,0.29,Crew_Quarters,ACTIVE
+000711,Books_048,Entertainment_and_Leisure_Items,Books,68.5,16.0,56.2,2.04,AMBIENT,LOT2024-191,,True,NONE,"[""BAR432924"", ""RFID12635""]",25,N/A,,0,,0.4,Crew_Quarters,ACTIVE
+000712,Books_049,Entertainment_and_Leisure_Items,Books,15.7,60.7,18.6,16.79,AMBIENT,LOT2026-136,,True,NONE,"[""BAR425569"", ""RFID47627"", ""QR3300""]",32,N/A,,0,,0.29,Crew_Quarters,ACTIVE
+000713,Books_050,Entertainment_and_Leisure_Items,Books,29.1,23.9,58.9,5.41,AMBIENT,LOT2025-364,,True,NONE,"[""BAR706806"", ""RFID94125""]",48,N/A,,0,,0.42,Crew_Quarters,ACTIVE
+000714,Books_051,Entertainment_and_Leisure_Items,Books,76.5,51.0,13.6,11.5,AMBIENT,LOT2026-816,,True,NONE,"[""BAR402712"", ""RFID76029""]",47,N/A,,0,,0.38,Crew_Quarters,ACTIVE
+000715,Books_052,Entertainment_and_Leisure_Items,Books,24.8,25.3,19.3,18.46,AMBIENT,LOT2024-487,,True,NONE,"[""BAR246606"", ""RFID52335""]",53,N/A,,0,,0.2,Crew_Quarters,ACTIVE
+000716,Books_053,Entertainment_and_Leisure_Items,Books,59.1,54.1,52.8,0.46,AMBIENT,LOT2025-664,,True,NONE,"[""BAR205075"", ""RFID56924""]",46,N/A,,0,,0.24,Crew_Quarters,ACTIVE
+000717,Books_054,Entertainment_and_Leisure_Items,Books,66.6,42.0,36.7,8.87,AMBIENT,LOT2024-259,,False,NONE,"[""BAR858510"", ""RFID54286""]",45,N/A,,0,,0.21,Crew_Quarters,ACTIVE
+000718,Books_055,Entertainment_and_Leisure_Items,Books,26.4,75.4,56.0,2.42,AMBIENT,LOT2026-411,,False,NONE,"[""BAR721885"", ""RFID77135"", ""QR5924""]",47,N/A,,0,,0.45,Crew_Quarters,LOST
+000719,Books_056,Entertainment_and_Leisure_Items,Books,23.9,78.1,46.4,2.86,AMBIENT,LOT2024-994,,True,NONE,"[""BAR194789"", ""RFID28541""]",41,N/A,,0,,0.24,Crew_Quarters,ACTIVE
+000720,Books_057,Entertainment_and_Leisure_Items,Books,20.3,71.8,21.6,1.88,AMBIENT,LOT2025-093,,True,NONE,"[""BAR859309"", ""RFID99746""]",35,N/A,,0,,0.39,Crew_Quarters,ACTIVE
+000721,Books_058,Entertainment_and_Leisure_Items,Books,17.0,48.5,26.7,4.49,AMBIENT,LOT2025-724,,True,NONE,"[""BAR354533"", ""RFID22559""]",50,N/A,,0,,0.17,Crew_Quarters,WASTE
+000722,Books_059,Entertainment_and_Leisure_Items,Books,32.9,29.8,42.1,17.49,AMBIENT,LOT2024-356,,True,NONE,"[""BAR612029"", ""RFID86864"", ""QR3918""]",58,N/A,,0,,0.39,Crew_Quarters,ACTIVE
+000723,Books_060,Entertainment_and_Leisure_Items,Books,67.6,52.7,46.3,18.32,AMBIENT,LOT2024-046,,True,NONE,"[""BAR321493"", ""RFID22170""]",34,N/A,,0,,0.33,Crew_Quarters,ACTIVE
+000724,Books_061,Entertainment_and_Leisure_Items,Books,37.1,67.5,6.9,19.18,AMBIENT,LOT2025-699,,True,NONE,"[""BAR642479""]",46,N/A,,0,,0.06,Crew_Quarters,ACTIVE
+000725,Books_062,Entertainment_and_Leisure_Items,Books,70.4,66.2,5.7,6.58,AMBIENT,LOT2026-466,,True,NONE,"[""BAR112151"", ""RFID97843""]",56,N/A,,0,,0.39,Crew_Quarters,ACTIVE
+000726,Books_063,Entertainment_and_Leisure_Items,Books,54.4,52.3,49.1,9.17,AMBIENT,LOT2026-344,,True,NONE,"[""BAR985174"", ""RFID57823"", ""QR3930""]",43,N/A,,0,,0.49,Crew_Quarters,ACTIVE
+000727,Books_064,Entertainment_and_Leisure_Items,Books,57.2,20.5,23.5,18.7,AMBIENT,LOT2026-833,,False,NONE,"[""BAR744371"", ""RFID69636""]",57,N/A,,0,,0.24,Crew_Quarters,ACTIVE
+000728,Books_065,Entertainment_and_Leisure_Items,Books,42.2,13.5,38.0,7.58,AMBIENT,LOT2025-786,,True,NONE,"[""BAR958961"", ""RFID45027"", ""QR6847""]",47,N/A,,0,,0.22,Crew_Quarters,ACTIVE
+000729,Books_066,Entertainment_and_Leisure_Items,Books,12.5,17.8,45.3,10.77,AMBIENT,LOT2024-548,,False,NONE,"[""BAR199166"", ""RFID28958""]",45,N/A,,0,,0.23,Crew_Quarters,ACTIVE
+000730,Books_067,Entertainment_and_Leisure_Items,Books,58.2,27.1,50.4,16.75,AMBIENT,LOT2024-079,,True,NONE,"[""BAR442452"", ""RFID29234""]",53,N/A,,0,,0.37,Crew_Quarters,PLANNED
+000731,Books_068,Entertainment_and_Leisure_Items,Books,45.9,60.8,23.6,12.84,AMBIENT,LOT2024-189,,False,NONE,"[""BAR883041"", ""RFID95576""]",39,N/A,,0,,0.06,Crew_Quarters,WASTE_DEPLETED
+000732,Books_069,Entertainment_and_Leisure_Items,Books,65.6,50.0,59.7,12.43,AMBIENT,LOT2024-711,,True,NONE,"[""BAR937764"", ""RFID85148""]",54,N/A,,0,,0.39,Crew_Quarters,ACTIVE
+000733,Books_070,Entertainment_and_Leisure_Items,Books,64.5,29.4,41.9,12.21,AMBIENT,LOT2025-006,,True,NONE,"[""BAR526962"", ""RFID64306""]",31,N/A,,0,,0.15,Crew_Quarters,ACTIVE
+000734,Books_071,Entertainment_and_Leisure_Items,Books,54.4,16.8,17.4,14.27,AMBIENT,LOT2025-746,,True,NONE,"[""BAR846621"", ""RFID70377""]",34,N/A,,0,,0.32,Crew_Quarters,ACTIVE
+000735,Books_072,Entertainment_and_Leisure_Items,Books,75.1,10.9,23.7,7.12,AMBIENT,LOT2026-511,,False,NONE,"[""BAR320869"", ""RFID32283""]",48,N/A,,0,,0.14,Crew_Quarters,ACTIVE
+000736,Books_073,Entertainment_and_Leisure_Items,Books,77.7,54.2,35.9,7.1,AMBIENT,LOT2026-379,,True,NONE,"[""BAR418801"", ""RFID51331""]",33,N/A,,0,,0.24,Crew_Quarters,ACTIVE
+000737,Books_074,Entertainment_and_Leisure_Items,Books,53.7,49.5,27.8,15.37,AMBIENT,LOT2025-241,,False,NONE,"[""BAR493514"", ""QR3023""]",38,N/A,,0,,0.07,Crew_Quarters,ACTIVE
+000738,Movies_Music_Devices_001,Entertainment_and_Leisure_Items,Movies_Music_Devices,30.3,70.5,47.2,19.69,AMBIENT,LOT2025-770,,True,NONE,"[""BAR328330"", ""RFID88544"", ""QR6950""]",45,N/A,,0,,0.32,Crew_Quarters,ACTIVE
+000739,Movies_Music_Devices_002,Entertainment_and_Leisure_Items,Movies_Music_Devices,54.3,54.5,32.6,10.79,AMBIENT,LOT2025-775,,True,NONE,"[""BAR586449"", ""RFID68911"", ""QR3910""]",34,N/A,,0,,0.21,Crew_Quarters,ACTIVE
+000740,Movies_Music_Devices_003,Entertainment_and_Leisure_Items,Movies_Music_Devices,63.4,55.9,42.6,2.24,AMBIENT,LOT2025-421,,True,NONE,"[""BAR298049"", ""RFID91117"", ""QR9247""]",57,N/A,,0,,0.5,Crew_Quarters,ACTIVE
+000741,Movies_Music_Devices_004,Entertainment_and_Leisure_Items,Movies_Music_Devices,76.2,32.8,18.7,11.52,AMBIENT,LOT2025-024,,False,NONE,"[""BAR879055"", ""RFID95736""]",50,N/A,,0,,0.27,Crew_Quarters,ACTIVE
+000742,Movies_Music_Devices_005,Entertainment_and_Leisure_Items,Movies_Music_Devices,42.0,60.6,18.2,9.6,AMBIENT,LOT2025-067,,True,NONE,"[""BAR132390"", ""RFID70447""]",32,N/A,,0,,0.35,Crew_Quarters,ACTIVE
+000743,Movies_Music_Devices_006,Entertainment_and_Leisure_Items,Movies_Music_Devices,22.4,42.3,40.3,16.13,AMBIENT,LOT2024-251,,True,NONE,"[""BAR584664"", ""RFID19154"", ""QR1529""]",41,N/A,,0,,0.35,Crew_Quarters,ACTIVE
+000744,Movies_Music_Devices_007,Entertainment_and_Leisure_Items,Movies_Music_Devices,42.9,37.0,48.1,19.16,AMBIENT,LOT2026-663,,True,NONE,"[""BAR660118"", ""RFID67477""]",54,N/A,,0,,0.37,Crew_Quarters,ACTIVE
+000745,Movies_Music_Devices_008,Entertainment_and_Leisure_Items,Movies_Music_Devices,67.6,63.8,25.0,14.42,AMBIENT,LOT2025-439,,True,NONE,"[""BAR925673"", ""RFID29134""]",52,N/A,,0,,0.38,Crew_Quarters,ACTIVE
+000746,Movies_Music_Devices_009,Entertainment_and_Leisure_Items,Movies_Music_Devices,60.5,35.7,41.1,3.1,AMBIENT,LOT2024-271,,True,NONE,"[""BAR201843"", ""RFID19708""]",35,N/A,,0,,0.36,Crew_Quarters,IN_USE
+000747,Movies_Music_Devices_010,Entertainment_and_Leisure_Items,Movies_Music_Devices,34.0,58.2,23.2,9.17,AMBIENT,LOT2026-037,,True,NONE,"[""BAR898304"", ""RFID78390"", ""QR4621""]",36,N/A,,0,,0.44,Crew_Quarters,ACTIVE
+000748,Movies_Music_Devices_011,Entertainment_and_Leisure_Items,Movies_Music_Devices,31.5,60.1,36.2,6.3,AMBIENT,LOT2024-762,,True,NONE,"[""BAR944311"", ""RFID29205""]",48,N/A,,0,,0.43,Crew_Quarters,ACTIVE
+000749,Movies_Music_Devices_012,Entertainment_and_Leisure_Items,Movies_Music_Devices,69.6,50.8,13.2,0.54,AMBIENT,LOT2026-892,,True,NONE,"[""BAR641922"", ""RFID91062""]",43,N/A,,0,,0.49,Crew_Quarters,ACTIVE
+000750,Movies_Music_Devices_013,Entertainment_and_Leisure_Items,Movies_Music_Devices,45.1,46.6,25.8,18.54,AMBIENT,LOT2025-180,,True,NONE,"[""BAR607509"", ""QR2060""]",30,N/A,,0,,0.18,Crew_Quarters,ACTIVE
+000751,Movies_Music_Devices_014,Entertainment_and_Leisure_Items,Movies_Music_Devices,29.5,64.5,48.4,13.1,AMBIENT,LOT2026-935,,True,NONE,"[""BAR769658""]",42,N/A,,0,,0.43,Crew_Quarters,IN_USE
+000752,Movies_Music_Devices_015,Entertainment_and_Leisure_Items,Movies_Music_Devices,26.0,24.2,41.5,8.15,N/A,LOT2026-069,,True,NONE,"[""BAR384660"", ""RFID80091""]",26,N/A,,0,,0.28,Crew_Quarters,ACTIVE
+000753,Movies_Music_Devices_016,Entertainment_and_Leisure_Items,Movies_Music_Devices,41.3,46.6,18.5,16.01,AMBIENT,LOT2026-879,,True,NONE,"[""BAR356992"", ""RFID69777"", ""QR5354""]",31,N/A,,0,,0.28,Crew_Quarters,ACTIVE
+000754,Movies_Music_Devices_017,Entertainment_and_Leisure_Items,Movies_Music_Devices,68.1,14.5,54.7,10.59,AMBIENT,LOT2024-600,,True,NONE,"[""BAR898679"", ""RFID70852"", ""QR1836""]",23,N/A,,0,,0.17,Crew_Quarters,ACTIVE
+000755,Movies_Music_Devices_018,Entertainment_and_Leisure_Items,Movies_Music_Devices,18.1,15.8,15.9,10.98,AMBIENT,LOT2025-583,,True,NONE,"[""BAR110068"", ""RFID24617""]",33,N/A,,0,,0.23,Crew_Quarters,ACTIVE
+000756,Movies_Music_Devices_019,Entertainment_and_Leisure_Items,Movies_Music_Devices,54.4,62.9,59.6,5.26,AMBIENT,LOT2025-647,,False,NONE,"[""BAR285107"", ""RFID73344""]",46,N/A,,0,,0.48,Crew_Quarters,ACTIVE
+000757,Movies_Music_Devices_020,Entertainment_and_Leisure_Items,Movies_Music_Devices,27.4,29.3,35.9,6.38,AMBIENT,LOT2024-500,,True,NONE,"[""BAR106833"", ""RFID76787""]",48,N/A,,0,,0.1,Crew_Quarters,ACTIVE
+000758,Movies_Music_Devices_021,Entertainment_and_Leisure_Items,Movies_Music_Devices,31.3,74.8,29.4,12.87,AMBIENT,LOT2024-798,,True,NONE,"[""BAR213992"", ""RFID37946""]",54,N/A,,0,,0.17,Crew_Quarters,IN_USE
+000759,Movies_Music_Devices_022,Entertainment_and_Leisure_Items,Movies_Music_Devices,57.9,74.9,16.6,13.54,AMBIENT,LOT2025-805,,False,NONE,"[""BAR280121""]",40,N/A,,0,,0.1,Crew_Quarters,LOST
+000760,Movies_Music_Devices_023,Entertainment_and_Leisure_Items,Movies_Music_Devices,55.7,65.2,47.9,5.61,AMBIENT,LOT2025-380,,True,NONE,"[""BAR252029"", ""RFID56390""]",36,N/A,,0,,0.17,Crew_Quarters,ACTIVE
+000761,Movies_Music_Devices_024,Entertainment_and_Leisure_Items,Movies_Music_Devices,63.4,10.4,56.7,1.39,AMBIENT,LOT2024-999,,True,NONE,"[""BAR579083"", ""RFID12553""]",46,N/A,,0,,0.12,Crew_Quarters,ACTIVE
+000762,Movies_Music_Devices_025,Entertainment_and_Leisure_Items,Movies_Music_Devices,68.3,11.7,28.5,7.83,AMBIENT,LOT2024-817,,True,NONE,"[""BAR325422"", ""RFID67685""]",55,N/A,,0,,0.07,Crew_Quarters,ACTIVE
+000763,Movies_Music_Devices_026,Entertainment_and_Leisure_Items,Movies_Music_Devices,43.6,60.5,30.8,19.43,AMBIENT,LOT2025-705,,True,NONE,"[""BAR840807"", ""RFID46718""]",22,N/A,,0,,0.3,Crew_Quarters,ACTIVE
+000764,Movies_Music_Devices_027,Entertainment_and_Leisure_Items,Movies_Music_Devices,34.0,47.7,29.1,5.9,AMBIENT,LOT2026-076,,True,NONE,"[""BAR440310""]",50,N/A,,0,,0.42,Crew_Quarters,SCHEDULED
+000765,Movies_Music_Devices_028,Entertainment_and_Leisure_Items,Movies_Music_Devices,50.2,49.3,29.1,6.76,AMBIENT,LOT2025-571,,False,NONE,"[""BAR656822""]",54,N/A,,0,,0.09,Crew_Quarters,IN_USE
+000766,Movies_Music_Devices_029,Entertainment_and_Leisure_Items,Movies_Music_Devices,58.9,61.7,57.6,7.42,AMBIENT,LOT2024-189,,True,NONE,"[""BAR436873"", ""RFID70398""]",48,N/A,,0,,0.12,Crew_Quarters,BROKEN
+000767,Movies_Music_Devices_030,Entertainment_and_Leisure_Items,Movies_Music_Devices,52.3,75.3,12.7,12.95,AMBIENT,LOT2025-818,,False,NONE,"[""BAR150364"", ""QR9392""]",47,N/A,,0,,0.2,Crew_Quarters,ACTIVE
+000768,Movies_Music_Devices_031,Entertainment_and_Leisure_Items,Movies_Music_Devices,77.2,71.1,23.0,10.91,AMBIENT,LOT2026-069,,True,NONE,"[""BAR870109"", ""RFID22077""]",38,N/A,,0,,0.39,Crew_Quarters,ACTIVE
+000769,Movies_Music_Devices_032,Entertainment_and_Leisure_Items,Movies_Music_Devices,69.2,16.1,55.7,12.32,AMBIENT,LOT2026-442,,True,NONE,"[""BAR957479"", ""RFID69151""]",32,N/A,,0,,0.5,Crew_Quarters,ACTIVE
+000770,Movies_Music_Devices_033,Entertainment_and_Leisure_Items,Movies_Music_Devices,22.7,50.3,30.0,15.69,AMBIENT,LOT2025-589,,False,NONE,"[""BAR408086"", ""RFID61111"", ""QR4690""]",47,N/A,,0,,0.17,Crew_Quarters,ACTIVE
+000771,Movies_Music_Devices_034,Entertainment_and_Leisure_Items,Movies_Music_Devices,50.9,63.7,34.3,13.18,AMBIENT,LOT2026-948,,True,NONE,"[""BAR471872""]",32,N/A,,0,,0.3,Crew_Quarters,ACTIVE
+000772,Movies_Music_Devices_035,Entertainment_and_Leisure_Items,Movies_Music_Devices,31.6,17.1,34.3,18.91,AMBIENT,LOT2026-357,,True,NONE,"[""BAR172631"", ""RFID51331""]",22,N/A,,0,,0.34,Crew_Quarters,ACTIVE
+000773,Movies_Music_Devices_036,Entertainment_and_Leisure_Items,Movies_Music_Devices,79.4,26.3,55.6,15.52,AMBIENT,LOT2025-127,,True,NONE,"[""BAR974677"", ""QR4417""]",21,N/A,,0,,0.2,Crew_Quarters,ACTIVE
+000774,Movies_Music_Devices_037,Entertainment_and_Leisure_Items,Movies_Music_Devices,24.4,36.6,49.8,2.13,AMBIENT,LOT2026-742,,False,NONE,"[""BAR641585"", ""RFID37477"", ""QR9013""]",31,N/A,,0,,0.38,Crew_Quarters,ACTIVE
+000775,Movies_Music_Devices_038,Entertainment_and_Leisure_Items,Movies_Music_Devices,39.1,24.7,10.0,10.29,AMBIENT,LOT2024-968,,True,NONE,"[""BAR579150"", ""RFID59811""]",50,N/A,,0,,0.21,Crew_Quarters,SCHEDULED
+000776,Movies_Music_Devices_039,Entertainment_and_Leisure_Items,Movies_Music_Devices,76.2,68.6,28.9,17.0,AMBIENT,LOT2026-087,,True,NONE,"[""BAR782028"", ""RFID61076""]",39,N/A,,0,,0.03,Crew_Quarters,LOST
+000777,Movies_Music_Devices_040,Entertainment_and_Leisure_Items,Movies_Music_Devices,72.8,13.2,51.6,3.79,AMBIENT,LOT2024-144,,True,NONE,"[""BAR828833"", ""RFID15110"", ""QR4437""]",20,N/A,,0,,0.44,Crew_Quarters,ACTIVE
+000778,Movies_Music_Devices_041,Entertainment_and_Leisure_Items,Movies_Music_Devices,39.0,21.0,14.5,18.74,AMBIENT,LOT2026-186,,True,NONE,"[""BAR482801"", ""QR3660""]",29,N/A,,0,,0.03,Crew_Quarters,ACTIVE
+000779,Movies_Music_Devices_042,Entertainment_and_Leisure_Items,Movies_Music_Devices,36.1,68.9,39.2,0.86,AMBIENT,LOT2025-036,,True,NONE,"[""BAR870651""]",21,N/A,,0,,0.04,Crew_Quarters,ACTIVE
+000780,Movies_Music_Devices_043,Entertainment_and_Leisure_Items,Movies_Music_Devices,46.8,21.1,5.8,17.97,AMBIENT,LOT2024-116,,True,NONE,"[""BAR598796"", ""RFID64404""]",25,N/A,,0,,0.28,Crew_Quarters,ACTIVE
+000781,Movies_Music_Devices_044,Entertainment_and_Leisure_Items,Movies_Music_Devices,54.6,31.8,30.8,18.09,AMBIENT,LOT2026-375,,True,NONE,"[""BAR743416"", ""RFID22635""]",28,N/A,,0,,0.38,Crew_Quarters,SCHEDULED
+000782,Movies_Music_Devices_045,Entertainment_and_Leisure_Items,Movies_Music_Devices,25.4,19.1,56.8,4.74,AMBIENT,LOT2026-414,,True,NONE,"[""BAR396012"", ""QR4706""]",25,N/A,,0,,0.14,Crew_Quarters,IN_USE
+000783,Movies_Music_Devices_046,Entertainment_and_Leisure_Items,Movies_Music_Devices,59.7,42.4,37.5,10.48,AMBIENT,LOT2024-336,,False,NONE,"[""BAR542521"", ""RFID29034""]",37,N/A,,0,,0.47,Crew_Quarters,ACTIVE
+000784,Movies_Music_Devices_047,Entertainment_and_Leisure_Items,Movies_Music_Devices,37.0,13.4,15.9,3.89,AMBIENT,LOT2024-166,,False,NONE,"[""BAR516036"", ""RFID84984""]",29,N/A,,0,,0.43,Crew_Quarters,ACTIVE
+000785,Movies_Music_Devices_048,Entertainment_and_Leisure_Items,Movies_Music_Devices,78.0,38.4,59.6,9.23,AMBIENT,LOT2024-763,,True,NONE,"[""BAR392872"", ""RFID77435""]",36,N/A,,0,,0.18,Crew_Quarters,WASTE_EXPIRED
+000786,Movies_Music_Devices_049,Entertainment_and_Leisure_Items,Movies_Music_Devices,66.5,44.1,35.2,13.37,AMBIENT,LOT2025-065,,True,NONE,"[""BAR919938"", ""RFID94186"", ""QR9901""]",41,N/A,,0,,0.08,Crew_Quarters,ACTIVE
+000787,Movies_Music_Devices_050,Entertainment_and_Leisure_Items,Movies_Music_Devices,17.8,48.5,21.3,17.5,AMBIENT,LOT2026-963,,False,NONE,"[""BAR186997""]",39,N/A,,0,,0.11,Crew_Quarters,PLANNED
+000788,Movies_Music_Devices_051,Entertainment_and_Leisure_Items,Movies_Music_Devices,45.8,19.9,42.4,15.59,AMBIENT,LOT2025-539,,True,NONE,"[""BAR730127"", ""RFID83778""]",32,N/A,,0,,0.27,Crew_Quarters,PLANNED
+000789,Movies_Music_Devices_052,Entertainment_and_Leisure_Items,Movies_Music_Devices,26.1,76.3,34.2,7.68,AMBIENT,LOT2026-650,,True,NONE,"[""BAR748213"", ""RFID29929""]",26,N/A,,0,,0.48,Crew_Quarters,ACTIVE
+000790,Movies_Music_Devices_053,Entertainment_and_Leisure_Items,Movies_Music_Devices,13.4,77.8,27.0,7.98,N/A,LOT2025-480,,True,NONE,"[""BAR437558"", ""RFID49320"", ""QR5117""]",53,N/A,,0,,0.36,Crew_Quarters,ACTIVE
+000791,Movies_Music_Devices_054,Entertainment_and_Leisure_Items,Movies_Music_Devices,61.3,51.6,8.7,15.18,AMBIENT,LOT2024-783,,True,NONE,"[""BAR946188""]",28,N/A,,0,,0.21,Crew_Quarters,ACTIVE
+000792,Movies_Music_Devices_055,Entertainment_and_Leisure_Items,Movies_Music_Devices,51.4,27.4,24.3,4.76,AMBIENT,LOT2025-127,,True,NONE,"[""BAR861244"", ""RFID98121"", ""QR8264""]",37,N/A,,0,,0.09,Crew_Quarters,ACTIVE
+000793,Movies_Music_Devices_056,Entertainment_and_Leisure_Items,Movies_Music_Devices,54.6,46.4,33.8,15.5,AMBIENT,LOT2026-449,,False,NONE,"[""BAR413337""]",58,N/A,,0,,0.31,Crew_Quarters,ACTIVE
+000794,Movies_Music_Devices_057,Entertainment_and_Leisure_Items,Movies_Music_Devices,62.8,60.4,53.1,19.0,AMBIENT,LOT2025-116,,True,NONE,"[""BAR757350"", ""RFID86674"", ""QR8983""]",22,N/A,,0,,0.38,Crew_Quarters,ACTIVE
+000795,Movies_Music_Devices_058,Entertainment_and_Leisure_Items,Movies_Music_Devices,79.8,52.2,37.9,7.44,AMBIENT,LOT2025-432,,True,NONE,"[""BAR159404"", ""RFID46726""]",51,N/A,,0,,0.37,Crew_Quarters,WASTE_DEPLETED
+000796,Movies_Music_Devices_059,Entertainment_and_Leisure_Items,Movies_Music_Devices,33.0,56.7,18.8,7.33,AMBIENT,LOT2025-249,,True,NONE,"[""BAR714239"", ""RFID87474""]",20,N/A,,0,,0.15,Crew_Quarters,BROKEN
+000797,Movies_Music_Devices_060,Entertainment_and_Leisure_Items,Movies_Music_Devices,44.2,52.5,36.1,12.25,COLD,LOT2024-605,,True,NONE,"[""BAR978922"", ""RFID22920""]",44,N/A,,0,,0.08,Crew_Quarters,IN_USE
+000798,Movies_Music_Devices_061,Entertainment_and_Leisure_Items,Movies_Music_Devices,57.1,73.3,28.2,8.06,AMBIENT,LOT2025-873,,True,NONE,"[""BAR583124"", ""RFID78519"", ""QR7532""]",22,N/A,,0,,0.41,Crew_Quarters,ACTIVE
+000799,Movies_Music_Devices_062,Entertainment_and_Leisure_Items,Movies_Music_Devices,56.8,11.8,36.2,0.78,AMBIENT,LOT2025-822,,False,NONE,"[""BAR129752"", ""RFID43228""]",41,N/A,,0,,0.35,Crew_Quarters,ACTIVE
+000800,Movies_Music_Devices_063,Entertainment_and_Leisure_Items,Movies_Music_Devices,29.4,64.9,22.8,14.07,AMBIENT,LOT2024-215,,True,NONE,"[""BAR685606"", ""RFID81732""]",60,N/A,,0,,0.38,Crew_Quarters,IN_USE
+000801,Movies_Music_Devices_064,Entertainment_and_Leisure_Items,Movies_Music_Devices,22.0,45.0,9.9,7.23,AMBIENT,LOT2024-325,,True,NONE,"[""BAR968937"", ""RFID21853""]",54,N/A,,0,,0.17,Crew_Quarters,ACTIVE
+000802,Movies_Music_Devices_065,Entertainment_and_Leisure_Items,Movies_Music_Devices,36.8,28.5,43.9,7.21,AMBIENT,LOT2024-983,,True,NONE,"[""BAR276730"", ""RFID24611"", ""QR6087""]",48,N/A,,0,,0.46,Crew_Quarters,IN_USE
+000803,Movies_Music_Devices_066,Entertainment_and_Leisure_Items,Movies_Music_Devices,63.0,47.7,26.9,14.0,AMBIENT,LOT2026-613,,False,NONE,"[""BAR795405"", ""RFID44520"", ""QR6573""]",32,N/A,,0,,0.28,Crew_Quarters,ACTIVE
+000804,Movies_Music_Devices_067,Entertainment_and_Leisure_Items,Movies_Music_Devices,17.3,76.9,49.8,17.78,AMBIENT,LOT2024-332,,True,NONE,"[""BAR335745"", ""RFID15344"", ""QR3539""]",38,N/A,,0,,0.34,Crew_Quarters,ACTIVE
+000805,Movies_Music_Devices_068,Entertainment_and_Leisure_Items,Movies_Music_Devices,68.3,78.8,18.5,4.75,AMBIENT,LOT2025-250,,False,NONE,"[""BAR121783""]",33,N/A,,0,,0.23,Crew_Quarters,ACTIVE
+000806,Movies_Music_Devices_069,Entertainment_and_Leisure_Items,Movies_Music_Devices,23.5,23.0,33.5,8.17,AMBIENT,LOT2025-765,,False,NONE,"[""BAR374194"", ""RFID57706""]",56,N/A,,0,,0.15,Crew_Quarters,ACTIVE
+000807,Movies_Music_Devices_070,Entertainment_and_Leisure_Items,Movies_Music_Devices,75.6,32.4,24.6,19.17,AMBIENT,LOT2026-253,,True,NONE,"[""BAR934202"", ""RFID26877"", ""QR9314""]",28,N/A,,0,,0.36,Crew_Quarters,ACTIVE
+000808,Movies_Music_Devices_071,Entertainment_and_Leisure_Items,Movies_Music_Devices,67.8,25.9,24.2,14.13,AMBIENT,LOT2024-477,,True,NONE,"[""BAR382206"", ""RFID16973""]",55,N/A,,0,,0.23,Crew_Quarters,ACTIVE
+000809,Movies_Music_Devices_072,Entertainment_and_Leisure_Items,Movies_Music_Devices,79.7,11.5,29.7,13.11,AMBIENT,LOT2026-152,,False,NONE,"[""BAR166874"", ""RFID18573""]",42,N/A,,0,,0.15,Crew_Quarters,ACTIVE
+000810,Movies_Music_Devices_073,Entertainment_and_Leisure_Items,Movies_Music_Devices,11.9,51.8,28.7,15.36,N/A,LOT2024-678,,True,NONE,"[""BAR574073"", ""RFID98430""]",28,N/A,,0,,0.13,Crew_Quarters,IN_USE
+000811,Movies_Music_Devices_074,Entertainment_and_Leisure_Items,Movies_Music_Devices,38.5,63.6,58.9,11.86,N/A,LOT2024-730,,True,NONE,"[""BAR891115"", ""RFID25687""]",20,N/A,,0,,0.05,Crew_Quarters,ACTIVE
+000812,Recreation_Materials_001,Entertainment_and_Leisure_Items,Recreation_Materials,61.3,27.4,38.1,15.25,AMBIENT,LOT2024-665,,True,NONE,"[""BAR619018"", ""RFID53488"", ""QR7611""]",31,N/A,,0,,0.3,Crew_Quarters,DISPOSED
+000813,Recreation_Materials_002,Entertainment_and_Leisure_Items,Recreation_Materials,38.5,58.7,12.6,7.06,AMBIENT,LOT2024-725,,True,NONE,"[""BAR551266""]",26,N/A,,0,,0.11,Crew_Quarters,ACTIVE
+000814,Recreation_Materials_003,Entertainment_and_Leisure_Items,Recreation_Materials,79.0,54.3,23.7,15.11,AMBIENT,LOT2026-063,,True,NONE,"[""BAR684191"", ""RFID58909"", ""QR1028""]",53,N/A,,0,,0.48,Crew_Quarters,ACTIVE
+000815,Recreation_Materials_004,Entertainment_and_Leisure_Items,Recreation_Materials,36.9,11.9,54.8,11.4,N/A,LOT2024-652,,True,NONE,"[""BAR751031"", ""RFID80151"", ""QR6656""]",24,N/A,,0,,0.07,Crew_Quarters,ACTIVE
+000816,Recreation_Materials_005,Entertainment_and_Leisure_Items,Recreation_Materials,36.2,22.4,29.2,16.97,AMBIENT,LOT2025-032,,False,NONE,"[""BAR752300"", ""RFID80462""]",31,N/A,,0,,0.4,Crew_Quarters,ACTIVE
+000817,Recreation_Materials_006,Entertainment_and_Leisure_Items,Recreation_Materials,75.5,17.5,42.6,11.93,WARM,LOT2025-198,,True,NONE,"[""BAR732819"", ""RFID90372""]",30,N/A,,0,,0.47,Crew_Quarters,WASTE
+000818,Recreation_Materials_007,Entertainment_and_Leisure_Items,Recreation_Materials,37.2,41.4,11.4,11.22,AMBIENT,LOT2024-246,,True,NONE,"[""BAR957300"", ""RFID62990"", ""QR1960""]",41,N/A,,0,,0.46,Crew_Quarters,WASTE
+000819,Recreation_Materials_008,Entertainment_and_Leisure_Items,Recreation_Materials,73.7,59.5,51.1,2.25,AMBIENT,LOT2026-329,,True,NONE,"[""BAR652953"", ""RFID79720""]",53,N/A,,0,,0.38,Crew_Quarters,ACTIVE
+000820,Recreation_Materials_009,Entertainment_and_Leisure_Items,Recreation_Materials,19.5,63.4,21.1,12.64,AMBIENT,LOT2024-503,,False,NONE,"[""BAR124991"", ""RFID52141""]",45,N/A,,0,,0.31,Crew_Quarters,ACTIVE
+000821,Recreation_Materials_010,Entertainment_and_Leisure_Items,Recreation_Materials,64.0,64.0,43.4,10.69,AMBIENT,LOT2024-315,,True,NONE,"[""BAR716006"", ""RFID84878""]",22,N/A,,0,,0.33,Crew_Quarters,IN_USE
+000822,Recreation_Materials_011,Entertainment_and_Leisure_Items,Recreation_Materials,13.3,31.2,15.4,19.29,AMBIENT,LOT2026-895,,True,NONE,"[""BAR554876"", ""RFID78679""]",23,N/A,,0,,0.26,Crew_Quarters,ACTIVE
+000823,Recreation_Materials_012,Entertainment_and_Leisure_Items,Recreation_Materials,25.0,42.0,15.2,4.66,AMBIENT,LOT2024-508,,False,NONE,"[""BAR316779"", ""RFID90349"", ""QR7250""]",40,N/A,,0,,0.12,Crew_Quarters,ACTIVE
+000824,Recreation_Materials_013,Entertainment_and_Leisure_Items,Recreation_Materials,10.3,26.8,49.8,16.68,N/A,LOT2024-381,,False,NONE,"[""BAR978483"", ""RFID30437"", ""QR5033""]",31,N/A,,0,,0.32,Crew_Quarters,ACTIVE
+000825,Recreation_Materials_014,Entertainment_and_Leisure_Items,Recreation_Materials,57.6,59.7,54.6,6.4,AMBIENT,LOT2024-426,,True,NONE,"[""BAR963559"", ""RFID46449""]",37,N/A,,0,,0.11,Crew_Quarters,IN_USE
+000826,Recreation_Materials_015,Entertainment_and_Leisure_Items,Recreation_Materials,10.7,58.5,7.3,15.41,AMBIENT,LOT2024-073,,True,NONE,"[""BAR768568"", ""RFID30830""]",28,N/A,,0,,0.25,Crew_Quarters,ACTIVE
+000827,Recreation_Materials_016,Entertainment_and_Leisure_Items,Recreation_Materials,76.0,28.0,42.4,18.63,AMBIENT,LOT2025-292,,True,NONE,"[""BAR997065"", ""RFID24220""]",45,N/A,,0,,0.21,Crew_Quarters,WASTE_EXPIRED
+000828,Recreation_Materials_017,Entertainment_and_Leisure_Items,Recreation_Materials,16.1,69.3,16.0,10.51,AMBIENT,LOT2024-115,,True,NONE,"[""BAR339751"", ""RFID60864"", ""QR2104""]",22,N/A,,0,,0.14,Crew_Quarters,ACTIVE
+000829,Recreation_Materials_018,Entertainment_and_Leisure_Items,Recreation_Materials,20.0,51.8,7.3,18.69,AMBIENT,LOT2026-326,,True,NONE,"[""BAR145883"", ""RFID30016""]",32,N/A,,0,,0.48,Crew_Quarters,WASTE
+000830,Recreation_Materials_019,Entertainment_and_Leisure_Items,Recreation_Materials,24.0,55.1,26.5,3.32,AMBIENT,LOT2024-189,,True,NONE,"[""BAR757681"", ""RFID96246""]",38,N/A,,0,,0.03,Crew_Quarters,ACTIVE
+000831,Recreation_Materials_020,Entertainment_and_Leisure_Items,Recreation_Materials,52.1,30.1,13.9,11.08,AMBIENT,LOT2026-067,,True,NONE,"[""BAR529836"", ""RFID12288""]",40,N/A,,0,,0.1,Crew_Quarters,WASTE
+000832,Recreation_Materials_021,Entertainment_and_Leisure_Items,Recreation_Materials,20.0,17.3,17.9,7.81,AMBIENT,LOT2025-788,,True,NONE,"[""BAR694495"", ""RFID39428""]",56,N/A,,0,,0.04,Crew_Quarters,ACTIVE

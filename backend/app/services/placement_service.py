@@ -101,6 +101,142 @@ def get_item_priorities(db: Session, item_ids: List[str]) -> Dict[str, int]:
     items = db.query(Item.item_id, Item.priority).filter(Item.item_id.in_(item_ids)).all()
     return {item.item_id: item.priority for item in items}
 
+# OPTIMIZATION 2: Constraint pre-filtering functions
+def check_basic_compatibility(item_req: ItemCreate, container: ContainerCreate) -> bool:
+    """Quick compatibility check without spatial calculations."""
+    # Basic dimension validation
+    if (item_req.width_cm > container.width_cm or 
+        item_req.depth_cm > container.depth_cm or 
+        item_req.height_cm > container.height_cm):
+        return False
+
+    # Check mass constraints if container has max_mass
+    if container.max_mass and item_req.mass_kg > container.max_mass:
+        return False
+
+    # Check temperature compatibility
+    if item_req.temp_requirement != TemperatureRequirement.AMBIENT:
+        # For now, assume all containers support ambient temperature
+        # In a real system, you'd check container temperature capabilities
+        pass
+
+    # Check hazardous material restrictions
+    if item_req.hazardous_class != HazardousClass.NONE:
+        # For now, assume all containers can handle hazardous materials
+        # In a real system, you'd check container safety ratings
+        pass
+
+    return True
+
+def get_compatible_containers(item_req: ItemCreate, containers_data: Dict[str, ContainerCreate]) -> List[str]:
+    """Pre-filter containers that can potentially hold the item."""
+    compatible_container_ids = []
+    for container_id, container in containers_data.items():
+        if check_basic_compatibility(item_req, container):
+            compatible_container_ids.append(container_id)
+    return compatible_container_ids
+
+def calculate_container_suitability_score(container: ContainerCreate, item: ItemCreate) -> float:
+    """Calculate how suitable a container is for an item (higher score = better)."""
+    score = 0.0
+    
+    # Preferred zone bonus
+    if container.zone == item.preferred_zone:
+        score += 100.0
+    
+    # Access index bonus (lower access index = easier access = higher score)
+    score += (100 - container.access_index)
+    
+    # Mass utilization bonus (prefer containers with room but not too empty)
+    if container.max_mass and container.max_mass > 0:
+        current_mass = getattr(container, 'current_mass', 0.0) or 0.0
+        available_mass = container.max_mass - current_mass
+        if available_mass >= item.mass_kg:
+            # Sweet spot: 60-80% utilization after placing item
+            target_utilization = 0.7
+            new_utilization = (current_mass + item.mass_kg) / container.max_mass
+            utilization_score = 100 - abs(new_utilization - target_utilization) * 100
+            score += utilization_score * 0.3  # 30% weight
+    
+    # Size efficiency bonus (prefer containers that aren't too oversized)
+    container_volume = container.width_cm * container.depth_cm * container.height_cm
+    item_volume = item.width_cm * item.depth_cm * item.height_cm
+    if container_volume > 0:
+        size_efficiency = item_volume / container_volume
+        # Prefer 10-50% volume utilization
+        if 0.1 <= size_efficiency <= 0.5:
+            score += size_efficiency * 20
+    
+    return score
+
+def placement_is_good_enough(item: ItemCreate, container: ContainerCreate, position: Position) -> bool:
+    """OPTIMIZATION 5: Determine if a placement is good enough to stop searching."""
+    # Perfect placement criteria
+    if container.zone == item.preferred_zone:
+        # In preferred zone, check if it's a good position
+        front_third = container.depth_cm * 0.33
+        if position.startCoordinates.depth <= front_third:  # Front placement
+            return True
+        # For high priority items, any preferred zone placement is good enough
+        if item.priority >= 80:
+            return True
+    
+    # For very high priority items, any placement is acceptable
+    if item.priority >= 90:
+        return True
+    
+    return False
+
+def should_attempt_rearrangement(item: ItemCreate, failed_containers: int, total_containers: int) -> bool:
+    """OPTIMIZATION 6: Decide if rearrangement is worth attempting."""
+    # Always try rearrangement for very high priority items
+    if item.priority >= 85:
+        return True
+    
+    # Try rearrangement if we couldn't place in most containers
+    failure_rate = failed_containers / total_containers if total_containers > 0 else 1.0
+    if failure_rate >= 0.7 and item.priority >= 60:
+        return True
+    
+    # Skip rearrangement for low priority items
+    if item.priority < 30:
+        return False
+    
+    return True
+
+# OPTIMIZATION 8: Memoization cache for displacement calculations
+_displacement_cache = {}
+_compatibility_cache = {}
+
+def get_displacement_cache_key(item_id: str, from_container: str, to_container: str) -> str:
+    """Generate cache key for displacement calculations."""
+    return f"{item_id}_{from_container}_{to_container}"
+
+def can_displace_item_cached(item_data: dict, from_container_id: str, to_container_id: str, containers_data: Dict[str, ContainerCreate]) -> bool:
+    """Check if item can be displaced with caching."""
+    cache_key = get_displacement_cache_key(item_data['item_id'], from_container_id, to_container_id)
+    
+    if cache_key in _displacement_cache:
+        return _displacement_cache[cache_key]
+    
+    # Calculate displacement feasibility
+    to_container = containers_data[to_container_id]
+    can_displace = (
+        item_data['width_cm'] <= to_container.width_cm and
+        item_data['depth_cm'] <= to_container.depth_cm and
+        item_data['height_cm'] <= to_container.height_cm and
+        (not to_container.max_mass or item_data['mass_kg'] <= to_container.max_mass)
+    )
+    
+    _displacement_cache[cache_key] = can_displace
+    return can_displace
+
+def clear_optimization_caches():
+    """Clear all optimization caches (call between placement requests)."""
+    global _displacement_cache, _compatibility_cache
+    _displacement_cache.clear()
+    _compatibility_cache.clear()
+
 def find_spot_in_container(
     item_req: ItemCreate,  # Item dimensions and properties
     container: ContainerCreate,  # Container dimensions
@@ -114,27 +250,16 @@ def find_spot_in_container(
     - Mass constraints
     - Access patterns
     """
-    # Basic dimension validation
-    if (item_req.width_cm > container.width_cm or 
-        item_req.depth_cm > container.depth_cm or 
-        item_req.height_cm > container.height_cm):
-        return None
-
-    # Check mass constraints if container has max_mass
-    if container.max_mass and item_req.mass_kg > container.max_mass:
-        return None
-
-    # Check temperature compatibility
-    if item_req.temp_requirement != TemperatureRequirement.AMBIENT:
-        # For now, assume all containers support ambient temperature
-        # In a real system, you'd check container temperature capabilities
-        pass
-
-    # Check hazardous material restrictions
-    if item_req.hazardous_class != HazardousClass.NONE:
-        # For now, assume all containers can handle hazardous materials
-        # In a real system, you'd check container safety ratings
-        pass
+    # OPTIMIZATION: Quick compatibility check first (with caching)
+    compat_key = f"{item_req.item_id}_{container.container_id}"
+    if compat_key in _compatibility_cache:
+        if not _compatibility_cache[compat_key]:
+            return None
+    else:
+        is_compatible = check_basic_compatibility(item_req, container)
+        _compatibility_cache[compat_key] = is_compatible
+        if not is_compatible:
+            return None
 
     # Use PlacementUtils for actual placement logic
     return PlacementUtils.find_optimal_placement_spot(
@@ -169,6 +294,9 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
 
     # --- Phase 0: Initialization & Data Loading ---
     print("--- Phase 0: Initializing ---")
+    # OPTIMIZATION: Clear caches for this placement request
+    clear_optimization_caches()
+    
     placements_result: List[PlacementResponseItem] = [] # Stores the *final* intended placement state for response
     rearrangements_result: List[RearrangementStep] = [] # Stores required move actions for response
     processed_item_ids: Set[str] = set() # Tracks items handled (placed or failed) during simulation
@@ -179,21 +307,25 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
     containers_data = {container.container_id: container for container in request_data.containers}
     container_ids = list(containers_data.keys())
 
-    # Load existing data from database
+    # Load existing data from database - OPTIMIZED: Single bulk query
     existing_placements_dict = get_current_placements_dict(db, container_ids)
     
-    # Get ALL existing items in the target containers (not just from current request)
-    all_existing_items_in_containers = []
-    print(f"--- DEBUG: Loading existing items from containers: {container_ids} ---")
-    for container_id in container_ids:
-        container_items = db.query(Item).filter(Item.current_location == container_id).all()
-        print(f"  Container {container_id}: Found {len(container_items)} existing items")
-        for item in container_items:
-            print(f"    Item {item.item_id}: priority {item.priority}, zone {item.preferred_zone}")
+    # OPTIMIZATION 1: Bulk load all existing items and placements in one query
+    print(f"--- OPTIMIZED: Bulk loading existing items from containers: {container_ids} ---")
+    if container_ids:
+        # Single query to get all items with their placements
+        items_with_placements = db.query(Item, Placement)\
+            .outerjoin(Placement, Item.item_id == Placement.item_id_fk)\
+            .filter(Item.current_location.in_(container_ids))\
+            .all()
+        
+        all_existing_items_in_containers = []
+        for item, placement in items_with_placements:
+            print(f"  Item {item.item_id}: priority {item.priority}, zone {item.preferred_zone}")
             all_existing_items_in_containers.append({
                 'item_id': item.item_id,
                 'priority': item.priority,
-                'container_id': container_id,
+                'container_id': item.current_location,
                 'width_cm': item.width_cm,
                 'depth_cm': item.depth_cm,
                 'height_cm': item.height_cm,
@@ -206,8 +338,12 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
                 'usage_frequency': item.usage_frequency,
                 'current_uses': item.current_uses,
                 'usage_remaining': item.usage_remaining,
-                'preferred_zone': item.preferred_zone
+                'preferred_zone': item.preferred_zone,
+                'placement': placement  # Include placement data for position info
             })
+        print(f"  BULK LOADED: {len(all_existing_items_in_containers)} items in single query")
+    else:
+        all_existing_items_in_containers = []
     
     # Get priorities for existing items
     existing_item_priorities = {item['item_id']: item['priority'] for item in all_existing_items_in_containers}
@@ -218,14 +354,38 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
     existing_item_priorities.update(new_item_priorities)
     print(f"  Combined priorities: {existing_item_priorities}")
 
-    # Build initial simulation state
+    # Build initial simulation state with existing placements
     temp_placements_by_container: Dict[str, List[Tuple[str, Coordinates, Coordinates]]] = {}
+    
+    # First, populate from existing database placements
     for container_id, placements in existing_placements_dict.items():
         temp_placements_by_container[container_id] = []
         for placement in placements:
             start_coords = Coordinates(width=placement.start_w, depth=placement.start_d, height=placement.start_h)
             end_coords = Coordinates(width=placement.end_w, depth=placement.end_d, height=placement.end_h)
             temp_placements_by_container[container_id].append((placement.item_id_fk, start_coords, end_coords))
+    
+    # Also add existing items that might not have placement records (use default positions)
+    for existing_item in all_existing_items_in_containers:
+        container_id = existing_item['container_id']
+        item_id = existing_item['item_id']
+        
+        # Check if this item already has a placement in temp_placements_by_container
+        existing_in_temp = any(item_id == placed_item_id 
+                              for placed_item_id, _, _ in temp_placements_by_container.get(container_id, []))
+        
+        if not existing_in_temp:
+            # Add with default position
+            default_start = Coordinates(width=0.0, depth=0.0, height=0.0)
+            default_end = Coordinates(
+                width=existing_item['width_cm'], 
+                depth=existing_item['depth_cm'], 
+                height=existing_item['height_cm']
+            )
+            temp_placements_by_container.setdefault(container_id, []).append(
+                (item_id, default_start, default_end)
+            )
+            print(f"  Added existing item {item_id} to simulation state in {container_id}")
 
     # Process new items in descending priority order
     sorted_incoming_items = sorted(request_data.items, key=lambda x: x.priority, reverse=True)
@@ -243,39 +403,78 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
         placed = False
         is_high_prio = item_req.priority >= 75 # Example priority threshold
 
-        # Identify preferred containers based on zone
+        # OPTIMIZATION 3: Pre-filter compatible containers
+        compatible_container_ids = get_compatible_containers(item_req, containers_data)
+        print(f"    Compatible containers: {len(compatible_container_ids)}/{len(containers_data)} - {compatible_container_ids}")
+
+        # Identify preferred containers based on zone (from compatible ones only)
         preferred_container_ids = [
-            cid for cid, c in containers_data.items() if c.zone == item_req.preferred_zone
+            cid for cid in compatible_container_ids 
+            if containers_data[cid].zone == item_req.preferred_zone
         ] if item_req.preferred_zone else []
 
+        # OPTIMIZATION 4: Sort preferred containers by suitability score
         if preferred_container_ids:
-            for container_id in preferred_container_ids:
-                if container_id not in containers_data: continue
-                container = containers_data[container_id]
-                # Use the current simulation state for the target container
-                current_placements_in_pref_container = temp_placements_by_container.get(container_id, [])
+            container_scores = [(cid, calculate_container_suitability_score(containers_data[cid], item_req)) 
+                               for cid in preferred_container_ids]
+            container_scores.sort(key=lambda x: x[1], reverse=True)  # Best containers first
+            sorted_preferred_containers = [cid for cid, score in container_scores]
+            print(f"    Sorted preferred containers by score: {[(cid, f'{score:.1f}') for cid, score in container_scores[:3]]}")
+        else:
+            sorted_preferred_containers = []
 
-                # Try to find a spot using the helper function
-                spot_info = find_spot_in_container(
-                    item_req, container, current_placements_in_pref_container, is_high_prio
-                )
+        if sorted_preferred_containers:
+            # Check if this high-priority item should trigger rearrangement in preferred zone
+            should_trigger_rearrangement_phase1 = False
+            if is_high_prio:  # Priority >= 75
+                for container_id in sorted_preferred_containers:
+                    # Check if there are any lower priority items in this preferred container
+                    existing_items_in_container = [item for item in all_existing_items_in_containers 
+                                                   if item['container_id'] == container_id]
+                    for existing_item in existing_items_in_container:
+                        if existing_item['priority'] < item_req.priority:
+                            should_trigger_rearrangement_phase1 = True
+                            print(f"    HIGH PRIORITY DETECTED: {item_req.item_id} (prio {item_req.priority}) should displace {existing_item['item_id']} (prio {existing_item['priority']}) in preferred zone")
+                            break
+                    if should_trigger_rearrangement_phase1:
+                        break
+            
+            # Only attempt Phase 1 placement if no rearrangement should be triggered
+            if not should_trigger_rearrangement_phase1:
+                for container_id in sorted_preferred_containers:
+                    container = containers_data[container_id]
+                    # Use the current simulation state for the target container
+                    current_placements_in_pref_container = temp_placements_by_container.get(container_id, [])
 
-                if spot_info:
-                    start_coords, end_coords, _ = spot_info
-                    # --- Update Simulation State ---
-                    temp_placements_by_container.setdefault(container_id, []).append(
-                        (item_req.item_id, start_coords, end_coords)
+                    # Try to find a spot using the helper function
+                    spot_info = find_spot_in_container(
+                        item_req, container, current_placements_in_pref_container, is_high_prio
                     )
-                    # Add to provisional results (might be updated if item is moved later)
-                    placement_details = PlacementResponseItem(
-                        item_id=item_req.item_id, container_id=container_id,
-                        position=Position(startCoordinates=start_coords, endCoordinates=end_coords)
-                    )
-                    placements_result.append(placement_details)
-                    processed_item_ids.add(item_req.item_id)
-                    print(f"    SUCCESS (Phase 1): Placed {item_req.item_id} in preferred {container_id} at {start_coords}")
-                    placed = True
-                    break # Placed in preferred zone, move to next item
+
+                    if spot_info:
+                        start_coords, end_coords, _ = spot_info
+                        position = Position(startCoordinates=start_coords, endCoordinates=end_coords)
+                        
+                        # --- Update Simulation State ---
+                        temp_placements_by_container.setdefault(container_id, []).append(
+                            (item_req.item_id, start_coords, end_coords)
+                        )
+                        # Add to provisional results (might be updated if item is moved later)
+                        placement_details = PlacementResponseItem(
+                                item_id=item_req.item_id, container_id=container_id, position=position
+                        )
+                        placements_result.append(placement_details)
+                        processed_item_ids.add(item_req.item_id)
+                        print(f"    SUCCESS (Phase 1): Placed {item_req.item_id} in preferred {container_id} at {start_coords}")
+                        
+                        # OPTIMIZATION 7: Early termination for good enough placements
+                        if placement_is_good_enough(item_req, container, position):
+                            print(f"    EARLY TERMINATION: Excellent placement found for {item_req.item_id}")
+                        
+                        placed = True
+                        break # Placed in preferred zone, move to next item
+            else:
+                print(f"    SKIPPING Phase 1 placement for {item_req.item_id} - will attempt rearrangement in Phase 2")
 
         if not placed:
             print(f"    INFO (Phase 1): Could not place {item_req.item_id} in preferred zone. Needs further processing.")
@@ -305,35 +504,62 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
         ] if high_prio_item.preferred_zone else []
 
         # If no preferred zone defined, try other containers anyway for high-priority items
+        # OPTIMIZATION 10: Smart rearrangement decision
         if not preferred_container_ids and high_prio_item.priority > 80:
             print(f"    No preferred zone defined but high priority. Considering all containers.")
             preferred_container_ids = list(containers_data.keys())
         elif not preferred_container_ids:
-            print(f"    No preferred zone defined. Moving {high_prio_item.item_id} to final placement pass.")
+            # Check if rearrangement is worth attempting based on item priority and failure rate
+            compatible_containers = get_compatible_containers(high_prio_item, containers_data)
+            failed_containers = len(containers_data) - len(compatible_containers)
+            
+            if should_attempt_rearrangement(high_prio_item, failed_containers, len(containers_data)):
+                print(f"    No preferred zone but rearrangement worth trying for priority {high_prio_item.priority}")
+                preferred_container_ids = compatible_containers
+            else:
+                print(f"    No preferred zone and rearrangement not worth it. Moving {high_prio_item.item_id} to final placement pass.")
             items_requiring_placement_pass_3.append(high_prio_item)
             continue
 
-        # === Attempt direct placement first ===
-        # Check again if space opened up in preferred zone after other placements
+        # === Check if rearrangement should be attempted for priority reasons ===
+        # For high priority items (80+), always try rearrangement if there are existing items
+        # with lower priority in preferred containers, even if there's space available
+        should_force_rearrangement = False
+        if high_prio_item.priority >= 80:
+            for container_id in preferred_container_ids:
+                # Check if there are any lower priority items in this preferred container
+                existing_items_in_container = [item for item in all_existing_items_in_containers 
+                                               if item['container_id'] == container_id]
+                for existing_item in existing_items_in_container:
+                    if existing_item['priority'] < high_prio_item.priority:
+                        should_force_rearrangement = True
+                        print(f"    FORCE REARRANGEMENT: High priority item {high_prio_item.item_id} (prio {high_prio_item.priority}) should displace {existing_item['item_id']} (prio {existing_item['priority']})")
+                        break
+                if should_force_rearrangement:
+                    break
+
+        # === Attempt direct placement first (only if not forcing rearrangement) ===
         placed_without_rearrange = False
-        for container_id in preferred_container_ids:
-            if container_id not in containers_data: continue
-            container = containers_data[container_id]
-            current_placements_in_pref_container = temp_placements_by_container.get(container_id, [])
-            spot_info = find_spot_in_container(high_prio_item, container, current_placements_in_pref_container, True)
-            if spot_info:
-                start_coords, end_coords, _ = spot_info
-                temp_placements_by_container.setdefault(container_id, []).append((high_prio_item.item_id, start_coords, end_coords))
-                placements_result.append(PlacementResponseItem(
-                    item_id=high_prio_item.item_id, 
-                    container_id=container_id, 
-                    position=Position(startCoordinates=start_coords, endCoordinates=end_coords)
-                ))
-                processed_item_ids.add(high_prio_item.item_id)
-                print(f"    SUCCESS (Phase 2 Direct): Placed {high_prio_item.item_id} in preferred {container_id}.")
-                placed_without_rearrange = True
-                rearrangement_done_for_this_item = True
-                break
+        if not should_force_rearrangement:
+            # Check again if space opened up in preferred zone after other placements
+            for container_id in preferred_container_ids:
+                if container_id not in containers_data: continue
+                container = containers_data[container_id]
+                current_placements_in_pref_container = temp_placements_by_container.get(container_id, [])
+                spot_info = find_spot_in_container(high_prio_item, container, current_placements_in_pref_container, True)
+                if spot_info:
+                    start_coords, end_coords, _ = spot_info
+                    temp_placements_by_container.setdefault(container_id, []).append((high_prio_item.item_id, start_coords, end_coords))
+                    placements_result.append(PlacementResponseItem(
+                        item_id=high_prio_item.item_id, 
+                        container_id=container_id, 
+                        position=Position(startCoordinates=start_coords, endCoordinates=end_coords)
+                    ))
+                    processed_item_ids.add(high_prio_item.item_id)
+                    print(f"    SUCCESS (Phase 2 Direct): Placed {high_prio_item.item_id} in preferred {container_id}.")
+                    placed_without_rearrange = True
+                    rearrangement_done_for_this_item = True
+                    break
 
         if placed_without_rearrange:
             continue  # Go to next high_prio_item
@@ -341,20 +567,13 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
         # === Look for items to displace based on priority ===
         # For each preferred container, identify all potential displacees
         all_potential_displacees = []
-        print(f"    DEBUG: Checking for displaceable items in preferred containers: {preferred_container_ids}")
-        print(f"    DEBUG: Current simulation state: {temp_placements_by_container}")
-        print(f"    DEBUG: All existing items in containers: {[item['item_id'] for item in all_existing_items_in_containers]}")
-        
         for container_id in preferred_container_ids:
             current_container_placements = temp_placements_by_container.get(container_id, [])
-            print(f"    DEBUG: Container {container_id} has {len(current_container_placements)} current placements")
             
             # Check both current simulation state AND existing database items
             for existing_item_id, start_coords, end_coords in current_container_placements:
-                print(f"    DEBUG: Checking item {existing_item_id} with priority {existing_item_priorities.get(existing_item_id, 'UNKNOWN')}")
                 # Only consider existing items with known priorities that are lower than our target
                 if existing_item_id in existing_item_priorities and existing_item_priorities[existing_item_id] < high_prio_item.priority:
-                    print(f"    DEBUG: Adding {existing_item_id} (priority {existing_item_priorities[existing_item_id]}) to displacees list")
                     all_potential_displacees.append({
                         "item_id": existing_item_id,
                         "priority": existing_item_priorities[existing_item_id],
@@ -368,7 +587,6 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
                     existing_item_data['priority'] < high_prio_item.priority and
                     existing_item_data['item_id'] not in [d["item_id"] for d in all_potential_displacees]):
                     
-                    print(f"    DEBUG: Found existing DB item {existing_item_data['item_id']} (priority {existing_item_data['priority']}) in {container_id}")
                     # Create a default position for the existing item
                     default_start = Coordinates(width=0.0, depth=0.0, height=0.0)
                     default_end = Coordinates(
@@ -496,10 +714,30 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
                         usage_remaining=displacee_db.usage_remaining
                     )
                     
-                    # Try to find a new home for this displaced item
+                    # OPTIMIZATION 9: Smart target container selection for displacement
+                    # First check cached compatibility, then sort by suitability
+                    displacee_data = {
+                        'item_id': displacee_id,
+                        'width_cm': displacee_item.width_cm,
+                        'depth_cm': displacee_item.depth_cm, 
+                        'height_cm': displacee_item.height_cm,
+                        'mass_kg': displacee_item.mass_kg
+                    }
+                    
+                    # Pre-filter and sort target containers
+                    candidate_targets = []
                     for target_container_id in container_ids:
-                        if target_container_id == source_container_id: continue # Don't put back in same container
-                            
+                        if target_container_id == source_container_id: continue
+                        if can_displace_item_cached(displacee_data, source_container_id, target_container_id, containers_data):
+                            score = calculate_container_suitability_score(containers_data[target_container_id], displacee_item)
+                            candidate_targets.append((target_container_id, score))
+                    
+                    # Sort by suitability score (best first)
+                    candidate_targets.sort(key=lambda x: x[1], reverse=True)
+                    print(f"        Found {len(candidate_targets)} candidate targets for {displacee_id}")
+                    
+                    # Try displacement to candidate containers
+                    for target_container_id, score in candidate_targets:
                         target_container = containers_data[target_container_id]
                         current_placements_in_target = temp_placements_by_container.get(target_container_id, [])
                         
@@ -547,7 +785,7 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
                         position=Position(startCoordinates=start_coords, endCoordinates=end_coords)
                     ))
                     
-                    # Add rearrangement steps to result
+                    # Add rearrangement steps to result as a list of RearrangementStep objects
                     rearrangements_result.extend(displacement_moves)
                     
                     processed_item_ids.add(high_prio_item.item_id)
@@ -573,8 +811,20 @@ def suggest_placements(db: Session, request_data: PlacementRequest, user_id: Opt
         print(f"Final attempt for: {item_req.item_id} (Prio: {item_req.priority})")
         placed = False
 
-        # Try all containers (not just preferred)
-        for container_id in container_ids:
+        # OPTIMIZATION 11: Smart container selection for Phase 3
+        # Pre-filter compatible containers and sort by suitability
+        compatible_container_ids = get_compatible_containers(item_req, containers_data)
+        if compatible_container_ids:
+            container_scores = [(cid, calculate_container_suitability_score(containers_data[cid], item_req)) 
+                               for cid in compatible_container_ids]
+            container_scores.sort(key=lambda x: x[1], reverse=True)  # Best containers first
+            sorted_containers = [cid for cid, score in container_scores]
+            print(f"    Phase 3: Trying {len(sorted_containers)} compatible containers in order of suitability")
+        else:
+            sorted_containers = container_ids  # Fallback to all containers
+
+        # Try containers in order of suitability
+        for container_id in sorted_containers:
             if container_id not in containers_data: continue
             container = containers_data[container_id]
             current_placements_in_container = temp_placements_by_container.get(container_id, [])
